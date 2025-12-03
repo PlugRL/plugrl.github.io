@@ -1,0 +1,24 @@
+site_name: My Docs
+site_name: ??? RL
+theme:
+  name: material
+features:
+  - navigation.instant
+  - navigation.tracking
+  - navigation.indexes
+  - navigation.tabs
+  - navigation.top
+  - navigation.tabs.sticky
+  - navigation.expand
+  - navigation.footer
+  - toc.follow
+  - search.suggest
+  - search.highlight  
+palette:
+  - media: "(prefers-color-scheme: dark)" 
+    scheme: slate
+    primary: teal
+    accent: light green
+    toggle:
+      icon: material/lightbulb3
+      name: Switch to light mode
