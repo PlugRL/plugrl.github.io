@@ -22,3 +22,17 @@ palette:
     toggle:
       icon: material/lightbulb3
       name: Switch to light mode
+plugins:
+  - search
+  - i18n:
+      default_language: en
+      languages:
+        en: English
+        zh: 中文
+      nav:
+        zh:
+          User Guide: 用户指南
+          Algorithm: 算法
+          Env: 环境
+          Policy: 策略
+          Contributing: 贡献指南
