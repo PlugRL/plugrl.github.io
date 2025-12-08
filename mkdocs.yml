@@ -1,38 +1,60 @@
-site_name: My Docs
 site_name: ??? RL
 theme:
   name: material
-features:
-  - navigation.instant
-  - navigation.tracking
-  - navigation.indexes
-  - navigation.tabs
-  - navigation.top
-  - navigation.tabs.sticky
-  - navigation.expand
-  - navigation.footer
-  - toc.follow
-  - search.suggest
-  - search.highlight  
-palette:
-  - media: "(prefers-color-scheme: dark)" 
-    scheme: slate
-    primary: teal
-    accent: light green
-    toggle:
-      icon: material/lightbulb3
-      name: Switch to light mode
+  features:
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.tabs
+    - navigation.top
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.footer
+    - navigation.instance
+    - toc.follow
+    - search.suggest
+    - search.highlight
 plugins:
   - search
   - i18n:
-      default_language: en
+      docs_structure: suffix
       languages:
-        en: English
-        zh: 中文
-      nav:
-        zh:
-          User Guide: 用户指南
-          Algorithm: 算法
-          Env: 环境
-          Policy: 策略
-          Contributing: 贡献指南
+        - locale: en
+          name: English
+          default: true
+          build: true
+        - locale: zh
+          name: 中文
+          build: true
+          nav_translations:
+            Home: 主页
+            User Guide: 用户指南
+            Algorithm: 算法
+            Environment: 环境
+            Policy: 策略
+            Contributing: 贡献指南
+            Get Started: 快速开始
+nav:
+  - Home: index.md
+
+  - User Guide:
+      - Overview: user_guide/index.md
+      - Get Started: user_guide/get_started.md
+
+  - Algorithm:
+      - Overview: algorithm/index.md
+      - PPO: algorithm/ppo.md
+
+  - Environment:
+      - Overview: env/index.md
+      - Libero Environment: env/libero_env.md
+      - Custom Environment: env/custom_env.md
+
+  - Policy:
+      - Overview: policy/index.md
+      - Custom Policy: policy/custom_policy.md
+
+  - Contributing:
+      - Overview: contributing/index.md
+      - Environment: contributing/env.md
+      - Policy: contributing/policy.md
+      - Algorithm: contributing/algorithm.md
