@@ -1,18 +1,5 @@
+site_url: https://<username>.github.io/vlarl/
 site_name: ??? RL
-theme:
-  name: material
-  features:
-    - navigation.tracking
-    - navigation.indexes
-    - navigation.tabs
-    - navigation.top
-    - navigation.tabs.sticky
-    - navigation.expand
-    - navigation.footer
-    - navigation.instance
-    - toc.follow
-    - search.suggest
-    - search.highlight
 plugins:
   - search
   - i18n:
@@ -33,6 +20,23 @@ plugins:
             Policy: 策略
             Contributing: 贡献指南
             Get Started: 快速开始
+  - exclude:
+      glob:
+        - '**/sitemap.xml'
+theme:
+  name: material
+  features:
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.tabs
+    - navigation.top
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.footer
+    - navigation.instance
+    - toc.follow
+    - search.suggest
+    - search.highlight
 nav:
   - Home: index.md
 
