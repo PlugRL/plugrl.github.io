@@ -1,5 +1,5 @@
 [project]
-name = "vlarl-docs"
+name = "plugrl-docs"
 version = "0.1.0"
 description = ""
 authors = [
@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [tool.poetry]
-packages = [{include = "vlarl_docs", from = "src"}]
+packages = [{include = "plugrl_docs", from = "src"}]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -1,5 +1,4 @@
-site_url: https://ctp314.github.io/vlarl/
-site_name: ??? RL
+site_name: PlugRL
 plugins:
   - search
   - i18n:
