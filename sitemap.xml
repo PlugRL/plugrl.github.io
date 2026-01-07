@@ -2,196 +2,196 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://plugrl.github.io/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/algorithm/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/algorithm/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/algorithm/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/algorithm/ppo/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/algorithm/ppo/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/algorithm/ppo/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/contributing/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/contributing/algorithm/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/algorithm/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/algorithm/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/contributing/env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/env/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/contributing/policy/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/policy/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/policy/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/env/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/env/custom_env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/env/custom_env/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/env/custom_env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/env/libero_env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/env/libero_env/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/env/libero_env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/policy/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/policy/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/policy/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/policy/custom_policy/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/policy/custom_policy/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/policy/custom_policy/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/user_guide/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/user_guide/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/user_guide/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/user_guide/get_started/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/user_guide/get_started/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/user_guide/get_started/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/algorithm/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/algorithm/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/algorithm/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/algorithm/ppo/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/algorithm/ppo/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/algorithm/ppo/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/contributing/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/contributing/algorithm/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/algorithm/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/algorithm/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/contributing/env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/env/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/contributing/policy/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/contributing/policy/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/contributing/policy/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/env/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/env/custom_env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/env/custom_env/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/env/custom_env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/env/libero_env/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/env/libero_env/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/env/libero_env/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/policy/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/policy/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/policy/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/policy/custom_policy/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/policy/custom_policy/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/policy/custom_policy/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/user_guide/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/user_guide/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/user_guide/"/>
     </url>
     <url>
         <loc>https://plugrl.github.io/zh/user_guide/get_started/</loc>
-        <lastmod>2025-12-23</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="zh" href="https://plugrl.github.io/zh/user_guide/get_started/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://plugrl.github.io/user_guide/get_started/"/>

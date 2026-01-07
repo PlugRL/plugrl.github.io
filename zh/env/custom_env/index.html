@@ -1071,7 +1071,7 @@ class CustomEnv(BaseEnv):
         super().__init__(config=config)
         ...
 
-    def prepare_obs(self, obs: np.ndarray) -&gt; Observation:
+    def prepare_obs(self, obs) -&gt; Observation:
         return Observation(
             images=...,
             states=...,
