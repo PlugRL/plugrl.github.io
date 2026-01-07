@@ -1,3 +1,4 @@
+site_url: https://plugrl.github.io
 site_name: PlugRL
 plugins:
   - search
