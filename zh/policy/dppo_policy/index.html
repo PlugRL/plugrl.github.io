@@ -8,17 +8,17 @@
       
       
       
-        <link rel="canonical" href="https://plugrl.github.io/zh/policy/custom_policy/">
+        <link rel="canonical" href="https://plugrl.github.io/zh/policy/dppo_policy/">
       
       
-        <link rel="prev" href="../dppo_policy/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../../contributing/">
+        <link rel="next" href="../custom_policy/">
       
       
         
-          <link rel="alternate" href="../../../policy/custom_policy/" hreflang="en">
+          <link rel="alternate" href="../../../policy/dppo_policy/" hreflang="en">
         
           <link rel="alternate" href="./" hreflang="zh">
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Custom Policy - PlugRL</title>
+        <title>DPPO Policies - PlugRL</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#dppo" class="md-skip">
           跳转至
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Custom Policy
+              DPPO Policies
             
           </span>
         </div>
@@ -127,7 +127,7 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../../policy/custom_policy/" hreflang="en" class="md-select__link">
+            <a href="../../../policy/dppo_policy/" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -842,34 +842,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../dppo_policy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    DPPO Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -887,7 +859,7 @@
   <span class="md-ellipsis">
     
   
-    Custom Policy
+    DPPO Policies
   
 
     
@@ -905,7 +877,7 @@
   <span class="md-ellipsis">
     
   
-    Custom Policy
+    DPPO Policies
   
 
     
@@ -929,58 +901,64 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#dppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPPO 策略
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DPPO 策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basepolicygradientdiffusionpolicy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基类：BasePolicyGradientDiffusionPolicy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dppo-dppo-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPPO 模型（dppo-policy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openpi-pi-pi0-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenPI $\pi$ 系列模型（pi0-policy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dppo-diffusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自定义 DPPO 策略（即插即用 diffusion 风格）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="自定义 DPPO 策略（即插即用 diffusion 风格）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        自定义策略
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="自定义策略">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        代码放哪里
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="代码放哪里">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-plugrl-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        方式 A：贡献到 plugrl-server
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-plugrl-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        方式 B：作为外部插件包（不需要改 plugrl-server）
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         最小模板
@@ -991,10 +969,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#lerobot-diffusion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        说明
+        配合 LeRobot diffusion 的具体讲解
       
     </span>
   </a>
@@ -1002,10 +980,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sac" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        配合 SAC 示例对齐接口
+        实战要点（来自内置实现）
       
     </span>
   </a>
@@ -1013,13 +991,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        验证方式
+        验证
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1032,6 +1015,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1233,58 +1244,64 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#dppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPPO 策略
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DPPO 策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basepolicygradientdiffusionpolicy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基类：BasePolicyGradientDiffusionPolicy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dppo-dppo-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPPO 模型（dppo-policy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openpi-pi-pi0-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenPI $\pi$ 系列模型（pi0-policy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dppo-diffusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自定义 DPPO 策略（即插即用 diffusion 风格）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="自定义 DPPO 策略（即插即用 diffusion 风格）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        自定义策略
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="自定义策略">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        代码放哪里
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="代码放哪里">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-plugrl-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        方式 A：贡献到 plugrl-server
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-plugrl-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        方式 B：作为外部插件包（不需要改 plugrl-server）
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         最小模板
@@ -1295,10 +1312,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#lerobot-diffusion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        说明
+        配合 LeRobot diffusion 的具体讲解
       
     </span>
   </a>
@@ -1306,10 +1323,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sac" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        配合 SAC 示例对齐接口
+        实战要点（来自内置实现）
       
     </span>
   </a>
@@ -1317,13 +1334,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        验证方式
+        验证
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1349,91 +1371,263 @@
 
 
 
-  <h1>Custom Policy</h1>
+  <h1>DPPO Policies</h1>
 
-<h2 id="_1">自定义策略</h2>
-<p>PlugRL 的策略发现机制是“<strong>import 时注册</strong>”：模块被 import 时，注册装饰器会把策略/配置写入 registry，随后 server CLI 才能看到它。</p>
-<p>因此会自然分成两类：</p>
+<h2 id="dppo">DPPO 策略</h2>
+<p>本页包含三个子部分：</p>
 <ul>
-<li><strong>内置策略</strong>：随 <code>plugrl-server</code> 提供，并会被自动 import。</li>
-<li><strong>自定义策略</strong>：可以做到即插即用——代码写在你自己的包里，只要在启动 server 前 import 一次即可。</li>
+<li>内置 DPPO 策略（<code>dppo-policy</code>）</li>
+<li>OpenPI $\pi$ 系列策略（<code>pi0-policy</code>）</li>
+<li>如何打包一个 DPPO 所需要的 diffusion policy</li>
 </ul>
-<p>实现一个新策略一般需要：</p>
-<ol>
-<li>写一个策略配置（dataclass，供 Tyro CLI 暴露参数）。</li>
-<li>实现一个 <code>BasePolicy</code> 子类。</li>
-<li>完成注册，并确保模块会被 import（这样 CLI 才能发现它）。</li>
-</ol>
-<p>SAC 的示例写法可以直接参考 <code>plugrl-server/examples/sac/sac_policy.py</code>。</p>
-<h3 id="_2">代码放哪里</h3>
-<p>你可以按需求选择两种方式。</p>
-<h4 id="a-plugrl-server">方式 A：贡献到 <code>plugrl-server</code></h4>
-<p>在 <code>plugrl-server/src/plugrl_server/policy/&lt;your_policy&gt;/...</code>：</p>
+<h3 id="basepolicygradientdiffusionpolicy">基类：<code>BasePolicyGradientDiffusionPolicy</code></h3>
+<p><code>DPPOPolicy</code> 和 diffusion 风格的自定义策略都基于 <code>BasePolicyGradientDiffusionPolicy</code>。</p>
+<p>基类负责的事情很固定：</p>
 <ul>
-<li>实现：<code>plugrl_server/policy/&lt;your_policy&gt;/&lt;your_policy&gt;_policy.py</code></li>
-<li>注册（import 时完成注册）：<code>plugrl_server/policy/&lt;your_policy&gt;/__init__.py</code></li>
-<li>记得从 <code>plugrl_server/policy/__init__.py</code> 导入你的模块（保证 <code>import plugrl_server</code> 会加载它）</li>
+<li>用 <code>_get_timesteps</code> 给出的时间步跑一段 denoising 循环。</li>
+<li>用 <code>_initialize_x</code> 初始化动作 latent <code>x</code>。</li>
+<li>每个时间步 <code>t</code> 调用 <code>_denoising_step</code>，并要求返回三个值：<code>x_next</code>、<code>logprob</code>、<code>entropy</code>。</li>
+<li>把每步信息写进 <code>InternalState</code>，供算法侧训练使用：<ul>
+<li><code>internal_state.action[:, i] = x_next</code></li>
+<li><code>internal_state.logprob[:, i] = logprob</code></li>
+<li><code>internal_state.entropy[:, i] = entropy</code></li>
+<li><code>internal_state.obs["x"][:, i] = x</code>，<code>internal_state.obs["t"][:, i] = t</code></li>
 </ul>
-<h4 id="b-plugrl-server">方式 B：作为外部插件包（不需要改 <code>plugrl-server</code>）</h4>
+</li>
+<li>步间用 <code>_iterative_process_action</code> 处理一次，循环结束后用 <code>_postprocess_action</code> 做最终输出变换。</li>
+<li>如果有 critic，基类会通过 <code>_get_value</code> 得到 <code>value</code>，写入 <code>internal_state.value</code>。</li>
+</ul>
+<p>关键张量形状（来自 <code>fake_internal_state()</code>）：</p>
 <ul>
-<li>把策略代码放在你自己的 Python 包里（例如 <code>my_pkg/plugrl_policies.py</code>）。</li>
-<li>确保在构建 server CLI 之前先 import 你的模块。</li>
+<li><code>internal_state.action</code>：<code>[B, S, H, D]</code>，其中 <code>S=num_denoising_steps</code>、<code>H=action_horizon</code>、<code>D=action_dim</code></li>
+<li><code>internal_state.obs["x"]</code>：<code>[B, S, H, D]</code></li>
+<li><code>internal_state.obs["t"]</code>：<code>[B, S]</code></li>
+<li><code>internal_state.value</code>：<code>[B]</code></li>
 </ul>
-<p>本质上，“接入动作”就是这一句 import。</p>
-<h3 id="_3">最小模板</h3>
+<p>你在子类里需要实现：</p>
+<ul>
+<li><code>_get_timesteps</code>、<code>_initialize_x</code>、<code>_denoising_step</code>、<code>_iterative_process_action</code>、<code>_postprocess_action</code></li>
+<li><code>fake_diffusion_cond()</code>，用于提前分配 buffer</li>
+<li>可选 <code>preprocess_observation()</code>，把昂贵的 conditioning 预处理缓存到 <code>processed_cond</code>，在每个 denoising step 复用</li>
+</ul>
+<h3 id="dppo-dppo-policy">DPPO 模型（<code>dppo-policy</code>）</h3>
+<p><strong>UID</strong>：<code>dppo-policy</code></p>
+<p><strong>实现位置</strong>：<code>plugrl-server/src/plugrl_server/policy/dppo/dppo_policy.py</code></p>
+<p><strong>它做什么</strong></p>
+<p><code>DPPOPolicy</code> 基于 <code>BasePolicyGradientDiffusionPolicy</code>，用 diffusion 的方式生成动作序列。</p>
+<ul>
+<li>会从 <code>plugrl_server/meta/dppo/cfg/&lt;env_type&gt;/&lt;env_name&gt;.yaml</code> 加载与环境对应的 Hydra 配置。</li>
+<li>会从 <code>plugrl_server/meta/dppo/asset/&lt;env_type&gt;/&lt;env_name&gt;/normalization.npz</code> 加载归一化统计。</li>
+<li>期望 worker 发来的观测中包含 <code>states</code> 字典，并按 YAML 中的 <code>low_dim_keys</code> 抽取并拼接成一个低维向量。</li>
+</ul>
+<p><strong>配置字段</strong></p>
+<p>策略配置为 <code>DPPOPolicyConfig</code>：</p>
+<ul>
+<li><code>policy.env_type</code>（默认：<code>gym</code>）</li>
+<li><code>policy.env_name</code>（默认：<code>hopper-medium-v2</code>）</li>
+<li><code>policy.checkpoint_path</code>（可选）：会从 checkpoint 中读取 <code>checkpoint["model"]</code> 并加载到 actor</li>
+<li><code>policy.critic</code>（可选）：<code>CriticObs</code> 的结构/激活函数等</li>
+</ul>
+<p><strong>怎么运行</strong></p>
+<p>典型 server 命令：</p>
+<pre><code class="language-bash">plugrl-run-server dppo hopper dppo-policy default \
+  --policy.env_type gym \
+  --policy.env_name hopper-medium-v2
+</code></pre>
+<p>如果有权重：</p>
+<pre><code class="language-bash">plugrl-run-server dppo hopper dppo-policy default \
+  --policy.checkpoint_path /path/to/checkpoint.pt
+</code></pre>
+<p><strong>依赖说明</strong></p>
+<p>该策略依赖可选的 <code>dppo</code> 包；缺失时会报错，错误信息里会提示安装 <code>"plugrl-worker[dppo]"</code>。</p>
+<h3 id="openpi-pi-pi0-policy">OpenPI $\pi$ 系列模型（<code>pi0-policy</code>）</h3>
+<p><strong>UID</strong>：<code>pi0-policy</code></p>
+<p><strong>实现位置</strong>：<code>plugrl-server/src/plugrl_server/policy/openpi/openpi_policy.py</code></p>
+<p><strong>它做什么</strong></p>
+<p><code>Pi0Policy</code> 把 OpenPI 的 PI0 模型封装成 PlugRL 的 diffusion policy：</p>
+<ul>
+<li>会根据 OpenPI 的配置构建输入/输出变换链（<code>input_transform</code> / <code>output_transform</code>）。</li>
+<li>需要你提供 <code>policy.checkpoint_path</code>（目录），其中应包含 <code>model.safetensors</code> 以及带 normalization stats 的 <code>assets/</code>。</li>
+<li>会把 worker 的观测 dict 先拆成样本列表再 batch 回来，最终构成 <code>TensorDict</code>。</li>
+</ul>
+<p><strong>配置字段</strong></p>
+<p>策略配置为 <code>Pi0PolicyConfig</code>：</p>
+<ul>
+<li><code>policy.name</code>（默认：<code>pi05_tiny_libero</code>）</li>
+<li><code>policy.checkpoint_path</code>（必填）</li>
+<li><code>policy.default_prompt</code>（可选）</li>
+<li><code>policy.denoising_steps</code>（默认：<code>5</code>）</li>
+<li><code>policy.train_expert_only</code>（默认：<code>True</code>）：会冻结 VLM 部分参数</li>
+</ul>
+<p><strong>怎么运行</strong></p>
+<pre><code class="language-bash">plugrl-run-server dppo hopper pi0-policy default \
+  --policy.checkpoint_path /path/to/pi0_checkpoint \
+  --policy.name pi05_tiny_libero
+</code></pre>
+<p><strong>依赖说明</strong></p>
+<p>该策略依赖 <code>plugrl-server/third_party/openpi</code> 及相关 Python 包。项目目前使用的本地安装/替换步骤见 <code>plugrl-server/src/plugrl_server/policy/openpi/README.md</code>。</p>
+<h3 id="dppo-diffusion">自定义 DPPO 策略（即插即用 diffusion 风格）</h3>
+<p>上面两类策略属于<strong>内置策略</strong>：它们随 <code>plugrl-server</code> 一起提供，并会被 <code>plugrl_server</code> 包自动 import，因此天然可用。</p>
+<p>而<strong>自定义</strong>的 DPPO 风格策略可以做到真正“即插即用”：</p>
+<ul>
+<li>你把代码写在自己的 Python 包里（不需要把文件放进 <code>plugrl-server/src/...</code>）。</li>
+<li>唯一要求是：启动 server 之前，你的模块要先被 import 一次，这样注册装饰器才能把策略/配置写入 registry，CLI 才能看见它。</li>
+</ul>
+<p>如果你想实现“DPPO 风格”的策略（diffusion rollout + 每步 logprob/entropy/value 的 internal state），推荐做法是：</p>
+<p>1) 继承 <code>BasePolicyGradientDiffusionPolicy</code>
+2) 使用 <code>@register_policy_config</code> 与 <code>@register_policy</code> 完成注册
+3) 确保在 <code>plugrl_server.cli:main</code> 运行前先 import 你的模块</p>
+<p>基类会驱动 denoising 循环，你只需要实现 diffusion 相关的细节。</p>
+<h4 id="_1">最小模板</h4>
 <pre><code class="language-python">import dataclasses
+import torch
+from tensordict import TensorDict
 
-from plugrl_server.policy.base_policy import BasePolicy, BasePolicyConfig, InternalState
+from plugrl_server.policy.base_policy_gradient_diffusion_policy import (
+    BasePolicyGradientDiffusionPolicy,
+    BasePolicyGradientDiffusionPolicyConfig,
+)
 from plugrl_server.policy.registration import register_policy, register_policy_config
 
-UID = &quot;your-policy&quot;
+UID = &quot;my-dppo-policy&quot;
 
 
 @register_policy_config(UID)
 @dataclasses.dataclass
-class YourPolicyConfig(BasePolicyConfig):
-    # 填你策略需要的参数
-    ...
+class MyDPPOPolicyConfig(BasePolicyGradientDiffusionPolicyConfig):
+    checkpoint_path: str | None = None
 
 
 @register_policy(UID)
-class YourPolicy(BasePolicy):
-    def prepare_observation(self, _obs: dict):
-        # 把 worker 发送的观测 dict 转为 tensor / tensordict
+class MyDPPOPolicy(BasePolicyGradientDiffusionPolicy):
+    def __init__(self, config: MyDPPOPolicyConfig):
+        super().__init__(config)
+        # 1) 创建/加载 actor
+        # 2) 可选：创建 critic
+        # 3) 设置：self.action_dim, self.action_horizon, self.num_denoising_steps
+
+    def prepare_observation(self, _obs: dict) -&gt; TensorDict:
+        # 把 worker 的观测 dict 转为 TensorDict
         ...
 
-    def get_action_and_internal_state(self, _obs: dict):
-        # 返回动作（numpy 或 tensor）+ InternalState
+    def preprocess_observation(self, obs: TensorDict):
+        # 可选：把昂贵的预处理缓存下来，在每个 denoising step 复用。
+        # 参考 Pi0Policy.preprocess_observation 的写法。
         ...
 
-    def fake_internal_state(self, batch_size: int) -&gt; InternalState:
-        # 构造形状/类型正确的 InternalState（用于 buffer/训练）
+    def _get_timesteps(self) -&gt; torch.Tensor:
+        # 返回长度为 num_denoising_steps 的 1D tensor
+        ...
+
+    def _initialize_x(self, obs: TensorDict) -&gt; torch.Tensor:
+        # 返回 (B, action_horizon, action_dim)
+        ...
+
+    def _denoising_step(
+        self,
+        x: torch.Tensor,
+        t: torch.Tensor,
+        cond: TensorDict,
+        x_next: torch.Tensor | None = None,
+        *,
+        processed_cond=None,
+        sampling_noise_level: float | None = None,
+    ) -&gt; tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        # 必须返回：(x_next, logprob, entropy)
+        # 形状通常与 DPPOPolicy 一致：
+        # - x_next: (B, H, A)
+        # - logprob: (B, H, A)
+        # - entropy: (B, H, A)
+        ...
+
+    def _iterative_process_action(self, action: torch.Tensor) -&gt; torch.Tensor:
+        return action
+
+    def _postprocess_action(self, action: torch.Tensor, obs: TensorDict):
+        # 将最终 diffusion action 转为 worker 环境可接受的 numpy action
+        ...
+
+    def fake_diffusion_cond(self, batch_size: int) -&gt; TensorDict:
+        # BasePolicyGradientDiffusionPolicy.fake_internal_state 会用到
         ...
 </code></pre>
-<h3 id="_4">说明</h3>
+<h4 id="lerobot-diffusion">配合 LeRobot diffusion 的具体讲解</h4>
+<p>如果你想看一个“完整可跑、形状/接口都对齐”的 diffusion policy 参考实现，可以直接读：</p>
 <ul>
-<li>policy 本身不会“单独运行”，它会被算法调用；需要往 <code>InternalState</code> 里放什么字段，取决于你的算法。</li>
-<li>想看一个完整、最小可跑的策略实现，SAC policy 是最直接的参考。</li>
+<li><code>plugrl-server/examples/lerobot/lerobot_diffusion.py</code>（<code>UID = "lerobot-diffusion-policy"</code>）</li>
 </ul>
-<h3 id="sac">配合 SAC 示例对齐接口</h3>
-<p>SAC 的 policy 侧实现很紧凑，主要看这些点：</p>
+<p>LeRobot 的接入示例代码量相对更大，但目标很明确：尽量不改动 LeRobot 的模型代码与配置，只在外层做适配。</p>
+<p>LeRobot diffusion 的原实现也不是按 PlugRL 的 <strong>批量/并行推理</strong> 场景写的，所以示例里补了几处兼容处理：</p>
 <ul>
-<li><strong>注册方式</strong>：<code>SACPolicyConfig</code> 用 UID <code>"sac_policy"</code> 注册，<code>SACPolicy</code> 也用同一个 UID 注册。</li>
-<li><strong>观测约定</strong>：<code>prepare_observation()</code> 读取 <code>obs["states"]["obs"]</code>，转成 <code>torch.Tensor</code>，并放到 policy 的 device 上。</li>
-<li><strong>动作形状</strong>：<code>get_action_and_internal_state()</code> 返回动作的形状是 <code>[B, 1, action_dim]</code>。实现里用 <code>action_numpy[:, None]</code> 补出中间这一维。</li>
-<li><strong>warmup 随机动作</strong>：算法在 <code>learning_starts</code> 之前会要求策略走随机采样，通过传 <code>random_sample</code> 标志位实现。</li>
-<li><strong>InternalState 怎么用</strong>：SAC 只会把 <code>internal_state.obs</code> 和 <code>internal_state.action</code> 写进 replay buffer。<code>logprob/entropy/value</code> 在 SAC 里不参与更新，但保留字段能让 <code>InternalState</code> 结构稳定，便于复用 buffer 和接口。</li>
+<li>为了拿到每个 denoising step 的 <code>logprob/entropy</code>，把一步采样里用于计算 <code>mean/std/variance</code> 的逻辑显式展开</li>
+<li>支持 <code>B * num_denoising_steps</code> 这类“扩展 batch”形态（用 <code>repeat_interleave</code> 对齐 batch 维度）</li>
 </ul>
-<h3 id="_5">验证方式</h3>
-<p>把 <code>dummy</code> 当作联通性 smoke test：先确认你的 policy 能出现在 server CLI 里、并且 server/worker 闭环能跑起来。</p>
+<p>实现要点（同样适用于自定义 DPPO policy）：</p>
+<p>1) <strong>加载预训练 diffusion policy，并显式暴露动作相关形状</strong></p>
+<ul>
+<li>在 <code>__init__</code> 里加载预训练策略后，设置：<ul>
+<li><code>self.action_dim</code></li>
+<li><code>self.action_horizon</code></li>
+<li><code>self.num_denoising_steps</code></li>
+</ul>
+</li>
+<li>同时可以按需加 critic（LeRobot 用一个简单的 MLP <code>ValueHead</code> 预测 value）。</li>
+</ul>
+<p>2) <strong>把 worker 的观测打包成 <code>TensorDict</code>（重点：多步观测）</strong></p>
+<p>LeRobot 的 <code>prepare_observation()</code> 预期 worker 发送的是一个“多步观测”（长度为 <code>n_obs_steps</code>），并用如下方式打包：</p>
+<ul>
+<li>从 <code>_obs["states"][f"&lt;key&gt;_{t}"]</code>、<code>_obs["images"][f"&lt;key&gt;_{t}"]</code> 读取 <code>t in range(n_obs_steps)</code> 的多步数据</li>
+<li><code>np.stack(..., axis=1)</code> 形成 <code>B x T x ...</code></li>
+<li>图像会 permute 成 <code>B, T, C, H, W</code> 并缩放到 <code>[0, 1]</code></li>
+<li>调用 <code>actor.normalize_inputs(...)</code> 做输入归一化</li>
+<li>将多相机图像合并成统一的 <code>OBS_IMAGES</code> 张量，再返回 <code>TensorDict</code></li>
+</ul>
+<p>如果你的自定义 DPPO policy 也需要 history / 多相机 / 多模态观测，推荐直接沿用这个“先堆叠成时间维、再统一归一化、最后封装 TensorDict”的结构。</p>
+<p>3) <strong>把昂贵的条件编码缓存下来（每次 rollout 只算一次）</strong></p>
+<p>LeRobot 在 <code>preprocess_observation()</code> 里做一次较重的预处理：</p>
+<ul>
+<li><code>processed_cond = actor.diffusion._prepare_global_conditioning(obs)</code></li>
+</ul>
+<p>然后在每个 denoising step 的 <code>_denoising_step()</code> 中复用 <code>processed_cond</code>，避免重复跑 encoder。</p>
+<p>4) <strong>支持“扩展 batch”（<code>B * num_denoising_steps</code>）</strong></p>
+<p>有些算法会把 batch 展开成 <code>B * num_denoising_steps</code>。LeRobot 的处理方式是：</p>
+<ul>
+<li>检测 <code>b_cond * self.num_denoising_steps == b</code></li>
+<li>用 <code>torch.repeat_interleave(processed_cond, self.num_denoising_steps, dim=0)</code> 把条件重复到匹配的 batch</li>
+</ul>
+<p>这和 <code>Pi0Policy</code>/<code>DPPOPolicy</code> 里处理 <code>repeat_interleave</code> 的思路一致。</p>
+<p>5) <strong>每个 denoising step 返回 <code>logprob/entropy</code></strong></p>
+<p>LeRobot 在每步里构造 <code>Normal(mean, std)</code> 并返回：</p>
+<ul>
+<li><code>logprob = dist.log_prob(x_next)</code></li>
+<li><code>entropy = dist.entropy()</code></li>
+</ul>
+<p>这样就能对齐 PlugRL 的 <code>BasePolicyGradientDiffusionPolicy</code> 里 <code>InternalState</code> 的 <code>logprob/entropy</code> 结构。</p>
+<p>6) <strong>动作后处理：切片 + 反归一化 + numpy 输出</strong></p>
+<p>LeRobot 的 <code>_postprocess_action()</code> 会：</p>
+<ul>
+<li>根据 <code>n_obs_steps</code> / <code>n_action_steps</code> 把 action chunk 做切片（<code>start = n_obs_steps - 1</code>）</li>
+<li>用 <code>actor.unnormalize_outputs({ACTION: action})</code> 反归一化</li>
+<li><code>actions.cpu().numpy()</code> 返回给 worker 环境</li>
+</ul>
+<p>这个模式也很适合自定义 DPPO：最终输出尽量是 env 能直接 <code>step()</code> 的 numpy action。</p>
+<h4 id="_2">实战要点（来自内置实现）</h4>
+<ul>
+<li>DPPO 会做 env-specific 的归一化，并将 <code>states[low_dim_keys]</code> 拼成一个低维向量。</li>
+<li>Pi0 把昂贵的预处理放在 <code>preprocess_observation()</code>，并通过 <code>_denoising_step(..., processed_cond=...)</code> 复用。</li>
+<li>如果你的采样是确定性的（ODE 风格），可以像 Pi0 那样让 <code>logprob</code> 为全 0；如果是随机采样，则像 DPPO 那样根据分布计算 <code>logprob/entropy</code>。</li>
+</ul>
+<h4 id="_3">验证</h4>
+<p>先做一次 smoke test，确认 server CLI 能发现你的策略。</p>
 <p>如果你的策略在外部包里，一个最小可用的方式是“先 import，再把参数交给官方入口”：</p>
 <pre><code class="language-bash">python -c &quot;import my_pkg.plugrl_policies; from plugrl_server.cli import main; main()&quot; \
-    dummy default &lt;your-policy&gt; default
+    dummy default my-dppo-policy default
 </code></pre>
-<p>然后启动 worker：</p>
-<pre><code class="language-bash">plugrl-run-worker dummy-v1 --num-episodes 1
+<p>如果你希望命令更顺手，建议在你的包里提供一个自己的 console script（比如 <code>my-plugrl-run-server</code>），内部做 import 后再调用 <code>plugrl_server.cli.main()</code>。</p>
+<p>如果你仍使用官方命令形态（并且你的模块已确保会被自动 import），也可以直接跑：</p>
+<pre><code class="language-bash">plugrl-run-server dummy default my-dppo-policy default
 </code></pre>
-<p>跑通后再替换成你的目标算法/环境，逐步对齐动作形状、性能与训练逻辑。</p>
+<p>随后切到你的目标算法/环境，逐步对齐观测字段、动作形状与训练逻辑。</p>
 
 
 
@@ -1469,7 +1663,7 @@ class YourPolicy(BasePolicy):
       <nav class="md-footer__inner md-grid" aria-label="页脚" >
         
           
-          <a href="../dppo_policy/" class="md-footer__link md-footer__link--prev" aria-label="上一页: DPPO Policies">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="上一页: Overview">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1479,20 +1673,20 @@ class YourPolicy(BasePolicy):
                 上一页
               </span>
               <div class="md-ellipsis">
-                DPPO Policies
+                Overview
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../contributing/" class="md-footer__link md-footer__link--next" aria-label="下一页: Overview">
+          <a href="../custom_policy/" class="md-footer__link md-footer__link--next" aria-label="下一页: Custom Policy">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 下一页
               </span>
               <div class="md-ellipsis">
-                Overview
+                Custom Policy
               </div>
             </div>
             <div class="md-footer__button md-icon">

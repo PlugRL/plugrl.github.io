@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -509,6 +514,8 @@
       
         
       
+        
+      
     
     
     
@@ -578,6 +585,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -747,6 +782,8 @@
       
         
       
+        
+      
     
     
     
@@ -799,6 +836,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1018,6 +1083,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概览
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        组件与职责
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        下一步
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1035,7 +1141,41 @@
 
   <h1>Overview</h1>
 
-
+<h2 id="_1">概览</h2>
+<p>本节用户指南以“能跑通、好排查、易扩展”为目标，覆盖端到端的基本流程：</p>
+<ol>
+<li>启动训练 server（<code>plugrl-run-server</code> 或 <code>plugrl-run-server-ray</code>）。</li>
+<li>启动一个或多个环境 worker（<code>plugrl-run-worker &lt;env&gt;</code>）。</li>
+<li>（可选）启动远程 viewer，把 worker 的观测实时推送到浏览器界面。</li>
+</ol>
+<h2 id="_2">组件与职责</h2>
+<ul>
+<li>
+<p><strong>Server（plugrl-server）</strong></p>
+<ul>
+<li>聚合所有已连接 worker 的推理请求，批量推理。</li>
+<li>调用 <code>algorithm.infer(...)</code> 与 <code>algorithm.feedback(...)</code>。</li>
+<li>在调度循环中驱动学习（<code>algorithm.learn(...)</code>）与保存 checkpoint。</li>
+</ul>
+</li>
+<li>
+<p><strong>Worker（plugrl-worker）</strong></p>
+<ul>
+<li>通过 <code>gym.make(&lt;env_id&gt;, config=...)</code> 创建 Gymnasium 环境。</li>
+<li>通过 <code>plugrl_client.websocket_worker_agent.WebSocketWorkerAgent</code> 与 server 建立 WebSocket 通信。</li>
+<li>发送 <code>infer</code>（观测），接收 <code>action</code>（动作/动作序列），回传 <code>feedback</code>（奖励、终止信息等）。</li>
+</ul>
+</li>
+<li>
+<p><strong>协议层（plugrl-client）</strong></p>
+<ul>
+<li>WebSocket 传输 + msgpack 序列化（<code>msgpack_numpy</code>）。</li>
+<li>消息类型：<code>metadata</code>、<code>infer</code>、<code>action</code>、<code>feedback</code>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="_3">下一步</h2>
+<p>请继续阅读 <strong>快速开始</strong>：先用 <code>dummy</code> 做一次端到端联通性检查（便于排查网络/协议/参数问题），再替换为你自己的 env / policy。</p>
 
 
 

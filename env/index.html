@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://plugrl.github.io/env/">
       
       
-        <link rel="prev" href="../algorithm/ppo/">
+        <link rel="prev" href="../algorithm/custom_algorithm/">
       
       
         <link rel="next" href="libero_env/">
@@ -68,6 +68,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -506,6 +511,8 @@
       
         
       
+        
+      
     
     
     
@@ -575,6 +582,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -747,6 +782,8 @@
       
         
       
+        
+      
     
     
     
@@ -799,6 +836,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1018,6 +1083,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-environment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in environment types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-worker-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful worker flags
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1035,7 +1141,33 @@
 
   <h1>Overview</h1>
 
-
+<h2 id="overview">Overview</h2>
+<p>Environments run in <strong>plugrl-worker</strong> and are created via Gymnasium:</p>
+<pre><code class="language-python">env = gym.make(&lt;env_id&gt;, config=&lt;dataclass_config&gt;, max_episode_steps=...)
+</code></pre>
+<p>The worker exposes a single CLI entrypoint:</p>
+<pre><code class="language-bash">plugrl-run-worker &lt;env&gt; [OPTIONS]
+</code></pre>
+<h2 id="built-in-environment-types">Built-in environment types</h2>
+<p>From the worker package, commonly available IDs include:</p>
+<ul>
+<li><code>dummy-v1</code> (smoke tests)</li>
+<li><code>classic-v1</code> (classic control)</li>
+<li><code>atari-v1</code></li>
+<li><code>robomimic-v1</code></li>
+<li><code>d4rl-*</code> (if optional deps installed)</li>
+<li><code>libero-*</code> (if optional deps installed)</li>
+</ul>
+<p>Use <code>--help</code> to see all flags for a specific env:</p>
+<pre><code class="language-bash">plugrl-run-worker dummy-v1 --help
+</code></pre>
+<h2 id="useful-worker-flags">Useful worker flags</h2>
+<ul>
+<li><code>--num-workers</code>: spawn multiple worker processes</li>
+<li><code>--server-host/--server-port</code>: server address</li>
+<li><code>--use-remote-viewer</code>: stream observations to the viewer</li>
+<li><code>--use-real-time</code> / <code>--fps</code>: run at a fixed FPS for debugging</li>
+</ul>
 
 
 
@@ -1071,7 +1203,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../algorithm/ppo/" class="md-footer__link md-footer__link--prev" aria-label="Previous: PPO">
+          <a href="../algorithm/custom_algorithm/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Custom Algorithm">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1081,7 +1213,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                PPO
+                Custom Algorithm
               </div>
             </div>
           </a>

@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://plugrl.github.io/policy/custom_policy/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../dppo_policy/">
       
       
         <link rel="next" href="../../contributing/">
@@ -68,6 +68,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#custom-policy" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -506,6 +511,8 @@
       
         
       
+        
+      
     
     
     
@@ -575,6 +582,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -746,6 +781,8 @@
       
         
       
+        
+      
     
     
     
@@ -805,6 +842,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -814,6 +879,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Policy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -831,6 +914,123 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-put-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to put the code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where to put the code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-contribute-it-to-plugrl-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: contribute it to plugrl-server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-keep-it-as-a-plug-in-no-need-to-edit-plugrl-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: keep it as a plug-in (no need to edit plugrl-server)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-sac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough: SAC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1026,6 +1226,114 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-put-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to put the code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where to put the code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-contribute-it-to-plugrl-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: contribute it to plugrl-server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-keep-it-as-a-plug-in-no-need-to-edit-plugrl-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: keep it as a plug-in (no need to edit plugrl-server)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-sac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough: SAC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1043,7 +1351,89 @@
 
   <h1>Custom Policy</h1>
 
+<h2 id="custom-policy">Custom Policy</h2>
+<p>Policies are discovered via <strong>import-time registration</strong>: when a module is imported, decorators add the policy/config into the registry, and the server CLI can then see it.</p>
+<p>This naturally creates two cases:</p>
+<ul>
+<li><strong>Built-in policies</strong> ship inside <code>plugrl-server</code> and are imported automatically.</li>
+<li><strong>Custom policies</strong> can be plug-in: you implement them in your own package and import them before launching the server.</li>
+</ul>
+<p>To add a new policy, you typically:</p>
+<ol>
+<li>Define a policy config (dataclass) for Tyro CLI.</li>
+<li>Implement a <code>BasePolicy</code> subclass.</li>
+<li>Register both, and make sure the module is imported so the CLI can discover it.</li>
+</ol>
+<p>This is exactly how the SAC example does it in <code>plugrl-server/examples/sac/sac_policy.py</code>.</p>
+<h3 id="where-to-put-the-code">Where to put the code</h3>
+<p>You have two equally valid options.</p>
+<h4 id="option-a-contribute-it-to-plugrl-server">Option A: contribute it to <code>plugrl-server</code></h4>
+<p>In <code>plugrl-server/src/plugrl_server/policy/&lt;your_policy&gt;/...</code>:</p>
+<ul>
+<li>Implementation: <code>plugrl_server/policy/&lt;your_policy&gt;/&lt;your_policy&gt;_policy.py</code></li>
+<li>Registration (side-effect import): <code>plugrl_server/policy/&lt;your_policy&gt;/__init__.py</code></li>
+<li>Ensure it is imported from <code>plugrl_server/policy/__init__.py</code> (so <code>import plugrl_server</code> loads it)</li>
+</ul>
+<h4 id="option-b-keep-it-as-a-plug-in-no-need-to-edit-plugrl-server">Option B: keep it as a plug-in (no need to edit <code>plugrl-server</code>)</h4>
+<ul>
+<li>Put the policy module in your own package (e.g. <code>my_pkg/plugrl_policies.py</code>).</li>
+<li>Ensure your package gets imported before the server CLI is built.</li>
+</ul>
+<p>The only “integration step” is the import itself.</p>
+<h3 id="template">Template</h3>
+<pre><code class="language-python">import dataclasses
 
+from plugrl_server.policy.base_policy import BasePolicy, BasePolicyConfig, InternalState
+from plugrl_server.policy.registration import register_policy, register_policy_config
+
+UID = &quot;your-policy&quot;
+
+
+@register_policy_config(UID)
+@dataclasses.dataclass
+class YourPolicyConfig(BasePolicyConfig):
+    # Add fields needed by your policy
+    ...
+
+
+@register_policy(UID)
+class YourPolicy(BasePolicy):
+    def prepare_observation(self, _obs: dict):
+        # Convert worker observation dict -&gt; tensor / tensordict
+        ...
+
+    def get_action_and_internal_state(self, _obs: dict):
+        # Return an action (numpy or tensor) + InternalState
+        ...
+
+    def fake_internal_state(self, batch_size: int) -&gt; InternalState:
+        # Create an InternalState with correct shapes/dtypes for buffers
+        ...
+</code></pre>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>A policy alone is not “run”: it is used by an algorithm. The algorithm decides what fields it needs in <code>InternalState</code>.</li>
+<li>For a concrete reference, see SAC policy registration and action sampling logic in <code>plugrl-server/examples/sac/sac_policy.py</code>.</li>
+</ul>
+<h3 id="walkthrough-sac">Walkthrough: SAC</h3>
+<p>SAC is a compact policy reference. It shows:</p>
+<ul>
+<li><strong>Registration</strong>: <code>SACPolicyConfig</code> is registered as <code>"sac_policy"</code>. <code>SACPolicy</code> is registered with the same UID.</li>
+<li><strong>Observation contract</strong>: <code>prepare_observation()</code> reads <code>obs["states"]["obs"]</code>, converts it to a <code>torch.Tensor</code>, and places it on the policy device.</li>
+<li><strong>Action shape</strong>: <code>get_action_and_internal_state()</code> returns actions shaped like <code>[B, 1, action_dim]</code>. The implementation adds the middle dimension via <code>action_numpy[:, None]</code>.</li>
+<li><strong>Warmup random actions</strong>: the algorithm requests random actions before <code>learning_starts</code> using the <code>random_sample</code> flag.</li>
+<li><strong>InternalState usage</strong>: SAC stores <code>internal_state.obs</code> and <code>internal_state.action</code> for replay buffer insertion. <code>logprob/entropy/value</code> are kept for a consistent <code>InternalState</code> schema, even though SAC does not use them.</li>
+</ul>
+<h3 id="verify">Verify</h3>
+<p>Use <code>dummy</code> as a smoke test to verify that the policy is visible in the server CLI and that the server/worker loop runs.</p>
+<p>If your policy lives in an external package, a minimal pattern is “import first, then delegate to the real entrypoint”:</p>
+<pre><code class="language-bash">python -c &quot;import my_pkg.plugrl_policies; from plugrl_server.cli import main; main()&quot; \
+    dummy default &lt;your-policy&gt; default
+</code></pre>
+<p>Then run the worker:</p>
+<pre><code class="language-bash">plugrl-run-worker dummy-v1 --num-episodes 1
+</code></pre>
+<p>If this works, replace <code>dummy</code> with your target algorithm/env and iterate on shapes and performance.</p>
 
 
 
@@ -1079,7 +1469,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
+          <a href="../dppo_policy/" class="md-footer__link md-footer__link--prev" aria-label="Previous: DPPO Policies">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1089,7 +1479,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Overview
+                DPPO Policies
               </div>
             </div>
           </a>

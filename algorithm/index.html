@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -508,6 +513,8 @@
       
         
       
+        
+      
     
     
     
@@ -578,6 +585,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -747,6 +782,8 @@
       
         
       
+        
+      
     
     
     
@@ -799,6 +836,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1018,6 +1083,36 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implemented-algorithms-server-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implemented algorithms (server-side)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1035,7 +1130,30 @@
 
   <h1>Overview</h1>
 
-
+<h2 id="overview">Overview</h2>
+<p>Algorithms live in <code>plugrl-server</code> and are selected via Tyro subcommands.</p>
+<p>In practice, you pick a triple:</p>
+<p><code>&lt;algo&gt; &lt;algo_variant&gt; &lt;policy&gt; &lt;policy_variant&gt;</code></p>
+<p>Examples:</p>
+<pre><code class="language-bash">plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dppo hopper dppo-policy default
+</code></pre>
+<p>The CLI is assembled from registries:</p>
+<ul>
+<li><code>plugrl_server.algorithm.registration</code></li>
+<li><code>plugrl_server.policy.registration</code></li>
+</ul>
+<p>This means:</p>
+<ul>
+<li>adding a new algorithm/policy usually requires registering a config and a factory</li>
+<li>all configs are dataclasses and can be overridden by flags like <code>--algo.*</code> / <code>--policy.*</code></li>
+</ul>
+<h2 id="implemented-algorithms-server-side">Implemented algorithms (server-side)</h2>
+<ul>
+<li><code>dummy</code>: smoke-test the server/worker protocol</li>
+<li><code>dppo</code>: diffusion-based policy optimization (see server README for common runs)</li>
+<li><code>dppo-dist</code>: experimental distributed DPPO (via Ray launcher)</li>
+</ul>
 
 
 

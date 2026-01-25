@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://plugrl.github.io/zh/env/">
       
       
-        <link rel="prev" href="../algorithm/ppo/">
+        <link rel="prev" href="../algorithm/custom_algorithm/">
       
       
         <link rel="next" href="libero_env/">
@@ -68,6 +68,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -506,6 +511,8 @@
       
         
       
+        
+      
     
     
     
@@ -575,6 +582,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -747,6 +782,8 @@
       
         
       
+        
+      
     
     
     
@@ -799,6 +836,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1018,6 +1083,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概览
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内置环境类型（常见）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常用 worker 参数
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1035,7 +1141,34 @@
 
   <h1>Overview</h1>
 
-
+<h2 id="_1">概览</h2>
+<p>PlugRL 不要求你的环境代码必须放在 <code>plugrl-worker</code> 仓库/目录里：你可以把环境实现放在自己的包中，只要它被安装到同一 Python 环境、在 worker 启动时可被 import，并完成注册（或能被 <code>gym.make(...)</code> 创建），就可以接入。</p>
+<p>环境侧主要在 <strong>plugrl-worker</strong> 中运行，并通过 Gymnasium 方式创建：</p>
+<pre><code class="language-python">env = gym.make(&lt;env_id&gt;, config=&lt;dataclass_config&gt;, max_episode_steps=...)
+</code></pre>
+<p>worker 提供统一入口：</p>
+<pre><code class="language-bash">plugrl-run-worker &lt;env&gt; [OPTIONS]
+</code></pre>
+<h2 id="_2">内置环境类型（常见）</h2>
+<p>在安装对应可选依赖后，常见的环境 ID 包括：</p>
+<ul>
+<li><code>dummy-v1</code>（连通性/调试）</li>
+<li><code>classic-v1</code>（经典控制）</li>
+<li><code>atari-v1</code></li>
+<li><code>robomimic-v1</code></li>
+<li><code>d4rl-*</code>（需安装可选依赖）</li>
+<li><code>libero-*</code>（需安装可选依赖）</li>
+</ul>
+<p>查看某个环境的完整参数：</p>
+<pre><code class="language-bash">plugrl-run-worker dummy-v1 --help
+</code></pre>
+<h2 id="worker">常用 worker 参数</h2>
+<ul>
+<li><code>--num-workers</code>：启动多个进程并行跑环境</li>
+<li><code>--server-host/--server-port</code>：server 地址</li>
+<li><code>--use-remote-viewer</code>：推送观测到远程 viewer</li>
+<li><code>--use-real-time</code> / <code>--fps</code>：以固定 FPS 实时运行，便于调试</li>
+</ul>
 
 
 
@@ -1071,7 +1204,7 @@
       <nav class="md-footer__inner md-grid" aria-label="页脚" >
         
           
-          <a href="../algorithm/ppo/" class="md-footer__link md-footer__link--prev" aria-label="上一页: PPO">
+          <a href="../algorithm/custom_algorithm/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Custom Algorithm">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1081,7 +1214,7 @@
                 上一页
               </span>
               <div class="md-ellipsis">
-                PPO
+                Custom Algorithm
               </div>
             </div>
           </a>

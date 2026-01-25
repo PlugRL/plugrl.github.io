@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -508,6 +513,8 @@
       
         
       
+        
+      
     
     
     
@@ -578,6 +585,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -747,6 +782,8 @@
       
         
       
+        
+      
     
     
     
@@ -799,6 +836,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1018,6 +1083,36 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概览
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        当前已实现（server 侧）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1035,7 +1130,30 @@
 
   <h1>Overview</h1>
 
-
+<h2 id="_1">概览</h2>
+<p>算法侧主要在 <code>plugrl-server</code> 中实现，并通过 Tyro 的“子命令树”进行选择。</p>
+<p>从使用者角度，你需要选择一个组合：</p>
+<p><code>&lt;algo&gt; &lt;algo_variant&gt; &lt;policy&gt; &lt;policy_variant&gt;</code></p>
+<p>例如：</p>
+<pre><code class="language-bash">plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dppo hopper dppo-policy default
+</code></pre>
+<p>这套 CLI 是由 registry 自动拼出来的（可扩展点）：</p>
+<ul>
+<li><code>plugrl_server.algorithm.registration</code></li>
+<li><code>plugrl_server.policy.registration</code></li>
+</ul>
+<p>因此：</p>
+<ul>
+<li>新增算法/策略通常对应“注册 config + 提供构造函数”</li>
+<li>config 使用 dataclass，支持通过 <code>--algo.*</code>、<code>--policy.*</code> 覆盖参数</li>
+</ul>
+<h2 id="server">当前已实现（server 侧）</h2>
+<ul>
+<li><code>dummy</code>：用于验证 server/worker 协议与连通性</li>
+<li><code>dppo</code>：DPPO（Diffusion-based Policy Optimization）</li>
+<li><code>dppo-dist</code>：实验性的分布式 DPPO（通常配合 Ray 启动）</li>
+</ul>
 
 
 

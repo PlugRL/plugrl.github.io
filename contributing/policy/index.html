@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#contributing-policy" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -506,6 +511,8 @@
       
         
       
+        
+      
     
     
     
@@ -575,6 +582,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -744,6 +779,8 @@
       
         
       
+        
+      
     
     
     
@@ -796,6 +833,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -951,6 +1016,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -967,6 +1050,73 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing: Policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contributing: Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-add-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to add code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1026,6 +1176,64 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing: Policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contributing: Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-add-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to add code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1043,7 +1251,24 @@
 
   <h1>Policy</h1>
 
-
+<h2 id="contributing-policy">Contributing: Policy</h2>
+<p>Policies are implemented in <code>plugrl-server</code>.</p>
+<h3 id="where-to-add-code">Where to add code</h3>
+<ul>
+<li>Policy implementations: <code>plugrl_server/policy/...</code></li>
+<li>Registry: <code>plugrl_server.policy.registration</code></li>
+</ul>
+<h3 id="checklist">Checklist</h3>
+<ul>
+<li>[ ] Implement a policy and its config dataclass.</li>
+<li>[ ] Register it (UID + variants).</li>
+<li>[ ] Validate with a dummy env worker.</li>
+<li>[ ] Ensure the policy returns action tensors/arrays in the expected shape.</li>
+</ul>
+<h3 id="quick-validation">Quick validation</h3>
+<pre><code class="language-bash">plugrl-run-server dummy default &lt;your-policy&gt; default
+plugrl-run-worker dummy-v1 --num-episodes 1
+</code></pre>
 
 
 

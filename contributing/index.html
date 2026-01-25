@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#contributing" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -506,6 +511,8 @@
       
         
       
+        
+      
     
     
     
@@ -575,6 +582,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -744,6 +779,8 @@
       
         
       
+        
+      
     
     
     
@@ -796,6 +833,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1018,6 +1083,25 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1035,7 +1119,25 @@
 
   <h1>Overview</h1>
 
-
+<h2 id="contributing">Contributing</h2>
+<p>This section is for contributors (local development), which is slightly different from the “User Guide” usage path: here we assume you will work inside the relevant codebase and follow the existing registration/CLI conventions.</p>
+<ul>
+<li>In the codebase you are changing (e.g. <code>plugrl-worker</code> / <code>plugrl-server</code>), set up the dev environment with Poetry (run <code>poetry install</code>).</li>
+<li>Follow the existing patterns: dataclass configs, registry registration, and CLI auto-discovery (keep the style consistent).</li>
+</ul>
+<p>PlugRL is designed to be extended along three main axes:</p>
+<ul>
+<li>Environments (worker-side)</li>
+<li>Policies (server-side)</li>
+<li>Algorithms (server-side)</li>
+</ul>
+<p>Most extensions follow the same pattern:</p>
+<ol>
+<li>Add a dataclass config.</li>
+<li>Register it in a registry module.</li>
+<li>Ensure the CLI discovers it automatically.</li>
+</ol>
+<p>See the pages in this section for specifics.</p>
 
 
 

@@ -14,7 +14,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../../env/">
+        <link rel="next" href="../custom_algorithm/">
       
       
         
@@ -68,6 +68,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#plugrl-ppodppo" class="md-skip">
+          跳转至
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -508,6 +513,8 @@
       
         
       
+        
+      
     
     
     
@@ -577,6 +584,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PPO
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -594,6 +619,84 @@
 
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#plugrl-ppodppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PlugRL 中的算法（PPO/DPPO）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server 侧训练调度（实际发生了什么）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPPO 常用命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -755,6 +858,8 @@
       
         
       
+        
+      
     
     
     
@@ -807,6 +912,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1026,6 +1159,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#plugrl-ppodppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PlugRL 中的算法（PPO/DPPO）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server 侧训练调度（实际发生了什么）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPPO 常用命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1043,7 +1217,39 @@
 
   <h1>PPO</h1>
 
-
+<h2 id="plugrl-ppodppo">PlugRL 中的算法（PPO/DPPO）</h2>
+<p>本页作为“训练环路深挖”入口。文件名历史上写的是 PPO，但当前 <code>plugrl-server</code> 代码实现侧重点是：</p>
+<ul>
+<li><code>dummy</code></li>
+<li><code>dppo</code> / <code>dppo-dist</code></li>
+</ul>
+<h2 id="server">Server 侧训练调度（实际发生了什么）</h2>
+<p>server 内部以调度循环驱动训练：</p>
+<ol>
+<li>等待所有已连接 worker 都提交一次 <code>infer</code> 请求。</li>
+<li>把观测聚合成 batch，调用 <code>algorithm.infer(batch_obs)</code>。</li>
+<li>对每个 worker 回发 <code>action</code>。</li>
+<li>接收各 worker 的 <code>feedback</code>，调用 <code>algorithm.feedback(...)</code>。</li>
+<li>在合适时机调用 <code>algorithm.learn()</code>，并定期保存 checkpoint。</li>
+</ol>
+<p>关键点：</p>
+<ul>
+<li>推理批处理的“批大小”由当前连接数决定。</li>
+<li>feedback/learn/save 会在模型锁保护下执行，避免并发修改模型状态。</li>
+</ul>
+<h2 id="dppo">DPPO 常用命令</h2>
+<pre><code class="language-bash">plugrl-run-server dppo hopper dppo-policy default --exp_name my_dppo_exp
+</code></pre>
+<p>常用参数：</p>
+<ul>
+<li><code>--track.enabled true</code> 开启实验追踪</li>
+<li><code>--track.tracker swanlab|wandb</code></li>
+<li><code>--checkpoint-base-dir ./checkpoints</code> 指定 checkpoint 根目录</li>
+<li><code>--resume true</code> 从实验目录下最新 checkpoint 恢复</li>
+</ul>
+<p>多 GPU / DDP（Ray 启动）：</p>
+<pre><code class="language-bash">plugrl-run-server-ray dppo hopper dppo-policy default --num-ddp-gpus 4
+</code></pre>
 
 
 
@@ -1096,13 +1302,13 @@
         
         
           
-          <a href="../../env/" class="md-footer__link md-footer__link--next" aria-label="下一页: Overview">
+          <a href="../custom_algorithm/" class="md-footer__link md-footer__link--next" aria-label="下一页: Custom Algorithm">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 下一页
               </span>
               <div class="md-ellipsis">
-                Overview
+                Custom Algorithm
               </div>
             </div>
             <div class="md-footer__button md-icon">

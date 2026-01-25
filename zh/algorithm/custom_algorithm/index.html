@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="zh" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -8,32 +8,32 @@
       
       
       
-        <link rel="canonical" href="https://plugrl.github.io/env/custom_env/">
+        <link rel="canonical" href="https://plugrl.github.io/zh/algorithm/custom_algorithm/">
       
       
-        <link rel="prev" href="../libero_env/">
+        <link rel="prev" href="../ppo/">
       
       
-        <link rel="next" href="../../policy/">
+        <link rel="next" href="../../env/">
       
       
         
-          <link rel="alternate" href="./" hreflang="en">
+          <link rel="alternate" href="../../../algorithm/custom_algorithm/" hreflang="en">
         
-          <link rel="alternate" href="../../zh/env/custom_env/" hreflang="zh">
+          <link rel="alternate" href="./" hreflang="zh">
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Custom Environment - PlugRL</title>
+        <title>Custom Algorithm - PlugRL</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
       
       
 
@@ -52,7 +52,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -70,8 +70,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#custom-environment" class="md-skip">
-          Skip to content
+        <a href="#_1" class="md-skip">
+          跳转至
         </a>
       
     </div>
@@ -85,8 +85,8 @@
   
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="PlugRL" class="md-header__button md-logo" aria-label="PlugRL" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../" title="PlugRL" class="md-header__button md-logo" aria-label="PlugRL" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Custom Environment
+              Custom Algorithm
             
           </span>
         </div>
@@ -120,20 +120,20 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="Select language">
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="./" hreflang="en" class="md-select__link">
+            <a href="../../../algorithm/custom_algorithm/" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="../../zh/env/custom_env/" hreflang="zh" class="md-select__link">
+            <a href="./" hreflang="zh" class="md-select__link">
               中文
             </a>
           </li>
@@ -154,16 +154,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="Search">
+      <nav class="md-search__options" aria-label="查找">
         
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -176,7 +176,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Initializing search
+            正在初始化搜索引擎
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -191,7 +191,7 @@
   
     
       
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -201,13 +201,13 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href="../../" class="md-tabs__link">
         
   
   
     
   
-  Home
+  主页
 
       </a>
     </li>
@@ -228,29 +228,7 @@
   
     
   
-  User Guide
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../algorithm/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Algorithm
+  用户指南
 
         </a>
       </li>
@@ -274,7 +252,29 @@
   
     
   
-  Environment
+  算法
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../env/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  环境
 
         </a>
       </li>
@@ -296,7 +296,7 @@
   
     
   
-  Policy
+  策略
 
         </a>
       </li>
@@ -318,7 +318,7 @@
   
     
   
-  Contributing
+  贡献指南
 
         </a>
       </li>
@@ -352,9 +352,9 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="PlugRL" class="md-nav__button md-logo" aria-label="PlugRL" data-md-component="logo">
+    <a href="../../" title="PlugRL" class="md-nav__button md-logo" aria-label="PlugRL" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -372,14 +372,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Home
+    主页
   
 
     
@@ -431,7 +431,7 @@
   <span class="md-ellipsis">
     
   
-    User Guide
+    用户指南
   
 
     
@@ -453,7 +453,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    User Guide
+    用户指南
   
 
           </label>
@@ -475,141 +475,7 @@
   <span class="md-ellipsis">
     
   
-    Get Started
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../algorithm/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Algorithm
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Algorithm
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../algorithm/ppo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    PPO
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../algorithm/custom_algorithm/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Custom Algorithm
+    快速开始
   
 
     
@@ -663,7 +529,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -674,7 +540,7 @@
   <span class="md-ellipsis">
     
   
-    Environment
+    算法
   
 
     
@@ -685,18 +551,18 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Environment
+    算法
   
 
           </label>
@@ -711,14 +577,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../libero_env/" class="md-nav__link">
+      <a href="../ppo/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Libero Environment
+    PPO
   
 
     
@@ -753,7 +619,7 @@
   <span class="md-ellipsis">
     
   
-    Custom Environment
+    Custom Algorithm
   
 
     
@@ -771,7 +637,7 @@
   <span class="md-ellipsis">
     
   
-    Custom Environment
+    Custom Algorithm
   
 
     
@@ -783,34 +649,34 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+<nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
   
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      目录
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#custom-environment" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Environment
+        自定义算法
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Custom Environment">
+    <nav class="md-nav" aria-label="自定义算法">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#recommended-approach" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended approach
+        代码放哪里
       
     </span>
   </a>
@@ -818,10 +684,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#verify" class="md-nav__link">
+  <a href="#server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify
+        Server 侧会调用什么
       
     </span>
   </a>
@@ -829,22 +695,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#implementing-a-custom-environment" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementing a custom environment
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementing a custom environment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Template
+        最小模板
       
     </span>
   </a>
@@ -852,26 +706,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#sac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-your-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using your environment
+        说明（结合 SAC）
       
     </span>
   </a>
@@ -879,10 +717,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#debugging-tips" class="md-nav__link">
+  <a href="#sac_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Debugging tips
+        配合 SAC 示例对齐接口
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证方式
       
     </span>
   </a>
@@ -940,6 +789,140 @@
         
           
         
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../env/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    环境
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../env/libero_env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Libero Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../env/custom_env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
         <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
@@ -951,7 +934,7 @@
   <span class="md-ellipsis">
     
   
-    Policy
+    策略
   
 
     
@@ -973,7 +956,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Policy
+    策略
   
 
           </label>
@@ -1087,7 +1070,7 @@
   <span class="md-ellipsis">
     
   
-    Contributing
+    贡献指南
   
 
     
@@ -1109,7 +1092,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Contributing
+    贡献指南
   
 
           </label>
@@ -1131,7 +1114,7 @@
   <span class="md-ellipsis">
     
   
-    Environment
+    环境
   
 
     
@@ -1159,7 +1142,7 @@
   <span class="md-ellipsis">
     
   
-    Policy
+    策略
   
 
     
@@ -1187,7 +1170,7 @@
   <span class="md-ellipsis">
     
   
-    Algorithm
+    算法
   
 
     
@@ -1221,34 +1204,34 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+<nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
   
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      目录
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#custom-environment" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Environment
+        自定义算法
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Custom Environment">
+    <nav class="md-nav" aria-label="自定义算法">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#recommended-approach" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended approach
+        代码放哪里
       
     </span>
   </a>
@@ -1256,10 +1239,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#verify" class="md-nav__link">
+  <a href="#server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify
+        Server 侧会调用什么
       
     </span>
   </a>
@@ -1267,22 +1250,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#implementing-a-custom-environment" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementing a custom environment
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementing a custom environment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Template
+        最小模板
       
     </span>
   </a>
@@ -1290,26 +1261,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#sac" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-your-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using your environment
+        说明（结合 SAC）
       
     </span>
   </a>
@@ -1317,10 +1272,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#debugging-tips" class="md-nav__link">
+  <a href="#sac_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Debugging tips
+        配合 SAC 示例对齐接口
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证方式
       
     </span>
   </a>
@@ -1349,95 +1315,133 @@
 
 
 
-  <h1>Custom Environment</h1>
+  <h1>Custom Algorithm</h1>
 
-<h2 id="custom-environment">Custom Environment</h2>
-<p>To add a new environment that can run under <code>plugrl-worker</code>, you typically need:</p>
+<h2 id="_1">自定义算法</h2>
+<p>要把一个新算法接入 <code>plugrl-server</code>，通常需要：</p>
 <ol>
-<li>A Gymnasium-compatible env (or wrapper) implementation.</li>
-<li>A dataclass config that the CLI can expose.</li>
-<li>Registration so <code>plugrl-run-worker &lt;env&gt;</code> can discover it.</li>
+<li>写一个算法配置（dataclass，供 Tyro CLI 暴露参数）。</li>
+<li>实现一个 <code>BaseAlgorithm</code> 子类（infer / feedback / learn / checkpoint 等钩子）。</li>
+<li>完成注册，并确保模块会被 import（这样 CLI 才能发现它）。</li>
 </ol>
-<h3 id="recommended-approach">Recommended approach</h3>
+<p>一个最小、完整且能跑通训练闭环的参考实现是 SAC：<code>plugrl-server/examples/sac/sac.py</code>。</p>
+<h3 id="_2">代码放哪里</h3>
+<p>在 <code>plugrl-server/src/plugrl_server/algorithm/&lt;your_algo&gt;/...</code>：</p>
 <ul>
-<li>Implement your env in <code>plugrl_worker/envs/&lt;your_env&gt;/...</code>.</li>
-<li>Define a config dataclass that extends the worker's base config.</li>
-<li>Register the env ID and config in the worker registry.</li>
+<li>实现：<code>plugrl_server/algorithm/&lt;your_algo&gt;/&lt;your_algo&gt;.py</code></li>
+<li>注册（import 时完成注册）：<code>plugrl_server/algorithm/&lt;your_algo&gt;/__init__.py</code></li>
+<li>记得从 <code>plugrl_server/algorithm/__init__.py</code> 导入你的模块（保证 <code>import plugrl_server</code> 会加载它）</li>
 </ul>
-<h3 id="verify">Verify</h3>
-<p>After registration, the env should appear as a subcommand:</p>
-<pre><code class="language-bash">plugrl-run-worker &lt;your-env-id&gt; --help
-</code></pre>
-<p>Then run it against a server (dummy is fine) to validate the protocol:</p>
-<pre><code class="language-bash">plugrl-run-server dummy default dummy-policy default
-plugrl-run-worker &lt;your-env-id&gt; --num-episodes 1
-</code></pre>
-<h3 id="implementing-a-custom-environment">Implementing a custom environment</h3>
-<p>PlugRL expects an environment class that inherits <code>plugrl_worker.envs.base_env.BaseEnv</code>, and a dataclass config that inherits <code>plugrl_worker.envs.base_env.BaseEnvConfig</code>.</p>
-<p>In practice, you implement two classes (env + config) and register them. The implementation can live in <code>plugrl-worker</code>, or in your own package (as long as the worker runtime imports it so registration code runs).</p>
-<h4 id="template">Template</h4>
-<p>Create a module (e.g. <code>custom_env.py</code>) with:</p>
+<h3 id="server">Server 侧会调用什么</h3>
+<p>WebSocket server loop 会调用算法的这些方法：</p>
+<ul>
+<li><code>infer(obs) -&gt; (action, internal_state)</code></li>
+<li><code>feedback(...) -&gt; (prev_node, global_step, log_dict)</code></li>
+<li><code>learn() -&gt; (global_step, log_dict)</code></li>
+<li>以及调度/保存相关：<code>should_learn/should_save/should_stop</code>、<code>create_checkpoint/load_checkpoint</code></li>
+</ul>
+<p>你可以在 <code>plugrl_server/algorithm/base_algorithm.py</code> 看到抽象签名。</p>
+<h3 id="_3">最小模板</h3>
 <pre><code class="language-python">import dataclasses
 import numpy as np
 
-from plugrl_worker.envs.base_env import Action, BaseEnv, BaseEnvConfig, Observation
-from plugrl_worker.utils.registration import register_env, register_env_config
+from plugrl_server.algorithm.base_algorithm import BaseAlgorithm, BaseAlgoConfig
+from plugrl_server.algorithm.registration import register_algo, register_algo_config
+from plugrl_server.common.checkpoint_manager import Checkpoint
+from plugrl_server.policy.base_policy import BasePolicy, InternalState
 
-UID = &quot;custom-v1&quot;
+UID = &quot;your-algo&quot;
 
 
-@register_env_config(UID)
+@register_algo_config(UID)
 @dataclasses.dataclass
-class CustomConfig(BaseEnvConfig):
-    # Add fields needed to construct your env, e.g. env_name/task_id/paths.
+class YourAlgoConfig(BaseAlgoConfig):
+    # 训练调度
+    total_timesteps: int = 100_000
+    # 填你算法需要的超参
     ...
 
 
-@register_env(UID)
-class CustomEnv(BaseEnv):
-    def __init__(
-        self,
-        config: CustomConfig,
-        worker_id: int | None = None,
-        total_workers: int | None = None,
-    ):
-        super().__init__(config=config)
-        self.worker_id = worker_id
-        self.total_workers = total_workers
+@register_algo(UID)
+class YourAlgorithm(BaseAlgorithm):
+    def __init__(self, config: YourAlgoConfig, policy: BasePolicy):
+        super().__init__(config=config, policy=policy)
+        self.global_step = 0
 
-    def prepare_obs(self, obs: np.ndarray) -&gt; Observation:
-        return Observation(
-            images={...},
-            states={...},
-            text=&quot;...&quot;,
-        )
+    def infer(self, obs: dict) -&gt; tuple[np.ndarray, InternalState]:
+        # 调用 policy 生成动作，并返回 InternalState 给 feedback/learn 使用
+        action, internal_state = self.policy.get_action_and_internal_state(obs)
+        return action, internal_state
 
-    def reset(
+    def feedback(
         self,
         *,
-        seed: int | None = None,
-        options: dict | None = None,
-    ) -&gt; tuple[Observation | None, dict]:
-        ...
+        obs: dict,
+        internal_state: InternalState | None,
+        terminated: bool,
+        truncated: bool,
+        next_obs: dict,
+        reward: float,
+        info: dict,
+        next_terminated: bool,
+        next_truncated: bool,
+        prev_node: tuple,
+    ) -&gt; tuple[tuple, int, dict]:
+        # 消费 transition：写入 buffer、更新计数器、返回日志
+        self.global_step += 1
+        return prev_node, self.global_step, {}
 
-    def step(self, action: Action) -&gt; tuple[Observation | None, float, bool, bool, dict]:
-        ...
+    def learn(self) -&gt; tuple[int, dict]:
+        # 做更新并返回日志
+        return self.global_step, {}
+
+    def should_learn(self) -&gt; bool:
+        return False
+
+    def should_stop(self) -&gt; bool:
+        return self.global_step &gt;= self.config.total_timesteps
+
+    def should_save(self) -&gt; bool:
+        return False
+
+    def create_checkpoint(self) -&gt; Checkpoint:
+        return Checkpoint(step=self.global_step, model=self.policy.state_dict(), optimizer=None, meta={})
+
+    def load_checkpoint(self, checkpoint: Checkpoint) -&gt; None:
+        self.global_step = checkpoint.step
+        if checkpoint.model is not None:
+            self.policy.load_state_dict(checkpoint.model)
 </code></pre>
-<h4 id="notes">Notes</h4>
+<h3 id="sac">说明（结合 SAC）</h3>
 <ul>
-<li><code>Observation</code> / <code>Action</code> are standardized I/O types used by the worker.</li>
-<li>The leading <code>b</code> dimension in the type annotations represents a batch dimension. If your env is not vectorized, treat it as <code>b=1</code>.</li>
-<li><code>register_env(...)</code> can take optional parameters such as <code>max_episode_steps</code> and <code>best_reward_threshold_for_success</code>.</li>
+<li>SAC 把 replay buffer 放在算法内部；<code>infer()</code> 返回的 <code>InternalState</code> 会在 <code>feedback()</code> 里用来写入 buffer。</li>
+<li>SAC 在算法 <code>__init__</code> 里创建优化器，并在 <code>create_checkpoint()</code> 里保存 optimizer state dict。</li>
+<li>如果你需要返回动作序列（action chunk），可以关注 <code>BaseAlgorithm.break_action_chunk</code> 的约定。</li>
 </ul>
-<h3 id="using-your-environment">Using your environment</h3>
-<p>Once the module is imported and registration has run, your env should appear as a CLI subcommand:</p>
-<pre><code class="language-bash">plugrl-run-worker &lt;your-env-id&gt; --help
+<h3 id="sac_1">配合 SAC 示例对齐接口</h3>
+<p><code>plugrl-server/examples/sac/sac.py</code> 适合用来对齐 server 侧的调用边界：</p>
+<ul>
+<li><strong><code>infer()</code></strong>：调用 <code>policy.get_action_and_internal_state(obs, random_sample=...)</code>，同时返回动作和 <code>InternalState</code>。SAC 在 <code>learning_starts</code> 之前会走随机动作。</li>
+<li><strong><code>feedback()</code></strong>：要求 <code>internal_state</code> 一定存在，然后把 transition 写入 replay buffer。SAC 的分工很明确：<ul>
+<li>当前 <code>obs</code> 直接用 <code>internal_state.obs</code>。这部分已经由 policy 处理过。</li>
+<li><code>next_obs</code> 在算法里调用 <code>policy.prepare_observation(next_obs)</code> 处理。</li>
+</ul>
+</li>
+<li><strong>训练调度</strong>：<ul>
+<li><code>should_learn()</code> 用 <code>learning_starts</code> 和 <code>update_every</code> 控制更新频率。</li>
+<li><code>learn()</code> 每次会做 <code>update_to_data_ratio * update_every</code> 次梯度更新。</li>
+<li><code>should_save()</code> 用 <code>save_interval</code> 控制 checkpoint 周期。</li>
+</ul>
+</li>
+<li><strong>Checkpoint</strong>：<code>create_checkpoint()</code> 保存 <code>policy.state_dict()</code>、优化器 state dict，再加一个 <code>meta</code>。SAC 在 <code>meta</code> 里保存 <code>last_*_step</code> 和 <code>update_counter</code>，用来继续跑时对齐内部计数。</li>
+</ul>
+<p>buffer 和 loss 的实现完全取决于你的算法；但方法边界建议和这个例子一致。</p>
+<h3 id="_4">验证方式</h3>
+<p>把 <code>dummy</code> 当作 smoke test：先确认你的算法能出现在 server CLI 里、并且 server/worker 闭环能跑起来。</p>
+<pre><code class="language-bash">plugrl-run-server &lt;your-algo&gt; default dummy-policy default
+plugrl-run-worker dummy-v1 --num-episodes 1
 </code></pre>
-<h3 id="debugging-tips">Debugging tips</h3>
-<ul>
-<li>Use <code>dummy</code> as a smoke test to validate connectivity first (host/port/protocol/options), then swap in your real algorithm/policy.</li>
-<li>If your env has images, try <code>--use-remote-viewer</code> to inspect observations quickly.</li>
-</ul>
+<p>跑通后再替换成你的目标环境/策略，完善 buffer、loss 与训练调度。</p>
 
 
 
@@ -1461,7 +1465,7 @@ class CustomEnv(BaseEnv):
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
+  回到页面顶部
 </button>
         
       </main>
@@ -1470,30 +1474,30 @@ class CustomEnv(BaseEnv):
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
         
           
-          <a href="../libero_env/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Libero Environment">
+          <a href="../ppo/" class="md-footer__link md-footer__link--prev" aria-label="上一页: PPO">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                Previous
+                上一页
               </span>
               <div class="md-ellipsis">
-                Libero Environment
+                PPO
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../policy/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../../env/" class="md-footer__link md-footer__link--next" aria-label="下一页: Overview">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                Next
+                下一页
               </span>
               <div class="md-ellipsis">
                 Overview
@@ -1533,10 +1537,10 @@ class CustomEnv(BaseEnv):
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.indexes", "navigation.tabs", "navigation.top", "navigation.tabs.sticky", "navigation.expand", "navigation.footer", "navigation.instance", "toc.follow", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tracking", "navigation.indexes", "navigation.tabs", "navigation.top", "navigation.tabs.sticky", "navigation.expand", "navigation.footer", "navigation.instance", "toc.follow", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>

@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#plugrl" class="md-skip">
           Skip to content
         </a>
       
@@ -430,10 +430,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#high-level-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        High-level architecture
       
     </span>
   </a>
@@ -441,10 +441,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
+  <a href="#what-this-docs-site-covers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project layout
+        What this docs site covers
       
     </span>
   </a>
@@ -578,6 +578,8 @@
       
         
       
+        
+      
     
     
     
@@ -647,6 +649,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -816,6 +846,8 @@
       
         
       
+        
+      
     
     
     
@@ -868,6 +900,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1096,10 +1156,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#high-level-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        High-level architecture
       
     </span>
   </a>
@@ -1107,10 +1167,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
+  <a href="#what-this-docs-site-covers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project layout
+        What this docs site covers
       
     </span>
   </a>
@@ -1134,21 +1194,40 @@
 
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+<h1 id="plugrl">PlugRL</h1>
+<p>PlugRL is an <strong>RL Infra</strong> (Reinforcement Learning Infrastructure) for running distributed RL experiments with a clean split between training and environment execution.</p>
+<p>Importantly, PlugRL is designed as a <strong>plug-and-play suite of packages</strong>, not a single monorepo-style codebase you must mirror.</p>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li>You can bring PlugRL into an existing project and only depend on what you need.</li>
+<li>Your envs/policies/algorithms can live in your own packages; just make them available on the side that uses them (worker or server) and register them there.</li>
+<li>This docs site describes the architecture and extension points; the repo layout is mostly for development and examples.</li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre>
+<p>In a typical end-to-end run, you will use these roles (each installable independently):</p>
+<ul>
+<li><strong>plugrl-server</strong>: training server (algorithm + policy + checkpointing + tracking)</li>
+<li><strong>plugrl-worker</strong>: environment workers (Gymnasium env runner + rollout collection)</li>
+<li><strong>plugrl-client</strong>: shared transport/protocol layer (WebSocket + msgpack)</li>
+<li><strong>plugrl-monitor</strong>: lightweight remote viewer for debugging observations</li>
+</ul>
+<p>PlugRL also ships with a few built-in baselines (e.g., <code>dummy</code> components for connectivity checks and DPPO-style setups) so you can run something out of the box and use it as a reference implementation.</p>
+<p>If you're new, start at <strong>User Guide → Get Started</strong>.</p>
+<h2 id="high-level-architecture">High-level architecture</h2>
+<ol>
+<li>Start a server (<code>plugrl-run-server</code> or <code>plugrl-run-server-ray</code>).</li>
+<li>Start one or more workers (<code>plugrl-run-worker &lt;env&gt;</code>), which connect via WebSocket.</li>
+<li>Workers repeatedly:</li>
+<li>send observation (<code>infer</code>)</li>
+<li>receive action chunk (<code>action</code>)</li>
+<li>step the env and send feedback (<code>feedback</code>)</li>
+<li>Server batches inference across connected workers, performs learning, and periodically saves checkpoints.</li>
+</ol>
+<h2 id="what-this-docs-site-covers">What this docs site covers</h2>
+<ul>
+<li>How to run a minimal end-to-end setup (dummy algo + dummy env)</li>
+<li>How to select algorithms/policies and configure them via Tyro CLI</li>
+<li>How environments are registered and configured in workers</li>
+<li>How to contribute new envs/policies/algorithms</li>
+</ul>
 
 
 

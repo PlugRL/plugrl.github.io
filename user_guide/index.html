@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -509,6 +514,8 @@
       
         
       
+        
+      
     
     
     
@@ -578,6 +585,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -747,6 +782,8 @@
       
         
       
+        
+      
     
     
     
@@ -799,6 +836,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1018,6 +1083,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1035,7 +1141,41 @@
 
   <h1>Overview</h1>
 
-
+<h2 id="overview">Overview</h2>
+<p>This guide focuses on the end-to-end workflow:</p>
+<ol>
+<li>Start a training server (<code>plugrl-run-server</code> or <code>plugrl-run-server-ray</code>).</li>
+<li>Start one or more environment workers (<code>plugrl-run-worker &lt;env&gt;</code>).</li>
+<li>(Optional) Start the remote viewer to stream observations.</li>
+</ol>
+<h2 id="components">Components</h2>
+<ul>
+<li>
+<p><strong>Server (<code>plugrl-server</code>)</strong></p>
+<ul>
+<li>Batches inference across all connected workers.</li>
+<li>Calls <code>algorithm.infer(...)</code> and <code>algorithm.feedback(...)</code>.</li>
+<li>Runs learning (<code>algorithm.learn(...)</code>) and checkpointing.</li>
+</ul>
+</li>
+<li>
+<p><strong>Worker (<code>plugrl-worker</code>)</strong></p>
+<ul>
+<li>Creates Gymnasium environments via <code>gym.make(&lt;env_id&gt;, config=...)</code>.</li>
+<li>Connects to server via <code>plugrl_client.websocket_worker_agent.WebSocketWorkerAgent</code>.</li>
+<li>Sends <code>infer</code> (observation), receives <code>action</code>, sends <code>feedback</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Protocol (<code>plugrl-client</code>)</strong></p>
+<ul>
+<li>WebSocket transport + msgpack serialization (<code>msgpack_numpy</code>).</li>
+<li>Message types: <code>metadata</code>, <code>infer</code>, <code>action</code>, <code>feedback</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="next">Next</h2>
+<p>Continue with <strong>Get Started</strong>: use <code>dummy</code> as a quick connectivity/debug smoke test first, then swap in your own envs/policies.</p>
 
 
 

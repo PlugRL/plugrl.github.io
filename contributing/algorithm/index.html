@@ -67,6 +67,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#contributing-algorithm" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -504,6 +509,8 @@
       
         
       
+        
+      
     
     
     
@@ -573,6 +580,34 @@
     
   
     PPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../algorithm/custom_algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Algorithm
   
 
     
@@ -742,6 +777,8 @@
       
         
       
+        
+      
     
     
     
@@ -794,6 +831,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../policy/dppo_policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPPO Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -977,6 +1042,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -993,6 +1076,73 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing: Algorithm
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contributing: Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-add-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to add code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1024,6 +1174,64 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing: Algorithm
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contributing: Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-add-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to add code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1041,7 +1249,25 @@
 
   <h1>Algorithm</h1>
 
-
+<h2 id="contributing-algorithm">Contributing: Algorithm</h2>
+<p>Algorithms are implemented in <code>plugrl-server</code>.</p>
+<h3 id="where-to-add-code">Where to add code</h3>
+<ul>
+<li>Algorithm implementations: <code>plugrl_server/algorithm/...</code></li>
+<li>Registry: <code>plugrl_server.algorithm.registration</code></li>
+<li>WebSocket server loop: <code>plugrl_server.server.websocket_agent_server</code></li>
+</ul>
+<h3 id="checklist">Checklist</h3>
+<ul>
+<li>[ ] Implement <code>infer(...)</code> and <code>feedback(...)</code> contract expected by the server loop.</li>
+<li>[ ] Implement learning (<code>learn</code>) and checkpointing hooks.</li>
+<li>[ ] Register algorithm config(s) in the registry.</li>
+<li>[ ] Validate end-to-end with <code>plugrl-run-worker dummy-v1</code>.</li>
+</ul>
+<h3 id="quick-validation">Quick validation</h3>
+<pre><code class="language-bash">plugrl-run-server dummy default dummy-policy default
+plugrl-run-worker dummy-v1 --num-episodes 1
+</code></pre>
 
 
 
