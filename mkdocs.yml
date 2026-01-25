@@ -47,6 +47,7 @@ nav:
   - Algorithm:
       - Overview: algorithm/index.md
       - PPO: algorithm/ppo.md
+      - Custom Algorithm: algorithm/custom_algorithm.md
 
   - Environment:
       - Overview: env/index.md
@@ -55,6 +56,7 @@ nav:
 
   - Policy:
       - Overview: policy/index.md
+      - DPPO Policies: policy/dppo_policy.md
       - Custom Policy: policy/custom_policy.md
 
   - Contributing:
