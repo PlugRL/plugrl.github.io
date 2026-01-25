@@ -1,105 +1,105 @@
-# 编写自定义环境
+## Custom Environment
 
-PlugRL 所需要的 Env 类继承自基类 `plugrl_worker.envs.base_env.BaseEnv` 其特点是标准化的 I/O 要求，Env 类依靠继承自 `plugrl_worker.envs.base_env.BaseEnvConfig` 的 Config 类初始化
+To add a new environment that can run under `plugrl-worker`, you typically need:
 
-具体而言，用户自定义环境时可以参考一下模板，将已有的环境通过类似打包的方式接入到 PlugRL 中。
+1. A Gymnasium-compatible env (or wrapper) implementation.
+2. A dataclass config that the CLI can expose.
+3. Registration so `plugrl-run-worker <env>` can discover it.
 
-首先是你需要编写下面两个和环境有关的类，比如在 `custom_env.py` 文件下：
+### Recommended approach
 
+- Implement your env in `plugrl_worker/envs/<your_env>/...`.
+- Define a config dataclass that extends the worker's base config.
+- Register the env ID and config in the worker registry.
+
+### Verify
+
+After registration, the env should appear as a subcommand:
+
+```bash
+plugrl-run-worker <your-env-id> --help
 ```
+
+Then run it against a server (dummy is fine) to validate the protocol:
+
+```bash
+plugrl-run-server dummy default dummy-policy default
+plugrl-run-worker <your-env-id> --num-episodes 1
+```
+
+### Implementing a custom environment
+
+PlugRL expects an environment class that inherits `plugrl_worker.envs.base_env.BaseEnv`, and a dataclass config that inherits `plugrl_worker.envs.base_env.BaseEnvConfig`.
+
+In practice, you implement two classes (env + config) and register them. The implementation can live in `plugrl-worker`, or in your own package (as long as the worker runtime imports it so registration code runs).
+
+#### Template
+
+Create a module (e.g. `custom_env.py`) with:
+
+```python
 import dataclasses
-from plugrl_worker.envs.base_env import BaseEnv, BaseEnvConfig, Observation, Action
+import numpy as np
+
+from plugrl_worker.envs.base_env import Action, BaseEnv, BaseEnvConfig, Observation
 from plugrl_worker.utils.registration import register_env, register_env_config
 
-UID = "Custom-v1"
+UID = "custom-v1"
+
 
 @register_env_config(UID)
 @dataclasses.dataclass
 class CustomConfig(BaseEnvConfig):
+    # Add fields needed to construct your env, e.g. env_name/task_id/paths.
     ...
+
 
 @register_env(UID)
 class CustomEnv(BaseEnv):
-    def __init__(self, config: CustomConfig, worker_id: int | None = None, total_workers: int | None = None):
+    def __init__(
+        self,
+        config: CustomConfig,
+        worker_id: int | None = None,
+        total_workers: int | None = None,
+    ):
         super().__init__(config=config)
-        ...
-        
+        self.worker_id = worker_id
+        self.total_workers = total_workers
+
     def prepare_obs(self, obs: np.ndarray) -> Observation:
         return Observation(
-            images=...,
-            states=...,
-            text=...,
+            images={...},
+            states={...},
+            text="...",
         )
-        
-    def reset(self, *, seed: int | None = None, options: dict | None = None) -> tuple[Observation | None, dict]:
+
+    def reset(
+        self,
+        *,
+        seed: int | None = None,
+        options: dict | None = None,
+    ) -> tuple[Observation | None, dict]:
         ...
-    
+
     def step(self, action: Action) -> tuple[Observation | None, float, bool, bool, dict]:
         ...
-    
-if __name__ == "__main__":
-    from plugrl_worker.cli import main
-    main()
 ```
 
-首先是引用
+#### Notes
 
-```
-from plugrl_worker.envs.base_env import BaseEnv, BaseEnvConfig, Observation, Action
-from plugrl_worker.utils.registration import register_env, register_env_config
-```
+- `Observation` / `Action` are standardized I/O types used by the worker.
+- The leading `b` dimension in the type annotations represents a batch dimension. If your env is not vectorized, treat it as `b=1`.
+- `register_env(...)` can take optional parameters such as `max_episode_steps` and `best_reward_threshold_for_success`.
 
-其中 `Observation` 和 `Action` 是定义的标准化 I/O，具体为：
+### Using your environment
 
-```
-ImageArray = Annotated[npt.NDArray[np.uint8], ("b", "h", "w", "c")]
-StateArray = Annotated[npt.NDArray[DType], ("b", "d")]
+Once the module is imported and registration has run, your env should appear as a CLI subcommand:
 
-@dataclasses.dataclass
-class Observation:
-    images: Dict[str, ImageArray]
-    states: Dict[str, StateArray]
-    text: str
-
-Action = Annotated[npt.NDArray[DType], ("b", "da")]
+```bash
+plugrl-run-worker <your-env-id> --help
 ```
 
-其中 `b` 这一项是考虑到打包的环境有可能本身支持并行，表示并行环境的个数，但由于目前还不支持并行环境打包，因此请按照 `b=1` 考虑。
+### Debugging tips
 
-之后的 `register_env`, `register_env_config` 是类的装饰器，用于注册环境及配置文件，`register_env` 同时支持参数 `max_episode_steps` 和 `best_reward_threshold_for_success`，用户可以在注册时同时设置一轮的最长步数和成功的奖励标准，比如：
-
-```
-register_env(UID, max_episode_steps=100, best_reward_threshold_for_success=1.)
-```
-
-表示注册一个名为 UID 的环境，运行步数为 100，若单次奖励超过 1，则记为成功。
-
-注册器可以让用户使用 CLI 看到注册好的环境，运行环境的客户端去接入已有的模型服务器上。
-
-```
-if __name__ == "__main__":
-    from plugrl_worker.cli import main
-    main()
-```
-
-对于配置文件，通常需要列出足够的信息用于初始化自定义环境，一般包含类似 `env_name`, `task_id` 等字段。
-
-对于自定义环境类，注意到初始化时除了配置文件的传入，同时还传入了 `worker_id` 和 `total_workers` 字段，这两个字段是客户端在并行创建时会传入的参数，用户根据这两个参数实现每个协程上的客户端运行不同参数的环境，一个使用的典型是代码库中 `plugrl_worker.envs.libero.libero_env` 的实现。
-
-# 使用自定义环境
-
-如果一切按照预期完成，在运行 `custom_env.py` 时会看到
-
-```
-╭─ Required options ────────────────────────────────────────────────────────────────────────────────────────────╮
-│ The following arguments are required: {dummy-v1,d4rl-v1,atari-v1,classic-v1,robomimic-v1,libero-v1,custom-v1} │
-│ ───────────────────────────────────────────────────────────────────────────────────────────────────────────── │
-│ For full helptext, run custom_env.py --help                                                                   │
-╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-
-运行 `python custom_env.py custom-v1 --help` 时你会看到所有可用参数，`python custom_env.py custom-v1` 后如果没有报错，则之后使用逻辑和其他环境相同。
-
-# 一般调试流程
-
-在运行成功后，可以使用 `--use-remote-viewer` 和 plugrl_server 中的 `dummy_algorithm` 和 `dummy_policy` 测试随机运行的结果。
+- Use `dummy` as a smoke test to validate connectivity first (host/port/protocol/options), then swap in your real algorithm/policy.
+- If your env has images, try `--use-remote-viewer` to inspect observations quickly.

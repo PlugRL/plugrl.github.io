@@ -1,4 +1,32 @@
-# 编写自定义环境
+## 自定义环境
+
+要把一个新环境接入 `plugrl-worker`，一般需要三件事：
+
+1. 一个 Gymnasium 兼容的环境实现（或对现有环境的 wrapper）。
+2. 一个 dataclass 配置（方便 CLI 暴露参数）。
+3. 完成注册，使得 `plugrl-run-worker <env>` 可以发现并实例化它。
+
+### 推荐做法
+
+- 在 `plugrl_worker/envs/<your_env>/...` 下实现环境。
+- 定义配置 dataclass（通常继承 worker 的 base config）。
+- 在 worker registry 中注册 env id 与对应 config。
+
+### 验证方式
+
+注册完成后，你应该能在命令行看到该环境子命令：
+
+```bash
+plugrl-run-worker <your-env-id> --help
+```
+
+然后用 `dummy` 做 1 个 episode 的联通性验证（主要用于调试）：
+
+```bash
+plugrl-run-server dummy default dummy-policy default
+plugrl-run-worker <your-env-id> --num-episodes 1
+```
+### 编写自定义环境
 
 PlugRL 所需要的 Env 类继承自基类 `plugrl_worker.envs.base_env.BaseEnv` 其特点是标准化的 I/O 要求，Env 类依靠继承自 `plugrl_worker.envs.base_env.BaseEnvConfig` 的 Config 类初始化
 
@@ -86,7 +114,7 @@ if __name__ == "__main__":
 
 对于自定义环境类，注意到初始化时除了配置文件的传入，同时还传入了 `worker_id` 和 `total_workers` 字段，这两个字段是客户端在并行创建时会传入的参数，用户根据这两个参数实现每个协程上的客户端运行不同参数的环境，一个使用的典型是代码库中 `plugrl_worker.envs.libero.libero_env` 的实现。
 
-# 使用自定义环境
+### 使用自定义环境
 
 如果一切按照预期完成，在运行 `custom_env.py` 时会看到
 
@@ -100,6 +128,6 @@ if __name__ == "__main__":
 
 运行 `python custom_env.py custom-v1 --help` 时你会看到所有可用参数，`python custom_env.py custom-v1` 后如果没有报错，则之后使用逻辑和其他环境相同。
 
-# 一般调试流程
+### 一般调试流程
 
 在运行成功后，可以使用 `--use-remote-viewer` 和 plugrl_server 中的 `dummy_algorithm` 和 `dummy_policy` 测试随机运行的结果。
