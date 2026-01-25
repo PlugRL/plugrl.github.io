@@ -18,3 +18,5 @@ Most extensions follow the same pattern:
 3. Ensure the CLI discovers it automatically.
 
 See the pages in this section for specifics.
+
+For local code quality checks before committing, see [Pre-commit](pre_commit.md).

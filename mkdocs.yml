@@ -61,6 +61,7 @@ nav:
 
   - Contributing:
       - Overview: contributing/index.md
+      - Pre-commit: contributing/pre_commit.md
       - Environment: contributing/env.md
       - Policy: contributing/policy.md
       - Algorithm: contributing/algorithm.md

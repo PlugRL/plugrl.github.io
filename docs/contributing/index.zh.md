@@ -18,3 +18,5 @@ PlugRL 的扩展点主要集中在三类：
 3. 确保 CLI 能自动发现并暴露为参数/子命令。
 
 本章节其它页面分别给出 env/policy/algorithm 的具体落点与建议流程。
+
+提交前的本地检查流程见 [pre-commit](pre_commit.zh.md)。
