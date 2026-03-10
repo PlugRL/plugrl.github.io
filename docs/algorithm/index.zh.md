@@ -4,13 +4,13 @@
 
 从使用者角度，你需要选择一个组合：
 
-`<algo> <algo_variant> <policy> <policy_variant>`
+`<policy> <policy_variant> <algo> <algo_variant>`
 
 例如：
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
-plugrl-run-server dppo hopper dppo-policy default
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-server dppo-policy default dppo hopper
 ```
 
 这套 CLI 是由 registry 自动拼出来的（可扩展点）：

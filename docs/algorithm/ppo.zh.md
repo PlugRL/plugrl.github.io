@@ -23,7 +23,7 @@ server 内部以调度循环驱动训练：
 ## DPPO 常用命令
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default --exp_name my_dppo_exp
+plugrl-run-server dppo-policy default dppo hopper --exp_name my_dppo_exp
 ```
 
 常用参数：
@@ -36,5 +36,5 @@ plugrl-run-server dppo hopper dppo-policy default --exp_name my_dppo_exp
 多 GPU / DDP（Ray 启动）：
 
 ```bash
-plugrl-run-server-ray dppo hopper dppo-policy default --num-ddp-gpus 4
+plugrl-run-server-ray dppo-policy default dppo hopper --num-ddp-gpus 4
 ```

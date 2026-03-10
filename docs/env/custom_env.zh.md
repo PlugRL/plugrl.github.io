@@ -23,7 +23,7 @@ plugrl-run-worker <your-env-id> --help
 然后用 `dummy` 做 1 个 episode 的联通性验证（主要用于调试）：
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dummy-policy default dummy default
 plugrl-run-worker <your-env-id> --num-episodes 1
 ```
 ### 编写自定义环境

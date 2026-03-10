@@ -5,8 +5,8 @@
 示例：
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
-plugrl-run-server dppo hopper dppo-policy default
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-server dppo-policy default dppo hopper
 ```
 
 ## 内置策略
@@ -18,5 +18,5 @@ plugrl-run-server dppo hopper dppo-policy default
 OpenPI 示例：
 
 ```bash
-plugrl-run-server dppo hopper pi0-policy default --policy.checkpoint_path /path/to/checkpoint
+plugrl-run-server pi0-policy default dppo hopper --policy.checkpoint_path /path/to/checkpoint
 ```

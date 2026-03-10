@@ -64,7 +64,7 @@ The policy config is `DPPOPolicyConfig`:
 A typical server command looks like:
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default \
+plugrl-run-server dppo-policy default dppo hopper \
   --policy.env_type gym \
   --policy.env_name hopper-medium-v2
 ```
@@ -72,7 +72,7 @@ plugrl-run-server dppo hopper dppo-policy default \
 If you have a checkpoint:
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default \
+plugrl-run-server dppo-policy default dppo hopper \
   --policy.checkpoint_path /path/to/checkpoint.pt
 ```
 
@@ -107,7 +107,7 @@ The policy config is `Pi0PolicyConfig`:
 **How to run**
 
 ```bash
-plugrl-run-server dppo hopper pi0-policy default \
+plugrl-run-server pi0-policy default dppo hopper \
   --policy.checkpoint_path /path/to/pi0_checkpoint \
   --policy.name pi05_tiny_libero
 ```
@@ -290,17 +290,17 @@ If you publish it as a package, a minimal pattern is “import first, then deleg
 
 ```bash
 python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; main()" \
-    dummy default my-dppo-policy default
+    my-dppo-policy default dummy default
 ```
 
-Then you can switch back to your normal command shape (algo/env/policy/variant) as needed.
+Then you can switch back to your normal command shape (policy/variant/algo/env) as needed.
 
 If you prefer a nicer UX, expose your own console script (e.g. `my-plugrl-run-server`) that does the import and calls `plugrl_server.cli.main()`.
 
 Then run the usual smoke test:
 
 ```bash
-plugrl-run-server dummy default my-dppo-policy default
+plugrl-run-server my-dppo-policy default dummy default
 ```
 
 Then switch to your target algorithm/env and iterate on observation/action alignment.

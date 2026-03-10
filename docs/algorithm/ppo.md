@@ -23,7 +23,7 @@ Key properties:
 ## Practical DPPO commands
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default --exp_name my_dppo_exp
+plugrl-run-server dppo-policy default dppo hopper --exp_name my_dppo_exp
 ```
 
 Useful flags:
@@ -36,5 +36,5 @@ Useful flags:
 For multi-GPU runs, use:
 
 ```bash
-plugrl-run-server-ray dppo hopper dppo-policy default --num-ddp-gpus 4
+plugrl-run-server-ray dppo-policy default dppo hopper --num-ddp-gpus 4
 ```

@@ -64,7 +64,7 @@
 典型 server 命令：
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default \
+plugrl-run-server dppo-policy default dppo hopper \
   --policy.env_type gym \
   --policy.env_name hopper-medium-v2
 ```
@@ -72,7 +72,7 @@ plugrl-run-server dppo hopper dppo-policy default \
 如果有权重：
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default \
+plugrl-run-server dppo-policy default dppo hopper \
   --policy.checkpoint_path /path/to/checkpoint.pt
 ```
 
@@ -107,7 +107,7 @@ plugrl-run-server dppo hopper dppo-policy default \
 **怎么运行**
 
 ```bash
-plugrl-run-server dppo hopper pi0-policy default \
+plugrl-run-server pi0-policy default dppo hopper \
   --policy.checkpoint_path /path/to/pi0_checkpoint \
   --policy.name pi05_tiny_libero
 ```
@@ -294,7 +294,7 @@ LeRobot 的 `_postprocess_action()` 会：
 
 ```bash
 python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; main()" \
-    dummy default my-dppo-policy default
+    my-dppo-policy default dummy default
 ```
 
 如果你希望命令更顺手，建议在你的包里提供一个自己的 console script（比如 `my-plugrl-run-server`），内部做 import 后再调用 `plugrl_server.cli.main()`。
@@ -302,7 +302,7 @@ python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; ma
 如果你仍使用官方命令形态（并且你的模块已确保会被自动 import），也可以直接跑：
 
 ```bash
-plugrl-run-server dummy default my-dppo-policy default
+plugrl-run-server my-dppo-policy default dummy default
 ```
 
 随后切到你的目标算法/环境，逐步对齐观测字段、动作形状与训练逻辑。

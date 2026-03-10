@@ -33,7 +33,7 @@ Tip: treat `dummy` as a smoke test: validate connectivity first, then plug in yo
 ### Terminal A: start server
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dummy-policy default dummy default
 ```
 
 You should see logs like:
@@ -79,13 +79,13 @@ The server supports DPPO (`dppo`) and a Ray-based distributed launcher.
 ### Single process server
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default --exp_name my_dppo_exp
+plugrl-run-server dppo-policy default dppo hopper --exp_name my_dppo_exp
 ```
 
 ### Ray launcher
 
 ```bash
-plugrl-run-server-ray dppo hopper dppo-policy default --exp_name my_dppo_exp --num-ddp-gpus 4
+plugrl-run-server-ray dppo-policy default dppo hopper --exp_name my_dppo_exp --num-ddp-gpus 4
 ```
 
 ## Troubleshooting

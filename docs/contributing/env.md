@@ -17,6 +17,6 @@ Environments are implemented in `plugrl-worker`.
 ### Quick validation
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dummy-policy default dummy default
 plugrl-run-worker <env-id> --num-episodes 1
 ```

@@ -4,13 +4,13 @@ Algorithms live in `plugrl-server` and are selected via Tyro subcommands.
 
 In practice, you pick a triple:
 
-`<algo> <algo_variant> <policy> <policy_variant>`
+`<policy> <policy_variant> <algo> <algo_variant>`
 
 Examples:
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
-plugrl-run-server dppo hopper dppo-policy default
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-server dppo-policy default dppo hopper
 ```
 
 The CLI is assembled from registries:

@@ -5,8 +5,8 @@ Policies live in `plugrl-server` and are selected together with the algorithm vi
 Examples:
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
-plugrl-run-server dppo hopper dppo-policy default
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-server dppo-policy default dppo hopper
 ```
 
 ## Built-in policies
@@ -18,5 +18,5 @@ plugrl-run-server dppo hopper dppo-policy default
 For OpenPI:
 
 ```bash
-plugrl-run-server dppo hopper pi0-policy default --policy.checkpoint_path /path/to/checkpoint
+plugrl-run-server pi0-policy default dppo hopper --policy.checkpoint_path /path/to/checkpoint
 ```

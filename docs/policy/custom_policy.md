@@ -90,7 +90,7 @@ If your policy lives in an external package, a minimal pattern is “import firs
 
 ```bash
 python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; main()" \
-	dummy default <your-policy> default
+	<your-policy> default dummy default
 ```
 
 Then run the worker:

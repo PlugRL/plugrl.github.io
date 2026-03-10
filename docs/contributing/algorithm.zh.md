@@ -18,6 +18,6 @@
 ### 快速验证
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dummy-policy default dummy default
 plugrl-run-worker dummy-v1 --num-episodes 1
 ```

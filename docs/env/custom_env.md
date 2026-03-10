@@ -23,7 +23,7 @@ plugrl-run-worker <your-env-id> --help
 Then run it against a server (dummy is fine) to validate the protocol:
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dummy-policy default dummy default
 plugrl-run-worker <your-env-id> --num-episodes 1
 ```
 

@@ -33,7 +33,7 @@ pip install -e .
 ### 终端 A：启动 server
 
 ```bash
-plugrl-run-server dummy default dummy-policy default
+plugrl-run-server dummy-policy default dummy default
 ```
 
 预期现象：
@@ -86,13 +86,13 @@ plugrl-run-worker dummy-v1 \
 ### 单进程 server
 
 ```bash
-plugrl-run-server dppo hopper dppo-policy default --exp_name my_dppo_exp
+plugrl-run-server dppo-policy default dppo hopper --exp_name my_dppo_exp
 ```
 
 ### Ray 启动（多 GPU / DDP）
 
 ```bash
-plugrl-run-server-ray dppo hopper dppo-policy default \
+plugrl-run-server-ray dppo-policy default dppo hopper \
 	--exp_name my_dppo_exp \
 	--num-ddp-gpus 4
 ```

@@ -90,7 +90,7 @@ SAC 的 policy 侧实现很紧凑，主要看这些点：
 
 ```bash
 python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; main()" \
-	dummy default <your-policy> default
+	<your-policy> default dummy default
 ```
 
 然后启动 worker：

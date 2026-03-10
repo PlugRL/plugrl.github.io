@@ -128,7 +128,7 @@ Buffer details and loss functions are algorithm-specific. Keep the method bounda
 Use `dummy` as a smoke test to validate discovery + protocol loop first:
 
 ```bash
-plugrl-run-server <your-algo> default dummy-policy default
+plugrl-run-server dummy-policy default <your-algo> default
 plugrl-run-worker dummy-v1 --num-episodes 1
 ```
 
