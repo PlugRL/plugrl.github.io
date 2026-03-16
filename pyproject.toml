@@ -3,20 +3,24 @@ name = "plugrl-docs"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Chenhao Lu",email = "luch21@mails.tsinghua.edu.cn"}
+    {name = "Chenhao Lu", email = "luch21@mails.tsinghua.edu.cn"}
 ]
 readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = [
-    "mkdocs (>=1.6.1,<2.0.0)",
-    "mkdocs-material (>=9.7.0,<10.0.0)",
-    "mkdocs-static-i18n (>=1.3.0,<2.0.0)",
-    "mkdocs-exclude (>=1.0.2,<2.0.0)",
+    "mkdocs>=1.6.1,<2.0.0",
+    "mkdocs-material>=9.7.0,<10.0.0",
+    "mkdocs-static-i18n>=1.3.0,<2.0.0",
+    "mkdocs-exclude>=1.0.2,<2.0.0",
 ]
 
-[tool.poetry]
-packages = [{include = "plugrl_docs", from = "src"}]
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["plugrl_docs*"]
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"

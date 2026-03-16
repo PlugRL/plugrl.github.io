@@ -1,37 +1,57 @@
-## Overview
+# Environments
 
-Environments run in **plugrl-worker** and are created via Gymnasium:
+Environments run on the env client and are created via Gymnasium.
 
-```python
-env = gym.make(<env_id>, config=<dataclass_config>, max_episode_steps=...)
-```
+## Quickstart
 
-The worker exposes a single CLI entrypoint:
+List options for one environment.
 
 ```bash
-plugrl-run-worker <env> [OPTIONS]
+plugrl-run-env-client dummy-v1 --help
 ```
 
-## Built-in environment types
+Run one short episode.
 
-From the worker package, commonly available IDs include:
+```bash
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-env-client dummy-v1 --num-episodes 1 --server-host 127.0.0.1 --server-port 8000
+```
 
-- `dummy-v1` (smoke tests)
-- `classic-v1` (classic control)
+## Verify
+
+- Env client prints server metadata.
+- Env client resets and steps the environment.
+
+## How environments are created
+
+Env client creates envs via Gymnasium.
+
+```py
+env = gym.make(env_id, config=config_dataclass, max_episode_steps=max_episode_steps)
+```
+
+## Built-in environment IDs
+
+- `dummy-v1`
+- `classic-v1`
 - `atari-v1`
 - `robomimic-v1`
-- `d4rl-*` (if optional deps installed)
-- `libero-*` (if optional deps installed)
+- `d4rl-*` when optional deps are installed
+- `libero-*` when optional deps are installed
 
-Use `--help` to see all flags for a specific env:
+## Common env client flags
 
-```bash
-plugrl-run-worker dummy-v1 --help
-```
-
-## Useful worker flags
-
-- `--num-workers`: spawn multiple worker processes
-- `--server-host/--server-port`: server address
+- `--num-workers`: run multiple env client processes
+- `--server-host`, `--server-port`: server address
 - `--use-remote-viewer`: stream observations to the viewer
-- `--use-real-time` / `--fps`: run at a fixed FPS for debugging
+- `--use-real-time`, `--fps`: fixed FPS for debugging
+
+## Troubleshooting
+
+- Env ID not found in CLI: registration module was not imported.
+- Multi process init conflicts: try `--use-env-lock` if your env is heavy.
+
+## Next steps
+
+- [Custom environment](custom_env.md)
+- [Get Started](../user_guide/get_started.md)

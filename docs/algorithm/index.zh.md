@@ -1,30 +1,60 @@
-## 概览
+# 算法
 
-算法侧主要在 `plugrl-server` 中实现，并通过 Tyro 的“子命令树”进行选择。
+算法运行在 server 侧，通过 Tyro 子命令进行选择。
 
-从使用者角度，你需要选择一个组合：
+## 快速开始
 
-`<policy> <policy_variant> <algo> <algo_variant>`
-
-例如：
+两个最小命令。
 
 ```bash
 plugrl-run-server dummy-policy default dummy default
 plugrl-run-server dppo-policy default dppo hopper
 ```
 
-这套 CLI 是由 registry 自动拼出来的（可扩展点）：
+## 验证
 
-- `plugrl_server.algorithm.registration`
-- `plugrl_server.policy.registration`
+查看已注册算法。
 
-因此：
+```bash
+plugrl-run-server --help
+```
 
-- 新增算法/策略通常对应“注册 config + 提供构造函数”
-- config 使用 dataclass，支持通过 `--algo.*`、`--policy.*` 覆盖参数
+跑一次 smoke test。
 
-## 当前已实现（server 侧）
+```bash
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-env-client dummy-v1 --num-episodes 1
+```
 
-- `dummy`：用于验证 server/worker 协议与连通性
-- `dppo`：DPPO（Diffusion-based Policy Optimization）
-- `dppo-dist`：实验性的分布式 DPPO（通常配合 Ray 启动）
+## 选择方式
+
+命令形状。
+
+- `<policy_uid> <policy_variant> <algo_uid> <algo_variant>`
+
+配置来源。
+
+- policy 与 algo 配置是独立的 dataclass
+- 用 `--policy.*` 与 `--algo.*` 覆盖字段
+
+发现机制。
+
+- registry 位于 `plugrl_server.policy.registration` 与 `plugrl_server.algorithm.registration`
+- 模块必须在构建 CLI 前被 import
+
+## 内置算法
+
+- `dummy`：协议与联通性验证
+- `dppo`：DPPO 训练循环
+- `dppo-dist`：Ray 分布式 DPPO
+
+## 常见问题
+
+- `--help` 里找不到 UID：注册模块没有被 import。
+- policy 与 algo 的 flag 冲突：共享概念只保留在一侧配置。
+
+## 下一步
+
+- [训练循环](ppo.zh.md)
+- [自定义算法](custom_algorithm.zh.md)
+- [策略](../policy/index.zh.md)

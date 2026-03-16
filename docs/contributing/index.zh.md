@@ -1,22 +1,45 @@
-## 贡献指南
+# 贡献指南
 
-本章节面向“开发/贡献者”，和正文的“使用指南”不太一样：这里默认你会在对应的子仓库里进行本地开发，并遵循现有的代码组织与注册方式。
+用于本地开发与扩展 PlugRL。
 
-- 在需要改动的 codebase 中用 Poetry 建环境并安装依赖（例如在 `plugrl-worker` / `plugrl-server` 目录下执行 `poetry install`）。
-- 按现有约定实现：dataclass 配置、registry 注册、以及 CLI 能自动发现（保持参数/子命令风格一致）。
+## 快速开始
 
-PlugRL 的扩展点主要集中在三类：
+在你要改的仓库里安装依赖。
 
-- 环境（worker 侧）
-- 策略（server 侧）
-- 算法（server 侧）
+```bash
+cd plugrl-server
+uv sync
+```
 
-大多数扩展遵循相同套路：
+如果你在改 env client 仓库，把目录换成 `plugrl-env-client`。
 
-1. 增加一个 dataclass 配置。
-2. 在对应 registry 模块中注册。
-3. 确保 CLI 能自动发现并暴露为参数/子命令。
+启用 pre-commit。
 
-本章节其它页面分别给出 env/policy/algorithm 的具体落点与建议流程。
+```bash
+uv run pre-commit install
+```
 
-提交前的本地检查流程见 [pre-commit](pre_commit.zh.md)。
+## 验证
+
+跑一个最小端到端 smoke test。
+
+```bash
+# 终端 1：plugrl-server
+uv run plugrl-run-server dummy-policy default dummy default
+
+# 终端 2：plugrl-env-client
+uv run plugrl-run-env-client dummy-v1 --num-episodes 1 --server-host 127.0.0.1 --server-port 8000
+```
+
+## 扩展点
+
+- 环境：env client 侧，仓库为 `plugrl-env-client`
+- 策略：server 侧，仓库为 `plugrl-server`
+- 算法：server 侧，仓库为 `plugrl-server`
+
+## 下一步
+
+- [Pre-commit](pre_commit.zh.md)
+- [贡献：环境](env.zh.md)
+- [贡献：策略](policy.zh.md)
+- [贡献：算法](algorithm.zh.md)

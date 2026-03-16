@@ -1,39 +1,49 @@
-## Custom Algorithm
+# Custom Algorithm
 
-To plug a new algorithm into `plugrl-server`, you typically:
+Add a server-side algorithm so `plugrl-run-server` can select it by UID.
 
-1. Define an algorithm config (dataclass) for Tyro CLI.
-2. Implement a `BaseAlgorithm` subclass (infer / feedback / learn / checkpoint hooks).
-3. Register both, and make sure the module is imported so the CLI can discover it.
+## Quickstart
 
-A minimal end-to-end example is the SAC implementation in `plugrl-server/examples/sac/sac.py`.
+1. Create a package under `plugrl-server/src/plugrl_server/algorithm/<algo_uid>/`.
+2. Register a config dataclass and an algorithm class.
+3. Ensure the module is imported at server startup so Tyro can discover it.
 
-### Where to add code
+Reference implementation: `plugrl-server/examples/sac/sac.py`.
 
-In `plugrl-server/src/plugrl_server/algorithm/<your_algo>/...`:
+## File layout
 
-- Implementation: `plugrl_server/algorithm/<your_algo>/<your_algo>.py`
-- Registration (side-effect import): `plugrl_server/algorithm/<your_algo>/__init__.py`
-- Ensure it is imported from `plugrl_server/algorithm/__init__.py` (so `import plugrl_server` loads it)
+Put the code in one of these layouts.
 
-### What the server expects
+### Built-in in `plugrl-server`
 
-The WebSocket server loop calls these methods on your algorithm:
+- `plugrl_server/algorithm/<algo_uid>/<algo_uid>.py` implementation
+- `plugrl_server/algorithm/<algo_uid>/__init__.py` registration import
+- `plugrl_server/algorithm/__init__.py` imports your package
+
+### Plug-in in your own package
+
+- Put the algorithm module in your own Python package.
+- Import the module before calling `plugrl_server.cli:main`.
+
+## Server contract
+
+The WebSocket server loop calls these methods.
 
 - `infer(obs) -> (action, internal_state)`
 - `feedback(...) -> (prev_node, global_step, log_dict)`
 - `learn() -> (global_step, log_dict)`
-- plus scheduling / checkpoint hooks: `should_learn/should_save/should_stop`, `create_checkpoint/load_checkpoint`
+- Scheduling and checkpoint hooks: `should_learn`, `should_save`, `should_stop`, `create_checkpoint`, `load_checkpoint`
 
-You can confirm the abstract signatures in `plugrl_server/algorithm/base_algorithm.py`.
+See `plugrl_server/algorithm/base_algorithm.py` for exact signatures.
 
-### Template
+## Minimal template
 
-```python
+```py
 import dataclasses
+
 import numpy as np
 
-from plugrl_server.algorithm.base_algorithm import BaseAlgorithm, BaseAlgoConfig
+from plugrl_server.algorithm.base_algorithm import BaseAlgoConfig, BaseAlgorithm
 from plugrl_server.algorithm.registration import register_algo, register_algo_config
 from plugrl_server.common.checkpoint_manager import Checkpoint
 from plugrl_server.policy.base_policy import BasePolicy, InternalState
@@ -44,10 +54,7 @@ UID = "your-algo"
 @register_algo_config(UID)
 @dataclasses.dataclass
 class YourAlgoConfig(BaseAlgoConfig):
-    # Training schedule
     total_timesteps: int = 100_000
-    # Add your hyper-params
-    ...
 
 
 @register_algo(UID)
@@ -57,7 +64,6 @@ class YourAlgorithm(BaseAlgorithm):
         self.global_step = 0
 
     def infer(self, obs: dict) -> tuple[np.ndarray, InternalState]:
-        # Use policy to produce an action, and return InternalState for training.
         action, internal_state = self.policy.get_action_and_internal_state(obs)
         return action, internal_state
 
@@ -75,12 +81,10 @@ class YourAlgorithm(BaseAlgorithm):
         next_truncated: bool,
         prev_node: tuple,
     ) -> tuple[tuple, int, dict]:
-        # Consume transition, update buffers/counters, and return logs.
         self.global_step += 1
         return prev_node, self.global_step, {}
 
     def learn(self) -> tuple[int, dict]:
-        # Perform updates and return logs.
         return self.global_step, {}
 
     def should_learn(self) -> bool:
@@ -101,35 +105,39 @@ class YourAlgorithm(BaseAlgorithm):
             self.policy.load_state_dict(checkpoint.model)
 ```
 
-### Notes (based on SAC)
+## Design rules
 
-- SAC stores training data in a replay buffer inside the algorithm, and uses the `InternalState` returned from `infer()` in `feedback()`.
-- SAC defines optimizers in the algorithm `__init__` and saves their state dicts in `create_checkpoint()`.
-- If you want your algorithm to emit action chunks, you can set `break_action_chunk` as needed (see `BaseAlgorithm`).
+- Put model and action generation parameters in the policy config.
+- Keep two counters if your `learn()` uses external data: environment steps and update steps.
+- Save schedule counters in `Checkpoint.meta` and restore them in `load_checkpoint`.
+- Use `BaseAlgorithm` unless you implement the distributed hooks required by `DDPAlgorithm`.
 
-### Walkthrough: SAC
+## Verify
 
-Use `plugrl-server/examples/sac/sac.py` to map the server contract:
-
-- **`infer()`**: calls `policy.get_action_and_internal_state(obs, random_sample=...)` and returns both values. SAC uses random actions before `learning_starts`.
-- **`feedback()`**: requires `internal_state`, then pushes a transition into a replay buffer. SAC uses a clear split:
-    - current `obs` comes from `internal_state.obs`. This is already prepared by the policy.
-    - `next_obs` is prepared inside the algorithm via `policy.prepare_observation(next_obs)`.
-- **Scheduling**:
-    - `should_learn()` gates updates based on `learning_starts` and `update_every`.
-    - `learn()` runs `update_to_data_ratio * update_every` gradient steps per call.
-    - `should_save()` triggers periodic checkpoints via `save_interval`.
-- **Checkpoint**: `create_checkpoint()` saves `policy.state_dict()`, optimizer state dicts, and a small `meta` dict. SAC stores `last_*_step` and `update_counter` in `meta` to resume cleanly.
-
-Buffer details and loss functions are algorithm-specific. Keep the method boundaries aligned with the server loop.
-
-### Verify
-
-Use `dummy` as a smoke test to validate discovery + protocol loop first:
+Start with a smoke test.
 
 ```bash
-plugrl-run-server dummy-policy default <your-algo> default
-plugrl-run-worker dummy-v1 --num-episodes 1
+plugrl-run-server dummy-policy default your-algo default
+plugrl-run-env-client dummy-v1 --num-episodes 1
 ```
 
-Then swap in your real env/policy and iterate on buffers, loss, and performance.
+For plug-in algorithms, import before entering the CLI.
+
+```bash
+python -c "import my_pkg.plugrl_algorithms; from plugrl_server.cli import main; main()" \
+  dummy-policy default your-algo default
+```
+
+## Troubleshooting
+
+- Algorithm UID not listed in `plugrl-run-server --help`: module import did not run.
+- Duplicate flags under `--algo.*` and `--policy.*`: keep the parameter in one config.
+- After resume, learning or saving cadence drifts: restore all counters from `Checkpoint.meta`.
+- `DDPAlgorithm` errors at runtime: switch to `BaseAlgorithm` or implement the required distributed hooks.
+
+## Next steps
+
+- [Algorithm overview](index.md)
+- [Training loop](ppo.md)
+- [Custom policy](../policy/custom_policy.md)
+- [Custom environment](../env/custom_env.md)

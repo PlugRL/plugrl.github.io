@@ -1,30 +1,60 @@
-## Overview
+# Algorithms
 
-Algorithms live in `plugrl-server` and are selected via Tyro subcommands.
+Algorithms run on the server and are selected via Tyro subcommands.
 
-In practice, you pick a triple:
+## Quickstart
 
-`<policy> <policy_variant> <algo> <algo_variant>`
-
-Examples:
+Two minimal commands.
 
 ```bash
 plugrl-run-server dummy-policy default dummy default
 plugrl-run-server dppo-policy default dppo hopper
 ```
 
-The CLI is assembled from registries:
+## Verify
 
-- `plugrl_server.algorithm.registration`
-- `plugrl_server.policy.registration`
+List registered algorithms.
 
-This means:
+```bash
+plugrl-run-server --help
+```
 
-- adding a new algorithm/policy usually requires registering a config and a factory
-- all configs are dataclasses and can be overridden by flags like `--algo.*` / `--policy.*`
+Run a smoke test loop.
 
-## Implemented algorithms (server-side)
+```bash
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-env-client dummy-v1 --num-episodes 1
+```
 
-- `dummy`: smoke-test the server/worker protocol
-- `dppo`: diffusion-based policy optimization (see server README for common runs)
-- `dppo-dist`: experimental distributed DPPO (via Ray launcher)
+## How selection works
+
+Command shape.
+
+- `<policy_uid> <policy_variant> <algo_uid> <algo_variant>`
+
+Config sources.
+
+- Policy and algorithm configs are independent dataclasses.
+- Override fields with `--policy.*` and `--algo.*`.
+
+Discovery.
+
+- Registries live in `plugrl_server.policy.registration` and `plugrl_server.algorithm.registration`.
+- Your modules must be imported before the CLI is built.
+
+## Built-in algorithms
+
+- `dummy`: protocol and connectivity smoke tests
+- `dppo`: DPPO training loop
+- `dppo-dist`: distributed DPPO via Ray launcher
+
+## Troubleshooting
+
+- Algorithm UID not listed: registration module was not imported.
+- CLI flags conflict across policy and algo: keep shared concepts in one config.
+
+## Next steps
+
+- [Training loop](ppo.md)
+- [Custom algorithm](custom_algorithm.md)
+- [Policies](../policy/index.md)

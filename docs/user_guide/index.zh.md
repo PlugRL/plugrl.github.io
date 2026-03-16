@@ -1,27 +1,46 @@
-## 概览
+# 用户指南
 
-本节用户指南以“能跑通、好排查、易扩展”为目标，覆盖端到端的基本流程：
+端到端跑通 PlugRL：启动 server，启动 worker，调试时把观测推到 viewer。
 
-1. 启动训练 server（`plugrl-run-server` 或 `plugrl-run-server-ray`）。
-2. 启动一个或多个环境 worker（`plugrl-run-worker <env>`）。
-3. （可选）启动远程 viewer，把 worker 的观测实时推送到浏览器界面。
+## 快速开始
 
-## 组件与职责
+```bash
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-env-client dummy-v1 --num-episodes 2 --server-host 127.0.0.1 --server-port 8000
+```
 
-- **Server（plugrl-server）**
-	- 聚合所有已连接 worker 的推理请求，批量推理。
-	- 调用 `algorithm.infer(...)` 与 `algorithm.feedback(...)`。
-	- 在调度循环中驱动学习（`algorithm.learn(...)`）与保存 checkpoint。
+## 验证
 
-- **Worker（plugrl-worker）**
-	- 通过 `gym.make(<env_id>, config=...)` 创建 Gymnasium 环境。
-	- 通过 `plugrl_client.websocket_worker_agent.WebSocketWorkerAgent` 与 server 建立 WebSocket 通信。
-	- 发送 `infer`（观测），接收 `action`（动作/动作序列），回传 `feedback`（奖励、终止信息等）。
+- server 打印 WebSocket 监听地址
+- env client 打印 server 元信息并开始跑 episode
 
-- **协议层（plugrl-client）**
-	- WebSocket 传输 + msgpack 序列化（`msgpack_numpy`）。
-	- 消息类型：`metadata`、`infer`、`action`、`feedback`。
+## 流程
+
+1. 用 `plugrl-run-server` 或 `plugrl-run-server-ray` 启动训练端。
+2. 用 `plugrl-run-env-client <env_id>` 启动一个或多个环境端。
+3. 需要看观测时开启 viewer 推流。
+
+## 组件
+
+- `plugrl-server`：聚合推理请求，驱动学习与 checkpoint
+- `plugrl-env-client`：创建 Gymnasium 环境，发送 `infer`，接收 `action`，回传 `feedback`
+- `plugrl-protocol`：WebSocket 传输与 msgpack 序列化
+- `plugrl-monitor`：可选 viewer
+
+## 常用参数
+
+- server 默认地址为 `0.0.0.0:8000`
+- env client 通过 `--server-host` 与 `--server-port` 连接
+- viewer 推流使用 `--use-remote-viewer`、`--viewer-host`、`--viewer-port`
+
+## 常见问题
+
+- env client 一直重试：确认 server 已监听且地址可达。
+- CLI 里找不到策略或算法：确认注册模块在构建 CLI 前已被 import。
 
 ## 下一步
 
-请继续阅读 **快速开始**：先用 `dummy` 做一次端到端联通性检查（便于排查网络/协议/参数问题），再替换为你自己的 env / policy。
+- [快速开始](get_started.zh.md)
+- [算法](../algorithm/index.zh.md)
+- [环境](../env/index.zh.md)
+- [策略](../policy/index.zh.md)

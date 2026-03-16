@@ -1,22 +1,38 @@
-## 贡献：环境（Env）
+# 贡献：环境
 
-环境在 `plugrl-worker` 中实现。
+环境在 `plugrl-env-client` 中实现。
 
-### 代码放哪里
+## 代码放哪里
 
-- 环境实现：`plugrl_worker/envs/...`
-- 配置与注册：`plugrl_worker.utils.registration`
+- 实现：`plugrl_env_client/envs/...`
+- 注册：`plugrl_env_client.utils.registration`
 
-### 最小检查清单
+## 清单
 
-- [ ] 实现一个 Gymnasium 环境（或 wrapper）。
-- [ ] 定义 dataclass 配置以便 CLI 暴露。
-- [ ] 注册 env id，确保 `plugrl-run-worker <env-id>` 可用。
-- [ ] 用 `dummy` server 做一次端到端连通性测试。
+- 实现 `BaseEnv` 与配置 dataclass。
+- 注册 env UID，让 `plugrl-run-env-client <env-id>` 可用。
+- 观测格式与 recorder 兼容。
 
-### 快速验证
+## 验证
+
+启动 dummy server。
 
 ```bash
 plugrl-run-server dummy-policy default dummy default
-plugrl-run-worker <env-id> --num-episodes 1
 ```
+
+启动 env client，使用你的 env。
+
+```bash
+plugrl-run-env-client <env-id> --num-episodes 1 --server-host 127.0.0.1 --server-port 8000
+```
+
+## 常见问题
+
+- CLI 找不到 UID：注册模块没有被 import。
+- 创建 env 失败：检查可选依赖与默认配置。
+
+## 下一步
+
+- [自定义环境](../env/custom_env.zh.md)
+- [贡献指南](index.zh.md)

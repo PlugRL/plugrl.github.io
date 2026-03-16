@@ -1,40 +1,56 @@
-## PlugRL 中的算法（PPO/DPPO）
+# 训练循环
 
-本页作为“训练环路深挖”入口。文件名历史上写的是 PPO，但当前 `plugrl-server` 代码实现侧重点是：
+本页描述 server 在运行时做了什么。
 
-- `dummy`
-- `dppo` / `dppo-dist`
+## 快速开始
 
-## Server 侧训练调度（实际发生了什么）
-
-server 内部以调度循环驱动训练：
-
-1. 等待所有已连接 worker 都提交一次 `infer` 请求。
-2. 把观测聚合成 batch，调用 `algorithm.infer(batch_obs)`。
-3. 对每个 worker 回发 `action`。
-4. 接收各 worker 的 `feedback`，调用 `algorithm.feedback(...)`。
-5. 在合适时机调用 `algorithm.learn()`，并定期保存 checkpoint。
-
-关键点：
-
-- 推理批处理的“批大小”由当前连接数决定。
-- feedback/learn/save 会在模型锁保护下执行，避免并发修改模型状态。
-
-## DPPO 常用命令
+跑一个 DPPO 实验。
 
 ```bash
 plugrl-run-server dppo-policy default dppo hopper --exp_name my_dppo_exp
 ```
 
-常用参数：
+## 验证
 
-- `--track.enabled true` 开启实验追踪
-- `--track.tracker swanlab|wandb`
-- `--checkpoint-base-dir ./checkpoints` 指定 checkpoint 根目录
-- `--resume true` 从实验目录下最新 checkpoint 恢复
+启动一个 worker，确认闭环在跑。
 
-多 GPU / DDP（Ray 启动）：
+```bash
+plugrl-run-env-client dummy-v1 --num-episodes 1
+```
+
+## server 内部发生了什么
+
+server 以调度循环驱动训练。
+
+1. 等待所有已连接 worker 都提交一次 `infer`。
+2. 聚合观测并调用 `algorithm.infer(batch_obs)`。
+3. 向每个 worker 回发 `action`。
+4. 接收 `feedback` 并调用 `algorithm.feedback(...)`。
+5. 在合适时机调用 `algorithm.learn()` 并保存 checkpoint。
+
+关键点。
+
+- 推理批大小由当前连接数决定。
+- feedback、learn、save 在模型锁保护下执行。
+
+## 常用参数
+
+- 指标追踪：`--track.enabled true`、`--track.tracker swanlab|wandb`
+- checkpoint：`--checkpoint-base-dir ./checkpoints`、`--resume true`
+
+多 GPU 训练使用 Ray 启动。
 
 ```bash
 plugrl-run-server-ray dppo-policy default dppo hopper --num-ddp-gpus 4
 ```
+
+## 常见问题
+
+- `--resume` 没生效：确认实验目录里已经有 checkpoint。
+- worker 卡住不 step：检查 worker 是否都走到了 `infer` 阶段。
+
+## 下一步
+
+- [算法](index.zh.md)
+- [自定义算法](custom_algorithm.zh.md)
+- [DPPO 策略](../policy/dppo_policy.zh.md)

@@ -1,23 +1,23 @@
-## pre-commit
+# Pre-commit
 
-`plugrl-worker` 和 `plugrl-server` 都用 `pre-commit` 做提交前检查，避免把明显的格式问题和低级错误带进仓库。
+提交前跑一轮轻量检查。
 
-在你正在改动的子仓库目录里：
+## 快速开始
 
-1. 安装 dev 依赖：
+在你正在改动的子仓库目录里执行。
 
-   - `poetry install --with dev`
+```bash
+uv sync
+uv run pre-commit install
+uv run pre-commit run --all-files
+```
 
-2. 安装 git hook：
+## 说明
 
-   - `poetry run pre-commit install`
-
-3. 首次建议全量跑一遍：
-
-   - `poetry run pre-commit run --all-files`
-
-注意：
-
-- 第一次跑出现 “Failed” 很常见，因为有些 hook 会自动改文件。把改动 `git add` 之后再跑一次就会变绿。
+- 第一次跑可能会自动改文件。`git add` 后再跑一次。
 - 格式化由 `ruff-format` 负责。
-- `plugrl-server` 需要 Python `>=3.11`。如果 Poetry 报 Python 版本不满足，需要先切到兼容的解释器/环境。
+- `plugrl-server` 需要 Python `>=3.11`。
+
+## 下一步
+
+- [贡献指南](index.zh.md)

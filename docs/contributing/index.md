@@ -1,22 +1,45 @@
-## Contributing
+# Contributing
 
-This section is for contributors (local development), which is slightly different from the “User Guide” usage path: here we assume you will work inside the relevant codebase and follow the existing registration/CLI conventions.
+Local development guide for extending PlugRL.
 
-- In the codebase you are changing (e.g. `plugrl-worker` / `plugrl-server`), set up the dev environment with Poetry (run `poetry install`).
-- Follow the existing patterns: dataclass configs, registry registration, and CLI auto-discovery (keep the style consistent).
+## Quickstart
 
-PlugRL is designed to be extended along three main axes:
+Set up the repo you are changing.
 
-- Environments (worker-side)
-- Policies (server-side)
-- Algorithms (server-side)
+```bash
+cd plugrl-server
+uv sync
+```
 
-Most extensions follow the same pattern:
+If you are working on the env client, run the same commands in `plugrl-env-client`.
 
-1. Add a dataclass config.
-2. Register it in a registry module.
-3. Ensure the CLI discovers it automatically.
+Enable pre-commit hooks.
 
-See the pages in this section for specifics.
+```bash
+uv run pre-commit install
+```
 
-For local code quality checks before committing, see [Pre-commit](pre_commit.md).
+## Verify
+
+Run a minimal end-to-end smoke test.
+
+```bash
+# Terminal 1: plugrl-server
+uv run plugrl-run-server dummy-policy default dummy default
+
+# Terminal 2: plugrl-env-client
+uv run plugrl-run-env-client dummy-v1 --num-episodes 1 --server-host 127.0.0.1 --server-port 8000
+```
+
+## What to extend
+
+- Environments: env-client-side (`plugrl-env-client`)
+- Policies: server-side (`plugrl-server`)
+- Algorithms: server-side (`plugrl-server`)
+
+## Next steps
+
+- [Pre-commit](pre_commit.md)
+- [Contributing: Environment](env.md)
+- [Contributing: Policy](policy.md)
+- [Contributing: Algorithm](algorithm.md)

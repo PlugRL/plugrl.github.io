@@ -1,29 +1,39 @@
-## Libero Environment
+# Libero environment
 
-`plugrl-worker` provides Libero integration behind an optional dependency group.
+Run Libero tasks in `plugrl-env-client` via an optional dependency group.
 
-### Install
+## Install
 
-Install the worker with the Libero extras (exact command depends on your packaging workflow). Conceptually:
+Install env client with Libero extras.
 
 ```bash
 pip install -e ".[libero]"
 ```
 
-### Run
+## Quickstart
 
-Use `--help` to see the registered Libero env IDs and their config fields:
-
-```bash
-plugrl-run-worker libero-v1 --help
-```
-
-Then run with your desired settings:
+Inspect the CLI config.
 
 ```bash
-plugrl-run-worker libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
+plugrl-run-env-client libero-v1 --help
 ```
 
-### Notes
+Run a few episodes.
 
-- Libero environments can be heavier than dummy/classic; consider `--use-env-lock` if you see initialization issues when using multiple processes.
+```bash
+plugrl-run-env-client libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
+```
+
+## Verify
+
+- Env client can create the Libero env.
+- Episodes run without init errors.
+
+## Troubleshooting
+
+- Multi process init conflicts: try `--use-env-lock`.
+
+## Next steps
+
+- [Environments](index.md)
+- [Get Started](../user_guide/get_started.md)

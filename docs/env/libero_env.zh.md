@@ -1,29 +1,39 @@
-## Libero 环境
+# Libero 环境
 
-`plugrl-worker` 提供了对 Libero 的集成（通常作为可选依赖安装）。
+通过可选依赖在 `plugrl-env-client` 中运行 Libero。
 
-### 安装
+## 安装
 
-以“可选依赖组”的方式安装（具体命令取决于你的安装方式/工具链），概念上类似：
+安装带 Libero extras 的 env client。
 
 ```bash
 pip install -e ".[libero]"
 ```
 
-### 运行
+## 快速开始
 
-先查看 Libero 环境对应的 env id 以及可配置项：
-
-```bash
-plugrl-run-worker libero-v1 --help
-```
-
-然后像其它环境一样启动 worker：
+查看可配置项。
 
 ```bash
-plugrl-run-worker libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
+plugrl-run-env-client libero-v1 --help
 ```
 
-### 备注
+跑几个 episode。
 
-- Libero 初始化相对更重，多进程时若遇到初始化冲突，可尝试开启 `--use-env-lock` 进行串行初始化。
+```bash
+plugrl-run-env-client libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
+```
+
+## 验证
+
+- env client 能创建 Libero 环境
+- episode 能正常跑完
+
+## 常见问题
+
+- 多进程初始化冲突：可尝试 `--use-env-lock`。
+
+## 下一步
+
+- [环境](index.zh.md)
+- [快速开始](../user_guide/get_started.zh.md)

@@ -1,39 +1,59 @@
-## 概览
+# 环境
 
-PlugRL 不要求你的环境代码必须放在 `plugrl-worker` 仓库/目录里：你可以把环境实现放在自己的包中，只要它被安装到同一 Python 环境、在 worker 启动时可被 import，并完成注册（或能被 `gym.make(...)` 创建），就可以接入。
+环境运行在 env client 侧，通过 Gymnasium 创建。
 
-环境侧主要在 **plugrl-worker** 中运行，并通过 Gymnasium 方式创建：
+> Note: 环境代码可以放在你自己的包里。只要 env client 启动时能 import 并完成注册，CLI 就能发现它。
 
-```python
-env = gym.make(<env_id>, config=<dataclass_config>, max_episode_steps=...)
-```
+## 快速开始
 
-worker 提供统一入口：
+查看一个环境的参数。
 
 ```bash
-plugrl-run-worker <env> [OPTIONS]
+plugrl-run-env-client dummy-v1 --help
 ```
 
-## 内置环境类型（常见）
+跑一个短 episode。
 
-在安装对应可选依赖后，常见的环境 ID 包括：
+```bash
+plugrl-run-server dummy-policy default dummy default
+plugrl-run-env-client dummy-v1 --num-episodes 1 --server-host 127.0.0.1 --server-port 8000
+```
 
-- `dummy-v1`（连通性/调试）
-- `classic-v1`（经典控制）
+## 验证
+
+- env client 打印 server 元信息
+- env client 能 reset 与 step 环境
+
+## 环境如何创建
+
+env client 通过 Gymnasium 创建 env。
+
+```py
+env = gym.make(env_id, config=config_dataclass, max_episode_steps=max_episode_steps)
+```
+
+## 常见内置环境 ID
+
+- `dummy-v1`
+- `classic-v1`
 - `atari-v1`
 - `robomimic-v1`
-- `d4rl-*`（需安装可选依赖）
-- `libero-*`（需安装可选依赖）
+- `d4rl-*` 需要安装可选依赖
+- `libero-*` 需要安装可选依赖
 
-查看某个环境的完整参数：
+## 常用 env client 参数
 
-```bash
-plugrl-run-worker dummy-v1 --help
-```
+- `--num-workers`：多进程并行跑环境
+- `--server-host`、`--server-port`：server 地址
+- `--use-remote-viewer`：推送观测到 viewer
+- `--use-real-time`、`--fps`：固定 FPS 运行
 
-## 常用 worker 参数
+## 常见问题
 
-- `--num-workers`：启动多个进程并行跑环境
-- `--server-host/--server-port`：server 地址
-- `--use-remote-viewer`：推送观测到远程 viewer
-- `--use-real-time` / `--fps`：以固定 FPS 实时运行，便于调试
+- CLI 找不到 env id：注册模块没有被 import。
+- 多进程初始化冲突：环境较重时可尝试 `--use-env-lock`。
+
+## 下一步
+
+- [自定义环境](custom_env.zh.md)
+- [快速开始](../user_guide/get_started.zh.md)

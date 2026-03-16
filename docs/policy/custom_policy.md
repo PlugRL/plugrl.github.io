@@ -1,42 +1,14 @@
-## Custom Policy
+# Custom policy
 
-Policies are discovered via **import-time registration**: when a module is imported, decorators add the policy/config into the registry, and the server CLI can then see it.
+Add a server-side policy so `plugrl-run-server` can select it by UID.
 
-This naturally creates two cases:
+Policies are discovered by import-time registration.
 
-- **Built-in policies** ship inside `plugrl-server` and are imported automatically.
-- **Custom policies** can be plug-in: you implement them in your own package and import them before launching the server.
+## Quickstart
 
-To add a new policy, you typically:
+Define a config dataclass and a `BasePolicy` subclass, then register both.
 
-1. Define a policy config (dataclass) for Tyro CLI.
-2. Implement a `BasePolicy` subclass.
-3. Register both, and make sure the module is imported so the CLI can discover it.
-
-This is exactly how the SAC example does it in `plugrl-server/examples/sac/sac_policy.py`.
-
-### Where to put the code
-
-You have two equally valid options.
-
-#### Option A: contribute it to `plugrl-server`
-
-In `plugrl-server/src/plugrl_server/policy/<your_policy>/...`:
-
-- Implementation: `plugrl_server/policy/<your_policy>/<your_policy>_policy.py`
-- Registration (side-effect import): `plugrl_server/policy/<your_policy>/__init__.py`
-- Ensure it is imported from `plugrl_server/policy/__init__.py` (so `import plugrl_server` loads it)
-
-#### Option B: keep it as a plug-in (no need to edit `plugrl-server`)
-
-- Put the policy module in your own package (e.g. `my_pkg/plugrl_policies.py`).
-- Ensure your package gets imported before the server CLI is built.
-
-The only “integration step” is the import itself.
-
-### Template
-
-```python
+```py
 import dataclasses
 
 from plugrl_server.policy.base_policy import BasePolicy, BasePolicyConfig, InternalState
@@ -48,55 +20,64 @@ UID = "your-policy"
 @register_policy_config(UID)
 @dataclasses.dataclass
 class YourPolicyConfig(BasePolicyConfig):
-	# Add fields needed by your policy
-	...
+    ...
 
 
 @register_policy(UID)
 class YourPolicy(BasePolicy):
-	def prepare_observation(self, _obs: dict):
-		# Convert worker observation dict -> tensor / tensordict
-		...
+    def prepare_observation(self, obs: dict):
+        ...
 
-	def get_action_and_internal_state(self, _obs: dict):
-		# Return an action (numpy or tensor) + InternalState
-		...
+    def get_action_and_internal_state(self, obs: dict):
+        ...
 
-	def fake_internal_state(self, batch_size: int) -> InternalState:
-		# Create an InternalState with correct shapes/dtypes for buffers
-		...
+    def fake_internal_state(self, batch_size: int) -> InternalState:
+        ...
 ```
 
-### Notes
+Reference implementation: `plugrl-server/examples/sac/sac_policy.py`.
 
-- A policy alone is not “run”: it is used by an algorithm. The algorithm decides what fields it needs in `InternalState`.
-- For a concrete reference, see SAC policy registration and action sampling logic in `plugrl-server/examples/sac/sac_policy.py`.
+## File layout
 
-### Walkthrough: SAC
+Built-in in `plugrl-server`.
 
-SAC is a compact policy reference. It shows:
+- `plugrl_server/policy/<policy_uid>/...`
+- Import it from `plugrl_server/policy/__init__.py`
 
-- **Registration**: `SACPolicyConfig` is registered as `"sac_policy"`. `SACPolicy` is registered with the same UID.
-- **Observation contract**: `prepare_observation()` reads `obs["states"]["obs"]`, converts it to a `torch.Tensor`, and places it on the policy device.
-- **Action shape**: `get_action_and_internal_state()` returns actions shaped like `[B, 1, action_dim]`. The implementation adds the middle dimension via `action_numpy[:, None]`.
-- **Warmup random actions**: the algorithm requests random actions before `learning_starts` using the `random_sample` flag.
-- **InternalState usage**: SAC stores `internal_state.obs` and `internal_state.action` for replay buffer insertion. `logprob/entropy/value` are kept for a consistent `InternalState` schema, even though SAC does not use them.
+Plug-in in your own package.
 
-### Verify
+- Put the policy module in your own package.
+- Import it before calling `plugrl_server.cli:main`.
 
-Use `dummy` as a smoke test to verify that the policy is visible in the server CLI and that the server/worker loop runs.
+## Verify
 
-If your policy lives in an external package, a minimal pattern is “import first, then delegate to the real entrypoint”:
+Check the CLI.
+
+```bash
+plugrl-run-server --help
+```
+
+For plug-in policies, import before entering the CLI.
 
 ```bash
 python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; main()" \
-	<your-policy> default dummy default
+  your-policy default dummy default
 ```
 
-Then run the worker:
+## Contract
 
-```bash
-plugrl-run-worker dummy-v1 --num-episodes 1
-```
+- `prepare_observation` converts worker obs dict into tensors.
+- `get_action_and_internal_state` returns an action and an `InternalState`.
+- `fake_internal_state` returns shapes and dtypes that match your buffers.
 
-If this works, replace `dummy` with your target algorithm/env and iterate on shapes and performance.
+## Troubleshooting
+
+- Policy UID not listed: module import did not run.
+- Training fails due to shape mismatch: keep action shape stable across infer and training.
+- `InternalState` missing fields: align it with what your algorithm stores.
+- Device and dtype drift: move tensors to `self.device` and keep dtypes stable.
+
+## Next steps
+
+- [Policies](index.md)
+- [Custom algorithm](../algorithm/custom_algorithm.md)
