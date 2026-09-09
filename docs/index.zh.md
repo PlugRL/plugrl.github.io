@@ -23,12 +23,10 @@ plugrl-run-env-client dummy-v1 --num-episodes 2 --server-host 127.0.0.1 --server
 - `plugrl-server`：训练端，负责算法、策略、checkpoint、指标追踪
 - `plugrl-env-client`：环境端，负责创建环境并采集 rollout
 - `plugrl-protocol`：协议与序列化层，WebSocket 与 msgpack
-- `plugrl-monitor`：可选 viewer，用于查看观测
 
 ## 常用参数
 
 - env client 通过 `--server-host` 与 `--server-port` 连接 server
-- 观测串流使用 `--use-remote-viewer`、`--viewer-host`、`--viewer-port`
 - 分布式启动使用 `plugrl-run-server-ray`
 
 ## 下一步

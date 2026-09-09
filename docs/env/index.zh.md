@@ -45,7 +45,6 @@ env = gym.make(env_id, config=config_dataclass, max_episode_steps=max_episode_st
 
 - `--num-workers`：多进程并行跑环境
 - `--server-host`、`--server-port`：server 地址
-- `--use-remote-viewer`：推送观测到 viewer
 - `--use-real-time`、`--fps`：固定 FPS 运行
 
 ## 常见问题

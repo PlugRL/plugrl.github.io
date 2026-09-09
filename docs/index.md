@@ -23,12 +23,10 @@ plugrl-run-env-client dummy-v1 --num-episodes 2 --server-host 127.0.0.1 --server
 - `plugrl-server`: training server, runs algorithm, policy, checkpoints, tracking
 - `plugrl-env-client`: environment runner, collects rollouts
 - `plugrl-protocol`: transport, message types, and serialization (WebSocket + msgpack)
-- `plugrl-monitor`: optional remote viewer for observations
 
 ## Common options
 
 - Env client connects to server via `--server-host` and `--server-port`.
-- Stream observations with `--use-remote-viewer`, `--viewer-host`, `--viewer-port`.
 - Use `plugrl-run-server-ray` for Ray-based distributed launch.
 
 ## Next steps

@@ -43,7 +43,6 @@ env = gym.make(env_id, config=config_dataclass, max_episode_steps=max_episode_st
 
 - `--num-workers`: run multiple env client processes
 - `--server-host`, `--server-port`: server address
-- `--use-remote-viewer`: stream observations to the viewer
 - `--use-real-time`, `--fps`: fixed FPS for debugging
 
 ## Troubleshooting
