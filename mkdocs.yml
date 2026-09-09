@@ -1,5 +1,9 @@
 site_url: https://plugrl.github.io
 site_name: PlugRL
+site_description: An RL infrastructure that keeps the training stack and the environment stack in separate dependency worlds.
+repo_url: https://github.com/PlugRL/plugrl.github.io
+repo_name: PlugRL/plugrl.github.io
+edit_uri: edit/main/docs/
 plugins:
   - search
   - i18n:
@@ -33,10 +37,28 @@ theme:
     - navigation.tabs.sticky
     - navigation.expand
     - navigation.footer
-    - navigation.instance
+    # navigation.instant is deliberately absent: mkdocs-static-i18n cannot keep
+    # the language switcher contextual with it enabled, and --strict fails.
     - toc.follow
+    - content.code.copy
+    - content.action.edit
     - search.suggest
     - search.highlight
+
+# Without these, fenced blocks render as bare <pre><code>: no syntax
+# highlighting, and content.code.copy has nothing to attach a button to.
+markdown_extensions:
+  - admonition
+  - attr_list
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.details
+
 nav:
   - Home: index.md
 
