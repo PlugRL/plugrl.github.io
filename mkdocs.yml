@@ -23,6 +23,7 @@ plugins:
             Environment: 环境
             Policy: 策略
             Contributing: 贡献指南
+            Protocol: 通信协议
             Get Started: 快速开始
   - exclude:
       glob:
@@ -65,6 +66,9 @@ nav:
   - User Guide:
       - Overview: user_guide/index.md
       - Get Started: user_guide/get_started.md
+
+  - Protocol:
+      - Overview: protocol/index.md
 
   - Algorithm:
       - Overview: algorithm/index.md
