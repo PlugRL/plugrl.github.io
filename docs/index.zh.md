@@ -21,9 +21,13 @@ plugrl-run-env-client mujoco-v1 \
     --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
 ```
 
-几分钟内 episode 回报就会从 -300 附近爬上来。`HalfCheetah-v5` 的观测是 17 维、
-动作是 6 维，**正好是 `fpo-policy` 的默认值**，所以不需要任何配置。
-环境端需要 `plugrl-env-client[mujoco]`。
+`HalfCheetah-v5` 的观测是 17 维、动作是 6 维，**正好是 `fpo-policy` 的默认值**，
+所以不需要任何配置。环境端需要 `plugrl-env-client[mujoco]`。
+
+episode 回报从 -300 附近起步。三个随机种子里，到第 2 万步仍有种子会掉回 -300 区间，
+均值在约 6 万步处越过零点，到 50 万步达到 **1928 ± 224** —— 在做这次测量的纯 CPU
+机器上大约一百分钟。**最初几分钟全是噪声**，要按几万步的尺度看，而不是看屏幕上
+最先出现的那几行。曲线、种子与日志：[E6](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e6-first-learning-curve)。
 
 !!! warning "`--algo.buffer-size` 不是装饰"
 
