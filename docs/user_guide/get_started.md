@@ -7,8 +7,8 @@ From nothing to a policy that is learning, in two terminals.
 Neither package is on PyPI. Clone both and install each with `uv`:
 
 ```bash
-git clone git@github.com:PlugRL/plugrl-server.git
-git clone git@github.com:PlugRL/plugrl-env-client.git
+git clone https://github.com/PlugRL/plugrl-server.git
+git clone https://github.com/PlugRL/plugrl-env-client.git
 
 cd plugrl-server     && uv sync && cd ..
 cd plugrl-env-client && uv sync --extra mujoco && cd ..
