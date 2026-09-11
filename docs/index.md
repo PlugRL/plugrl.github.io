@@ -22,10 +22,16 @@ plugrl-run-env-client mujoco-v1 \
     --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
 ```
 
-Episode return climbs out of the -300s within a few minutes. `HalfCheetah-v5`
-has a 17-dimensional observation and a 6-dimensional action, which are
-exactly `fpo-policy`'s defaults, so nothing needs configuring. The
-environment needs `plugrl-env-client[mujoco]`.
+`HalfCheetah-v5` has a 17-dimensional observation and a 6-dimensional
+action, which are exactly `fpo-policy`'s defaults, so nothing needs
+configuring. The environment needs `plugrl-env-client[mujoco]`.
+
+Episode return starts near -300. Across three seeds it is still dipping back
+into the -300s at step 20k, the mean crosses zero at about 60k, and by 500k
+steps it reaches **1928 ± 224** — roughly a hundred minutes on the CPU-only
+machine that measured it. The first few minutes are noise, so judge it over
+tens of thousands of steps rather than the first screenful. Curve, seeds and
+logs: [E6](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e6-first-learning-curve).
 
 !!! warning "`--algo.buffer-size` is not decoration"
 
