@@ -7,8 +7,8 @@
 两个包都不在 PyPI 上。分别 clone 并用 `uv` 安装：
 
 ```bash
-git clone git@github.com:PlugRL/plugrl-server.git
-git clone git@github.com:PlugRL/plugrl-env-client.git
+git clone https://github.com/PlugRL/plugrl-server.git
+git clone https://github.com/PlugRL/plugrl-env-client.git
 
 cd plugrl-server     && uv sync && cd ..
 cd plugrl-env-client && uv sync --extra mujoco && cd ..
