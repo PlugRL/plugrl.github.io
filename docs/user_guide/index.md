@@ -5,9 +5,12 @@ Run PlugRL end to end: start a server, then start one or more env clients.
 ## Quickstart
 
 ```bash
-plugrl-run-server dummy-policy default dummy default
-plugrl-run-env-client dummy-v1 --num-episodes 2 --server-host 127.0.0.1 --server-port 8000
+plugrl-run-server fpo-policy default fpo default \n    --policy.device cpu --algo.global-steps 500000 --algo.buffer-size 4096
+plugrl-run-env-client mujoco-v1 --server-host 127.0.0.1 --server-port 8000 \n    --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
 ```
+
+That pair learns. [Get Started](get_started.md) explains the two flags that
+are not optional, and has the dummy connectivity check.
 
 ## Verify
 
@@ -16,7 +19,9 @@ plugrl-run-env-client dummy-v1 --num-episodes 2 --server-host 127.0.0.1 --server
 
 ## Workflow
 
-1. Start a training server with `plugrl-run-server` or `plugrl-run-server-ray`.
+1. Start a training server with `plugrl-run-server`. (There is also
+   `plugrl-run-server-ray`, but it is not a supported path today - see
+   [Get Started](get_started.md).)
 2. Start one or more env clients with `plugrl-run-env-client <env_id>`.
 
 ## Components
