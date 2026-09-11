@@ -44,9 +44,16 @@ plugrl-run-env-client dummy-v1 --num-episodes 1
 
 ## 内置算法
 
+`plugrl-server` 里一共注册了五个 UID。
+
+- `fpo`：FPO 训练循环 - 快速开始跑的就是它
 - `dummy`：协议与联通性验证
-- `dppo`：DPPO 训练循环
-- `dppo-dist`：Ray 分布式 DPPO
+- `eval`：只跑策略不训练，可用 `--algo.policy-checkpoint-path` 指定权重
+- `dppo`：DPPO 训练循环，需要 `dppo` 可选依赖
+- `dppo-dist`：经 Ray 启动的分布式 DPPO，需要 `dppo` 可选依赖
+
+没装 `dppo` 可选依赖时，`plugrl-run-server` 启动会打印
+`Could not import DPPO algorithm module`，并且没有 `dppo-dist` 子命令。
 
 ## 常见问题
 

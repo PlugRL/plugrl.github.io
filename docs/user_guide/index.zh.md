@@ -5,8 +5,10 @@
 ## 快速开始
 
 ```bash
-plugrl-run-server fpo-policy default fpo default \n    --policy.device cpu --algo.global-steps 500000 --algo.buffer-size 4096
-plugrl-run-env-client mujoco-v1 --server-host 127.0.0.1 --server-port 8000 \n    --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
+plugrl-run-server fpo-policy default fpo default \
+    --policy.device cpu --algo.global-steps 500000 --algo.buffer-size 4096
+plugrl-run-env-client mujoco-v1 --server-host 127.0.0.1 --server-port 8000 \
+    --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
 ```
 
 这一对**真的会学**。[快速开始](get_started.zh.md)里说明了那两个不可省的参数，

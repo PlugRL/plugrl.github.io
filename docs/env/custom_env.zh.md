@@ -25,10 +25,19 @@ class CustomConfig(BaseEnvConfig):
 
 @register_env(UID)
 class CustomEnv(BaseEnv):
-    def __init__(self, config: CustomConfig, worker_id: int | None = None, total_workers: int | None = None):
-        super().__init__(config=config)
-        self.worker_id = worker_id
-        self.total_workers = total_workers
+    def __init__(
+        self,
+        config: CustomConfig,
+        num_envs: int = 1,
+        process_id: int | None = None,
+        total_processes: int | None = None,
+    ):
+        super().__init__(
+            config=config,
+            num_envs=num_envs,
+            process_id=process_id,
+            total_processes=total_processes,
+        )
 
     def prepare_obs(self, obs: np.ndarray) -> Observation:
         return Observation(images={}, states={}, text="")
@@ -61,6 +70,11 @@ plugrl-run-env-client custom-v1 --num-episodes 1
 - config 继承 `BaseEnvConfig`
 - 实现 `reset` 与 `step`
 - 在 `prepare_obs` 中把原始输出转成 `Observation`
+- `__init__` 接收 `config, num_envs, process_id, total_processes` 四个参数，
+  与 `BaseEnv.__init__` 以及内置的 `MuJoCoEnv` 一致。`EnvSpec.make` 总会传
+  `num_envs`，`gym.make_vec` 会转发 `process_id` 与 `total_processes`。本页
+  此前用的是 `worker_id` 与 `total_workers`，这两个名字在 `plugrl-env-client`
+  里根本不存在，按那个签名写的类会因为多出来的 `num_envs` 直接抛 `TypeError`。
 
 ## 注册
 
@@ -71,7 +85,7 @@ plugrl-run-env-client custom-v1 --num-episodes 1
 ## 常见问题
 
 - CLI 找不到 env id：模块没有被 import。
-- 多进程初始化冲突：可尝试 `--use-env-lock`。
+- 多进程初始化冲突：可尝试 `--runner.use-env-lock`。
 
 ## 下一步
 

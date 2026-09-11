@@ -24,10 +24,19 @@ class CustomConfig(BaseEnvConfig):
 
 @register_env(UID)
 class CustomEnv(BaseEnv):
-    def __init__(self, config: CustomConfig, worker_id: int | None = None, total_workers: int | None = None):
-        super().__init__(config=config)
-        self.worker_id = worker_id
-        self.total_workers = total_workers
+    def __init__(
+        self,
+        config: CustomConfig,
+        num_envs: int = 1,
+        process_id: int | None = None,
+        total_processes: int | None = None,
+    ):
+        super().__init__(
+            config=config,
+            num_envs=num_envs,
+            process_id=process_id,
+            total_processes=total_processes,
+        )
 
     def prepare_obs(self, obs: np.ndarray) -> Observation:
         return Observation(images={}, states={}, text="")
@@ -60,6 +69,12 @@ plugrl-run-env-client custom-v1 --num-episodes 1
 - Config inherits `BaseEnvConfig`.
 - Implement `reset` and `step`.
 - Convert raw env outputs into `Observation` in `prepare_obs`.
+- `__init__` takes `config, num_envs, process_id, total_processes`, the same
+  four as `BaseEnv.__init__` and as the shipped `MuJoCoEnv`. `EnvSpec.make`
+  always passes `num_envs`, and `gym.make_vec` forwards `process_id` and
+  `total_processes`. An earlier version of this page used `worker_id` and
+  `total_workers`; those names appear nowhere in `plugrl-env-client`, and a
+  class with that signature raises `TypeError` on the unexpected `num_envs`.
 
 ## Registration
 
@@ -70,7 +85,7 @@ plugrl-run-env-client custom-v1 --num-episodes 1
 ## Troubleshooting
 
 - Env ID not listed: module import did not run.
-- Multi process init conflicts: try `--use-env-lock`.
+- Multi process init conflicts: try `--runner.use-env-lock`.
 
 ## Next steps
 

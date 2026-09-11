@@ -68,11 +68,27 @@ happens, which is what makes it worth stating.
 ## Checking an implementation
 
 `plugrl-protocol` ships a server that grades a client against the
-specification clause by clause and exits non-zero on a violation:
+specification clause by clause and exits non-zero on a violation.
+
+From a fresh checkout of `plugrl-protocol`, two things are not already in place.
+The conformance server imports `websockets`, which is not a declared dependency -
+`pyproject.toml` lists only `numpy` and `msgpack`, so `uv sync` leaves it out. And
+the C++ client is a source file, not a binary, so it has to be compiled first.
+Both steps are what CI does:
 
 ```bash
-python examples/conformance_server.py --port 8000 --steps 20 &
-./plugrl_client 127.0.0.1 8000 20
+g++ -std=c++17 -O2 -Wall -Wextra -o /tmp/plugrl_client examples/plugrl_client.cpp
+
+uv run --with websockets examples/conformance_server.py --port 8000 --steps 20 &
+/tmp/plugrl_client 127.0.0.1 8000 20
+```
+
+`plugrl_client.cpp` uses POSIX sockets (`sys/socket.h`, `arpa/inet.h`), so that
+build needs Linux, macOS or WSL. The Python reference client has no such
+constraint and exercises the same clauses:
+
+```bash
+uv run --with websockets examples/raw_client.py --host 127.0.0.1 --port 8000 --steps 20
 ```
 
 Its report has two severities. A **violation** is something the real server

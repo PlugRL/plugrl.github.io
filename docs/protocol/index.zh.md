@@ -56,11 +56,25 @@ step state、终止标志 —— 只活在一条连接里。重连的客户端�
 
 ## 检验一个实现
 
-`plugrl-protocol` 附带一个服务端，它按规范逐条给客户端打分，有违规就以非零码退出：
+`plugrl-protocol` 附带一个服务端，它按规范逐条给客户端打分，有违规就以非零码退出。
+
+刚 clone 下来的 `plugrl-protocol` 还差两步。conformance server 会 import
+`websockets`，但它不是声明的依赖 —— `pyproject.toml` 里只有 `numpy` 和 `msgpack`，
+`uv sync` 装不上它；另外 C++ 客户端是源码不是可执行文件，要先编译。CI 做的就是这两步：
 
 ```bash
-python examples/conformance_server.py --port 8000 --steps 20 &
-./plugrl_client 127.0.0.1 8000 20
+g++ -std=c++17 -O2 -Wall -Wextra -o /tmp/plugrl_client examples/plugrl_client.cpp
+
+uv run --with websockets examples/conformance_server.py --port 8000 --steps 20 &
+/tmp/plugrl_client 127.0.0.1 8000 20
+```
+
+`plugrl_client.cpp` 用的是 POSIX socket（`sys/socket.h`、`arpa/inet.h`），
+所以这一步需要 Linux、macOS 或 WSL。Python 参考客户端没有这个限制，
+覆盖的条款是同一批：
+
+```bash
+uv run --with websockets examples/raw_client.py --host 127.0.0.1 --port 8000 --steps 20
 ```
 
 报告分两个等级。**violation** 是真服务端会拒绝或处理错的问题；**note** 是真服务端

@@ -21,6 +21,7 @@ plugrl-run-server --help
 
 - `dummy-policy`：随机动作，用于协议联通性验证
 - `dppo-policy`：DPPO diffusion 策略
+- `fpo-policy`：FPO flow matching 策略，快速上手那条命令用的就是它
 - `pi0-policy`：OpenPI 策略，需要 checkpoint 路径
 
 OpenPI 示例。

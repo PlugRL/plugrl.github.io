@@ -35,14 +35,31 @@ Key properties.
 
 ## Common options
 
-- Tracking: `--track.enabled true`, `--track.tracker swanlab|wandb`
-- Checkpoints: `--checkpoint-base-dir ./checkpoints`, `--resume true`
+- Tracking: `--track.enabled`, `--track.tracker swanlab|wandb`
+- Checkpoints: `--checkpoint-base-dir ./checkpoints`, `--resume`
 
-Multi GPU runs via Ray launcher.
+`--track.enabled` and `--resume` are bare boolean flags. Writing
+`--track.enabled true` or `--resume true` is a parse error - tyro reports
+`Unrecognized arguments: true` and exits. The off switches are
+`--track.no-enabled` and `--no-resume`. Both were written with a `true`
+argument on this page.
+
+Multi GPU runs via the Ray launcher.
 
 ```bash
-plugrl-run-server-ray dppo-policy default dppo hopper --num-ddp-gpus 4
+plugrl-run-server-ray dppo-policy default dppo-dist hopper --num-ddp-gpus 4
 ```
+
+!!! note "The Ray launcher is not a supported path today"
+
+    The algorithm has to be `dppo-dist`, not `dppo`: `cli_ray.py` asserts
+    `isinstance(algo, DDPAlgorithm)`, and only `DPPOAlgoDistributed` under the
+    UID `dppo-dist` mixes `DDPAlgorithm` in. This page previously showed
+    `dppo`, which trips that assertion. The launcher also requires the `dppo`
+    extra, builds its worker list from the *local* GPU count - so a multi-node
+    cluster still only sees the head node - and its server speaks an older
+    dialect of the protocol than the WebSocket one. Use `plugrl-run-server`
+    unless you are working on the Ray path itself.
 
 ## Troubleshooting
 
