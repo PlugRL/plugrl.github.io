@@ -78,18 +78,23 @@ Common flags.
 Subclass `BasePolicyGradientDiffusionPolicy` in
 `plugrl-server/src/plugrl_server/policy/base_policy_gradient_diffusion_policy.py`.
 
-The base class drives the denoising loop and fills `InternalState`:
+The base class drives the denoising loop and fills a `DiffusionRuntimeState`:
 
 - Per-step: `action`, `logprob`, `entropy`, plus `obs["x"]` and `obs["t"]`.
-- Final: calls `_postprocess_action` and stores `value` into `internal_state.value`.
+- Final: calls `_postprocess_action` and stores `value` into `runtime_state.value`.
 
 What you implement.
 
 - `_get_timesteps`, `_initialize_x`, `_denoising_step`, `_iterative_process_action`, `_postprocess_action`
 - `fake_diffusion_cond` for buffer preallocation
-- Optional `preprocess_observation` to cache expensive conditioning
+- `_get_value`. It is not abstract, but the base assigns its result into
+  `runtime_state.value`, so a subclass that leaves it out fails mid-rollout with
+  `TypeError: can't assign a NoneType to a torch.FloatTensor`.
+- Optional `build_obs_cache` to cache expensive conditioning. The base calls it
+  once per inference and passes the result to `_denoising_step` as the
+  keyword-only `cond_cache=` and to `_get_value` as `obs_cache=`.
 
-Key shapes (from `fake_internal_state`).
+Key shapes (from `fake_runtime_state`).
 
 - `action/logprob/entropy/obs["x"]`: `(B, S, H, D)`
 - `obs["t"]`: `(B, S)`
@@ -99,12 +104,15 @@ Minimal template.
 
 ```py
 import dataclasses
+from typing import Any
+
+import numpy as np
 import torch
-from tensordict import TensorDict
 
 from plugrl_server.policy.base_policy_gradient_diffusion_policy import (
     BasePolicyGradientDiffusionPolicy,
     BasePolicyGradientDiffusionPolicyConfig,
+    TorchTree,
 )
 from plugrl_server.policy.registration import register_policy, register_policy_config
 
@@ -123,23 +131,23 @@ class MyDPPOPolicy(BasePolicyGradientDiffusionPolicy):
         super().__init__(config)
         ...
 
-    def prepare_observation(self, obs: dict) -> TensorDict:
+    def prepare_observation(self, _obs: dict) -> dict[str, np.ndarray]:
         ...
 
     def _get_timesteps(self) -> torch.Tensor:
         ...
 
-    def _initialize_x(self, obs: TensorDict) -> torch.Tensor:
+    def _initialize_x(self, batch_size: int) -> torch.Tensor:
         ...
 
     def _denoising_step(
         self,
         x: torch.Tensor,
         t: torch.Tensor,
-        cond: TensorDict,
+        cond: TorchTree,
         x_next: torch.Tensor | None = None,
         *,
-        processed_cond=None,
+        cond_cache: Any = None,
         sampling_noise_level: float | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         ...
@@ -147,10 +155,13 @@ class MyDPPOPolicy(BasePolicyGradientDiffusionPolicy):
     def _iterative_process_action(self, action: torch.Tensor) -> torch.Tensor:
         return action
 
-    def _postprocess_action(self, action: torch.Tensor, obs: TensorDict):
+    def _postprocess_action(self, action: torch.Tensor, obs: TorchTree) -> Any:
         ...
 
-    def fake_diffusion_cond(self, batch_size: int) -> TensorDict:
+    def _get_value(self, obs: TorchTree, obs_cache: Any = None) -> torch.Tensor:
+        ...
+
+    def fake_diffusion_cond(self, batch_size: int) -> TorchTree:
         ...
 ```
 
@@ -160,8 +171,9 @@ See `plugrl-server/examples/lerobot/lerobot_diffusion.py` (`UID = "lerobot-diffu
 
 Patterns to copy.
 
-- Pack multi-step observations into a batched `TensorDict`.
-- Cache encoder outputs in `preprocess_observation`.
+- Pack multi-step observations into one batched nested `dict` of arrays - that is
+  what `TorchTree` is; the base converts it to tensors for you.
+- Cache encoder outputs in `build_obs_cache`.
 - Support expanded batch `B * num_denoising_steps` with `repeat_interleave`.
 - Deterministic sampling can return zero `logprob` like `Pi0Policy`.
 - Stochastic sampling should compute `logprob/entropy` like `DPPOPolicy`.
@@ -170,7 +182,7 @@ Patterns to copy.
 
 - `dppo-policy` import fails: install `dppo` in the environment that runs `plugrl-run-server`.
 - `pi0-policy` import/setup fails: follow the OpenPI setup in the server repo.
-- Shape mismatch in training: keep action shapes stable and align `InternalState` with your buffers.
+- Shape mismatch in training: keep action shapes stable and align the runtime state with your buffers.
 - Policy UID not listed: your registration module was not imported.
 
 ## Next steps

@@ -11,7 +11,11 @@
 ```py
 import dataclasses
 
-from plugrl_server.policy.base_policy import BasePolicy, BasePolicyConfig, InternalState
+from plugrl_server.policy.base_policy import (
+    BasePolicy,
+    BasePolicyConfig,
+    PolicyRuntimeState,
+)
 from plugrl_server.policy.registration import register_policy, register_policy_config
 
 UID = "your-policy"
@@ -28,10 +32,10 @@ class YourPolicy(BasePolicy):
     def prepare_observation(self, obs: dict):
         ...
 
-    def get_action_and_internal_state(self, obs: dict):
+    def get_action_and_runtime_state(self, obs: dict):
         ...
 
-    def fake_internal_state(self, batch_size: int) -> InternalState:
+    def fake_runtime_state(self, batch_size: int) -> PolicyRuntimeState:
         ...
 ```
 
@@ -66,15 +70,18 @@ python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; ma
 
 ## 约定
 
-- `prepare_observation` 把 worker 观测 dict 转成张量
-- `get_action_and_internal_state` 返回动作与 `InternalState`
-- `fake_internal_state` 返回能用于 buffer 预分配的形状与 dtype
+- `prepare_observation` 把 worker 观测 dict 转成 `NumpyState`，也就是 `np.ndarray`
+  或它们的嵌套 mapping；转张量由 `BaseTorchPolicy.extract_model_obs_tensor` 负责
+- `get_action_and_runtime_state` 返回动作与 `PolicyRuntimeState`
+- `fake_runtime_state` 返回能用于 buffer 预分配的形状与 dtype
+- `PolicyRuntimeState` 是类型别名而不是基类：dict、dataclass 或 `None` 都可以，
+  按算法需要返回
 
 ## 常见问题
 
 - CLI 找不到 UID：模块没有被 import。
 - 训练时 shape 对不上：infer 与训练路径的动作形状必须一致。
-- `InternalState` 字段缺失：与算法写入 buffer 的字段对齐。
+- runtime state 字段缺失：与算法写入 buffer 的字段对齐。
 - device 与 dtype 漂移：观测张量放到 `self.device` 并统一 dtype。
 
 ## 下一步

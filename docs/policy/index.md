@@ -21,6 +21,7 @@ plugrl-run-server --help
 
 - `dummy-policy`: random actions for protocol smoke tests
 - `dppo-policy`: DPPO diffusion policy
+- `fpo-policy`: FPO flow-matching policy, used by the get-started run
 - `pi0-policy`: OpenPI policy, requires a checkpoint path
 
 OpenPI example.

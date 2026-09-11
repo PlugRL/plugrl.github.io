@@ -7,10 +7,14 @@ PlugRL 文档站点源码，使用 MkDocs Material 构建，支持中英文双�
 本仓库使用 uv 管理 Python 环境与依赖。
 
 ```bash
-cd plugrl-docs
+git clone https://github.com/PlugRL/plugrl.github.io.git
+cd plugrl.github.io
 uv sync --frozen
 uv run mkdocs serve -a 127.0.0.1:8000
 ```
+
+`plugrl-docs` 是 pyproject 里的发行包名，不是目录名；`git clone` 得到的目录叫
+`plugrl.github.io`。已经在仓库根目录时，跳过前两行即可。
 
 在浏览器打开 http://127.0.0.1:8000/ 。
 

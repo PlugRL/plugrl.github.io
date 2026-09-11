@@ -24,15 +24,30 @@ plugrl-run-env-client dummy-v1 --num-episodes 1 --server-host 127.0.0.1 --server
 
 ## How environments are created
 
-Env client creates envs via Gymnasium.
+Env client creates envs with `gym.make_vec`. This is the call in
+`plugrl_env_client/runner/run.py`.
 
 ```py
-env = gym.make(env_id, config=config_dataclass, max_episode_steps=max_episode_steps)
+env = gym.make_vec(
+    env_id,
+    num_envs=num_envs,
+    vectorization_mode="vector_entry_point",
+    config=config_dataclass,
+    max_episode_steps=max_episode_steps,
+    process_id=process_id,
+    total_processes=total_processes,
+)
 ```
+
+`register_env` registers each env with `entry_point=None` and only a
+`vector_entry_point`, so plain `gym.make(env_id, ...)` fails with
+`<env_id> registered but entry_point is not specified`. This page previously
+showed the `gym.make` form; that form never worked.
 
 ## Built-in environment IDs
 
 - `dummy-v1`
+- `mujoco-v1` - needs the `mujoco` extra; this is the env the quickstart uses
 - `classic-v1`
 - `atari-v1`
 - `robomimic-v1`
@@ -41,14 +56,17 @@ env = gym.make(env_id, config=config_dataclass, max_episode_steps=max_episode_st
 
 ## Common env client flags
 
-- `--num-workers`: run multiple env client processes
+- `--num-procs`: run multiple env client processes
 - `--server-host`, `--server-port`: server address
-- `--use-real-time`, `--fps`: fixed FPS for debugging
+- `--recorder.video-fps`: output fps for recorded mp4 artifacts
+
+There is no flag for running an env at a fixed wall-clock FPS. `--use-real-time`
+and `--fps` were listed here and do not exist on this CLI.
 
 ## Troubleshooting
 
 - Env ID not found in CLI: registration module was not imported.
-- Multi process init conflicts: try `--use-env-lock` if your env is heavy.
+- Multi process init conflicts: try `--runner.use-env-lock` if your env is heavy.
 
 ## Next steps
 

@@ -29,12 +29,26 @@ Put the code in one of these layouts.
 
 The WebSocket server loop calls these methods.
 
-- `infer(obs) -> (action, internal_state)`
+- `infer(obs) -> (action, runtime_state)`
 - `feedback(...) -> (prev_node, global_step, log_dict)`
 - `learn() -> (global_step, log_dict)`
 - Scheduling and checkpoint hooks: `should_learn`, `should_save`, `should_stop`, `create_checkpoint`, `load_checkpoint`
 
-See `plugrl_server/algorithm/base_algorithm.py` for exact signatures.
+See `plugrl_server/algorithm/base_algorithm.py` for exact signatures. The
+server does call `learn()`, but `learn()` is concrete on `BaseAlgorithm`: it
+calls `learn_impl()` and then wraps the result with `build_train_info`.
+`learn_impl` is the abstract method, so that is the one you override.
+Overriding `learn` instead leaves `learn_impl` unimplemented and the class
+abstract, and `make_algo` fails with `TypeError`. An earlier version of the
+template below did exactly that.
+
+`infer` and `feedback` take and return `PolicyRuntimeState` from
+`plugrl_server.policy.state`; `feedback` also takes `train_state:
+PolicyTrainState = None`. There is no `InternalState` type and no
+`get_action_and_internal_state` method anywhere in `plugrl-server` - the
+template used both names and neither imports. Every `feedback` parameter is
+keyword-only, so a mismatched name is a `TypeError` on the server's first
+call, not a silent rename.
 
 ## Minimal template
 
@@ -46,7 +60,8 @@ import numpy as np
 from plugrl_server.algorithm.base_algorithm import BaseAlgoConfig, BaseAlgorithm
 from plugrl_server.algorithm.registration import register_algo, register_algo_config
 from plugrl_server.common.checkpoint_manager import Checkpoint
-from plugrl_server.policy.base_policy import BasePolicy, InternalState
+from plugrl_server.policy.base_policy import BasePolicy
+from plugrl_server.policy.state import PolicyRuntimeState, PolicyTrainState
 
 UID = "your-algo"
 
@@ -63,15 +78,16 @@ class YourAlgorithm(BaseAlgorithm):
         super().__init__(config=config, policy=policy)
         self.global_step = 0
 
-    def infer(self, obs: dict) -> tuple[np.ndarray, InternalState]:
-        action, internal_state = self.policy.get_action_and_internal_state(obs)
-        return action, internal_state
+    def infer(self, obs: dict) -> tuple[np.ndarray, PolicyRuntimeState]:
+        action, runtime_state = self.policy.get_action_and_runtime_state(obs)
+        return action, runtime_state
 
     def feedback(
         self,
         *,
         obs: dict,
-        internal_state: InternalState | None,
+        runtime_state: PolicyRuntimeState,
+        train_state: PolicyTrainState = None,
         terminated: bool,
         truncated: bool,
         next_obs: dict,
@@ -84,7 +100,7 @@ class YourAlgorithm(BaseAlgorithm):
         self.global_step += 1
         return prev_node, self.global_step, {}
 
-    def learn(self) -> tuple[int, dict]:
+    def learn_impl(self) -> tuple[int, dict]:
         return self.global_step, {}
 
     def should_learn(self) -> bool:

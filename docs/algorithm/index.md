@@ -44,9 +44,18 @@ Discovery.
 
 ## Built-in algorithms
 
+Five UIDs are registered in `plugrl-server`.
+
+- `fpo`: FPO training loop - the algorithm the quickstarts run
 - `dummy`: protocol and connectivity smoke tests
-- `dppo`: DPPO training loop
-- `dppo-dist`: distributed DPPO via Ray launcher
+- `eval`: run a policy without training it, optionally from
+  `--algo.policy-checkpoint-path`
+- `dppo`: DPPO training loop, needs the `dppo` extra
+- `dppo-dist`: distributed DPPO via the Ray launcher, needs the `dppo` extra
+
+Without the `dppo` extra installed, `plugrl-run-server` logs
+`Could not import DPPO algorithm module` at startup and the `dppo-dist`
+subcommand is absent.
 
 ## Troubleshooting
 
