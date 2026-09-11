@@ -1,0 +1,28 @@
+name: CI
+
+# deploy-pages.yml only runs on a push to main, so until now a pull request
+# got no validation at all - a broken build was only visible after merging.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Sync
+        run: uv sync --frozen
+      # --strict turns warnings into failures, so a broken link or a page
+      # missing from the nav fails here rather than shipping.
+      - name: Build
+        run: uv run mkdocs build --strict

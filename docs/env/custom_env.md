@@ -75,4 +75,4 @@ plugrl-run-env-client custom-v1 --num-episodes 1
 ## Next steps
 
 - [Environments](index.md)
-- [Remote viewer](../user_guide/get_started.md)
+- [Get Started](../user_guide/get_started.md)
