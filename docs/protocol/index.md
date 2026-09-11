@@ -40,7 +40,7 @@ msgpack maps with a `message_type` field. Arrays travel as
 `dtype` is a numpy typestr: a byte-order character, a kind character, and an
 item size. Parsing it takes about ten lines in any language.
 
-## Three rules a first implementation usually gets wrong
+## Four rules a first implementation usually gets wrong
 
 **Messages strictly alternate.** `infer`, `action`, `feedback`, `infer`, and
 so on. The server's connection handler is straight-line code with no
@@ -56,6 +56,14 @@ server routes feedback by environment index.
 
 **The reward is the sum over the chunk.** Not the last step's. A client that
 reports the final step's reward trains a different MDP, and nothing fails.
+
+**A reconnect starts from nothing.** Everything the server knows about an
+environment — its previous observation, the policy step state, its done
+flags — lives for exactly one connection. A client that reconnects must drop
+any `feedback` it was holding: the transition it describes can no longer be
+completed, and sending it puts a transition built from an empty observation
+into the training buffer. Nothing on either side reports an error when that
+happens, which is what makes it worth stating.
 
 ## Checking an implementation
 
