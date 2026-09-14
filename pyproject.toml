@@ -3,7 +3,8 @@ name = "plugrl-docs"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Chenhao Lu", email = "luch21@mails.tsinghua.edu.cn"}
+    {name = "Chenhao Lu", email = "luch21@mails.tsinghua.edu.cn"},
+    {name = "Zuo Gou"}
 ]
 license = "Apache-2.0"
 readme = "README.md"
