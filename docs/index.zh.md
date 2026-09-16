@@ -51,6 +51,21 @@ dummy 算法的 `learn` 是一个 sleep，不会移动任何权重。它用来�
 - env client 打印 server 元信息（策略名、动作形状）并开始跑 episode
 - 用 `fpo` 时，server 的指标表里 `rollout/reward` 会上升
 
+## 真实 VLA，端到端
+
+同样的两个进程也能承载一个完整尺寸的 pi0.5：环境端步进 LIBERO，服务端返回动作，
+FPO 用回传的反馈训练。边界本身没有任何改动，变的只是策略。
+
+作为对照，未经微调的 checkpoint 在 `libero_spatial` 上 99/100、在 `libero_10` 上
+185/200，与 openpi 公布的 98.8 与 92.4 一致；而且服务端记录的回合数与步数和客户端
+逐一相等——正是这一条说明传输层没有悄悄丢掉任何东西。
+
+**强化学习的结果是负面的。** 在最难的那个任务上，一轮 FPO 把成功率从 26/50 打到
+0/50；而且这次训练并不完整，10 轮只跑完 1 轮——第二次 learn 装不下，它要和第一次
+分配的优化器状态挤在同一张 24 GB 卡上。预测是预注册的，其中一条被证伪。数字、两个
+进程各自被记录下来的环境，以及这些数据**不能**支持的结论，见
+[E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero)。
+
 ## 组件
 
 - `plugrl-server`：训练端，负责算法、策略、checkpoint、指标追踪

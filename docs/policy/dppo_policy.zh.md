@@ -13,15 +13,27 @@
 DPPO 策略。
 
 ```bash
-plugrl-run-server dppo-policy default dppo hopper --exp_name my_dppo_exp
+plugrl-run-server dppo-policy default dppo hopper --exp-name my_dppo_exp
 ```
 
-OpenPI PI0 策略（需要 checkpoint 目录）。
+OpenPI PI0 策略（需要 checkpoint 目录）。它是流策略：与 `fpo` 或 `eval` 搭配，
+**绝不**与 `dppo` 搭配。下面两条就是 [E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero) 实际跑的命令。
 
 ```bash
-plugrl-run-server pi0-policy default dppo hopper \
-  --policy.checkpoint_path /path/to/pi0_checkpoint \
-  --policy.name pi05_tiny_libero
+# 评测 —— 不训练
+plugrl-run-server pi0-policy default eval default \
+  --policy.name pi05_libero \
+  --policy.checkpoint-path /path/to/pi0_checkpoint \
+  --policy.device cuda
+
+# FPO 微调
+plugrl-run-server pi0-policy default fpo default \
+  --policy.name pi05_libero \
+  --policy.checkpoint-path /path/to/pi0_checkpoint \
+  --policy.device cuda \
+  --algo.learning-rate 1e-5 --algo.batch-size 8 \
+  --algo.n-samples-per-action 4 --algo.buffer-size 4096 \
+  --algo.global-steps 40960
 ```
 
 ## 验证
@@ -52,26 +64,26 @@ python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; ma
 
 常用参数。
 
-- `--policy.env_type gym`
-- `--policy.env_name hopper-medium-v2`
-- `--policy.checkpoint_path /path/to/checkpoint.pt`
+- `--policy.env-type gym`
+- `--policy.env-name hopper-medium-v2`
+- `--policy.checkpoint-path /path/to/checkpoint.pt`
 - `--policy.critic.*`
 
 ## 内置：`pi0-policy`（OpenPI）
 
 - UID：`pi0-policy`
 - 代码：`plugrl-server/src/plugrl_server/policy/openpi/openpi_policy.py`
-- `--policy.checkpoint_path` 必填，目录内需要：
+- `--policy.checkpoint-path` 必填，目录内需要：
   - `model.safetensors`
   - `assets/`（归一化统计）
 - 本地安装/替换步骤见：`plugrl-server/src/plugrl_server/policy/openpi/README.md`。
 
 常用参数。
 
-- `--policy.name pi05_tiny_libero`
-- `--policy.denoising_steps 5`
-- `--policy.train_expert_only true`
-- `--policy.default_prompt "..."`
+- `--policy.name pi05_libero`
+- `--policy.denoising-steps 5`
+- `--policy.train-expert-only true`
+- `--policy.default-prompt "..."`
 
 ## 自定义 diffusion policy
 

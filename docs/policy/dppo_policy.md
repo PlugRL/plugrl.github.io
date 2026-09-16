@@ -13,15 +13,28 @@ This page covers:
 DPPO policy.
 
 ```bash
-plugrl-run-server dppo-policy default dppo hopper --exp_name my_dppo_exp
+plugrl-run-server dppo-policy default dppo hopper --exp-name my_dppo_exp
 ```
 
-OpenPI PI0 policy (requires a checkpoint directory).
+OpenPI PI0 policy (requires a checkpoint directory). It is a flow policy: it
+pairs with `fpo` or `eval`, never with `dppo`. These are the two invocations
+[E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero) ran.
 
 ```bash
-plugrl-run-server pi0-policy default dppo hopper \
-  --policy.checkpoint_path /path/to/pi0_checkpoint \
-  --policy.name pi05_tiny_libero
+# evaluation - no learning
+plugrl-run-server pi0-policy default eval default \
+  --policy.name pi05_libero \
+  --policy.checkpoint-path /path/to/pi0_checkpoint \
+  --policy.device cuda
+
+# FPO fine-tuning
+plugrl-run-server pi0-policy default fpo default \
+  --policy.name pi05_libero \
+  --policy.checkpoint-path /path/to/pi0_checkpoint \
+  --policy.device cuda \
+  --algo.learning-rate 1e-5 --algo.batch-size 8 \
+  --algo.n-samples-per-action 4 --algo.buffer-size 4096 \
+  --algo.global-steps 40960
 ```
 
 ## Verify
@@ -52,26 +65,26 @@ python -c "import my_pkg.plugrl_policies; from plugrl_server.cli import main; ma
 
 Common flags.
 
-- `--policy.env_type gym`
-- `--policy.env_name hopper-medium-v2`
-- `--policy.checkpoint_path /path/to/checkpoint.pt`
+- `--policy.env-type gym`
+- `--policy.env-name hopper-medium-v2`
+- `--policy.checkpoint-path /path/to/checkpoint.pt`
 - `--policy.critic.*`
 
 ## Built-in: `pi0-policy` (OpenPI)
 
 - UID: `pi0-policy`
 - Code: `plugrl-server/src/plugrl_server/policy/openpi/openpi_policy.py`
-- `--policy.checkpoint_path` is required and must point to a directory with:
+- `--policy.checkpoint-path` is required and must point to a directory with:
   - `model.safetensors`
   - `assets/` with normalization stats
 - Setup notes: `plugrl-server/src/plugrl_server/policy/openpi/README.md`.
 
 Common flags.
 
-- `--policy.name pi05_tiny_libero`
-- `--policy.denoising_steps 5`
-- `--policy.train_expert_only true`
-- `--policy.default_prompt "..."`
+- `--policy.name pi05_libero`
+- `--policy.denoising-steps 5`
+- `--policy.train-expert-only true`
+- `--policy.default-prompt "..."`
 
 ## Implement a diffusion-style policy
 
