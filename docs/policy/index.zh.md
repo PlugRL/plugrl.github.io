@@ -24,10 +24,14 @@ plugrl-run-server --help
 - `fpo-policy`：FPO flow matching 策略，快速上手那条命令用的就是它
 - `pi0-policy`：OpenPI 策略，需要 checkpoint 路径
 
-OpenPI 示例。
+OpenPI 示例。`pi0-policy` 是流策略，因此与 `fpo` 或 `eval` 搭配，
+**不能**与 `dppo` 搭配——后者要的是 diffusion 策略。
 
 ```bash
-plugrl-run-server pi0-policy default dppo hopper --policy.checkpoint_path /path/to/checkpoint
+plugrl-run-server pi0-policy default eval default \
+  --policy.name pi05_libero \
+  --policy.checkpoint-path /path/to/checkpoint \
+  --policy.device cuda
 ```
 
 ## 常见问题

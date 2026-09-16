@@ -57,6 +57,25 @@ confirm the two sides talk to each other, not to train anything.
   and starts stepping episodes.
 - With `fpo`, the server prints a metrics table whose `rollout/reward` rises.
 
+## A real VLA, end to end
+
+The same two processes carry a full-size pi0.5. The env client steps LIBERO,
+the server answers with actions, and FPO trains on the feedback that comes
+back. Nothing about the boundary changes; only the policy does.
+
+As a control, the unmodified checkpoint scored 99 of 100 on `libero_spatial`
+and 185 of 200 on `libero_10`, against openpi's published 98.8 and 92.4 - and
+the server's episode and step counts matched the clients' exactly, which is
+what says the transport dropped nothing.
+
+**The reinforcement learning result is negative.** One FPO iteration on the
+hardest task took its success rate from 26 of 50 to 0 of 50, and the run is
+incomplete at one iteration of ten: a second learn step does not fit beside
+the optimizer state the first one allocates on a 24 GB card. The predictions
+were pre-registered, and one of them is falsified. The numbers, the recorded
+environment of both processes, and what none of it supports:
+[E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero).
+
 ## Components
 
 - `plugrl-server`: training server, runs algorithm, policy, checkpoints, tracking

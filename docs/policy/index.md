@@ -24,10 +24,14 @@ plugrl-run-server --help
 - `fpo-policy`: FPO flow-matching policy, used by the get-started run
 - `pi0-policy`: OpenPI policy, requires a checkpoint path
 
-OpenPI example.
+OpenPI example. `pi0-policy` is a flow policy, so it pairs with `fpo` or with
+`eval` - not with `dppo`, which expects a diffusion policy.
 
 ```bash
-plugrl-run-server pi0-policy default dppo hopper --policy.checkpoint_path /path/to/checkpoint
+plugrl-run-server pi0-policy default eval default \
+  --policy.name pi05_libero \
+  --policy.checkpoint-path /path/to/checkpoint \
+  --policy.device cuda
 ```
 
 ## Troubleshooting
