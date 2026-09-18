@@ -53,6 +53,13 @@ dummy 算法的 `learn` 是一个 sleep，不会移动任何权重。它用来�
 
 ## 真实 VLA，端到端
 
+<video src="/media/libero-base.mp4" autoplay loop muted playsinline controls
+       style="width:360px;max-width:100%"></video>
+
+*画面是**未经微调**的 pi0.5 通过这条边界在 `libero_spatial` 任务 0 上的执行过程——
+三个回合，全部成功。这是策略自己看到的观测流，原生 224×224，不是外部机位。
+微调之后成功率归零的那个策略，在下文。*
+
 同样的两个进程也能承载一个完整尺寸的 pi0.5：环境端步进 LIBERO，服务端返回动作，
 FPO 用回传的反馈训练。边界本身没有任何改动，变的只是策略。
 
