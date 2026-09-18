@@ -2,13 +2,36 @@
 
 PlugRL is an RL infrastructure for distributed experiments with a clean split between training and environment execution.
 
-> Note: PlugRL is a suite of Python packages. You can keep envs, policies, and algorithms in your own packages and import them on the side that uses them.
+!!! note
+
+    PlugRL is a suite of Python packages. You can keep envs, policies and
+    algorithms in your own packages and import them on the side that uses
+    them.
+
+A full-size pi0.5 has run end to end across that split on LIBERO, and the
+reinforcement learning result is negative:
+[A real VLA, end to end](#a-real-vla-end-to-end).
 
 ## Quickstart
 
 Two processes: a training server that holds the policy, and an env client
 that runs environments and asks it for actions. This pair actually learns -
 FPO on HalfCheetah-v5, CPU only, no GPU and no assets to download.
+
+Neither package is on PyPI, so install both from source first:
+
+```bash
+git clone https://github.com/PlugRL/plugrl-server.git
+git clone https://github.com/PlugRL/plugrl-env-client.git
+
+cd plugrl-server     && uv sync && cd ..
+cd plugrl-env-client && uv sync --extra mujoco && cd ..
+```
+
+The env client has one extra per environment family, and `mujoco` is the one
+this run needs. Full steps: [Get Started](user_guide/get_started.md).
+
+Then, in two terminals:
 
 ```bash
 # Terminal 1 - the training server

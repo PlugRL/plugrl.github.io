@@ -2,12 +2,33 @@
 
 PlugRL 是一套面向分布式强化学习实验的基础设施。训练端与环境端通过统一协议解耦。
 
-> Note: PlugRL 是一组可插拔的 Python 包。你的 env、policy、algorithm 可以放在自己的包里，只要在使用侧 import 并完成注册。
+!!! note
+
+    PlugRL 是一组可插拔的 Python 包。你的 env、policy、algorithm 可以放在自己的
+    包里，只要在使用侧 import 并完成注册。
+
+一个完整尺寸的 pi0.5 已经通过这条边界在 LIBERO 上端到端跑通，而强化学习的结果是
+负面的：见[真实 VLA，端到端](#vla)。
 
 ## 快速开始
 
 两个进程：训练端持有策略，环境端跑环境并向它请求动作。下面这一对**真的会学** ——
 FPO + HalfCheetah-v5，纯 CPU，不需要 GPU，也不需要下载任何资源文件。
+
+两个包都不在 PyPI 上，先从源码安装：
+
+```bash
+git clone https://github.com/PlugRL/plugrl-server.git
+git clone https://github.com/PlugRL/plugrl-env-client.git
+
+cd plugrl-server     && uv sync && cd ..
+cd plugrl-env-client && uv sync --extra mujoco && cd ..
+```
+
+env client 按环境家族划分 extra，这次要用的是 `mujoco`。完整步骤见
+[快速开始](user_guide/get_started.zh.md)。
+
+然后开两个终端：
 
 ```bash
 # 终端 1 —— 训练端
