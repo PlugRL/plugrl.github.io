@@ -59,6 +59,14 @@ confirm the two sides talk to each other, not to train anything.
 
 ## A real VLA, end to end
 
+<video src="/media/libero-base.mp4" autoplay loop muted playsinline controls
+       style="width:360px;max-width:100%"></video>
+
+*The **unmodified** pi0.5, driven through the boundary on `libero_spatial`
+task 0 - three episodes, all three successful. This is the observation stream
+the policy itself sees, at its native 224x224, not an outside camera. The
+fine-tuned policy is the one that scores zero, further down.*
+
 The same two processes carry a full-size pi0.5. The env client steps LIBERO,
 the server answers with actions, and FPO trains on the feedback that comes
 back. Nothing about the boundary changes; only the policy does.
