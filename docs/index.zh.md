@@ -94,6 +94,22 @@ FPO 用回传的反馈训练。边界本身没有任何改动，变的只是策�
 进程各自被记录下来的环境，以及这些数据**不能**支持的结论，见
 [E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero)。
 
+## 环境端既不需要 CUDA，也不需要 GPU
+
+训练端有 6.5G，而且要一张显卡；跑环境的那台机器不必如此。LIBERO 环境端可以装成
+**3.4G、零个 nvidia wheel**（原本是 7.8G 带十六个），发出的观测逐字节相同，并且能在
+**CPU 上渲染**——十个客户端同时跑，30 个回合全部成功，代价是 **1.91 倍**墙钟。
+
+代价就在这 1.91 倍上，构成它的数字是：软件渲染的单步慢 10 倍，其中大部分、但不是
+全部，被"多个客户端排队等同一个策略"的等待所掩盖。
+
+这推翻了本项目自己已经写下的结论。E1 曾测得 robomimic 类环境端 7.2G 且带 CUDA，并
+断言这类环境的环境端**确实**需要 GPU——那对**默认安装**是成立的，因为 Linux 上
+`torch` 无论用不用都会把 CUDA 一起带来。[E12](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e12-cuda-free-rollout)
+先原样复现了 E1 那一行，再只改一个版本钉定；
+[E13](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e13-gpu-free-rendering)
+则量出了无 GPU 渲染的代价。
+
 ## 组件
 
 - `plugrl-server`：训练端，负责算法、策略、checkpoint、指标追踪
