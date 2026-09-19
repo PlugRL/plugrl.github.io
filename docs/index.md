@@ -107,6 +107,26 @@ were pre-registered, and one of them is falsified. The numbers, the recorded
 environment of both processes, and what none of it supports:
 [E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero).
 
+## The environment side needs neither CUDA nor a GPU
+
+The training server is 6.5G and wants a GPU. The machine running environments
+does not have to be either. A LIBERO env client installs at **3.4G with no
+nvidia wheels** instead of 7.8G with sixteen, sending byte-identical
+observations, and renders on the **CPU** - ten clients at once, 30 of 30
+episodes successful, at **1.91x** the wall clock of the same run on a GPU.
+
+The catch is that 1.91x, and the numbers that make it: stepping is 10x slower
+in software, and most but not all of that hides behind the queue of clients
+waiting on one policy.
+
+This overturns a conclusion the project had already published. E1 measured a
+robomimic-class env client at 7.2G with CUDA and said the environment side does
+need a GPU; that was true of a default install, where `torch` brings CUDA along
+whether or not anything uses it. [E12](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e12-cuda-free-rollout)
+reproduced E1's row exactly before changing one pin, and
+[E13](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e13-gpu-free-rendering)
+measured what rendering without a GPU costs.
+
 ## Components
 
 - `plugrl-server`: training server, runs algorithm, policy, checkpoints, tracking
