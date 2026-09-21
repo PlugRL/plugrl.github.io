@@ -58,15 +58,27 @@ step state、终止标志 —— 只活在一条连接里。重连的客户端�
 
 `plugrl-protocol` 附带一个服务端，它按规范逐条给客户端打分，有违规就以非零码退出。
 
-刚 clone 下来的 `plugrl-protocol` 还差两步。conformance server 会 import
-`websockets`，但它不是声明的依赖 —— `pyproject.toml` 里只有 `numpy` 和 `msgpack`，
-`uv sync` 装不上它；另外 C++ 客户端是源码不是可执行文件，要先编译。CI 做的就是这两步：
+一条命令就够，它会替你把客户端也起起来：
+
+```bash
+uv run --extra conformance plugrl-conformance \
+    --port 8000 --steps 20 \
+    --client "./my_client 127.0.0.1 8000 20"
+```
+
+`--client` 接收一条 shell 命令。检验器会在**端口开始监听之后**再启动它，结束后等它退出——
+这样"客户端连不上"就只可能是客户端自己的问题，而不是启动顺序。客户端以非零码退出
+也会被单独记为一条失败。
+
+不传 `--client` 时，它就等别处启动的客户端连进来，也就是原来那种两个终端的用法，依然可用。
+
+要检验本仓库自带的参考客户端：C++ 那个是源码而非可执行文件，需要先编译。
 
 ```bash
 g++ -std=c++17 -O2 -Wall -Wextra -o /tmp/plugrl_client examples/plugrl_client.cpp
 
-uv run --with websockets examples/conformance_server.py --port 8000 --steps 20 &
-/tmp/plugrl_client 127.0.0.1 8000 20
+uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
+    --client "/tmp/plugrl_client 127.0.0.1 8000 20"
 ```
 
 `plugrl_client.cpp` 用的是 POSIX socket（`sys/socket.h`、`arpa/inet.h`），
@@ -74,7 +86,8 @@ uv run --with websockets examples/conformance_server.py --port 8000 --steps 20 &
 覆盖的条款是同一批：
 
 ```bash
-uv run --with websockets examples/raw_client.py --host 127.0.0.1 --port 8000 --steps 20
+uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
+    --client "python examples/raw_client.py --host 127.0.0.1 --port 8000 --steps 20"
 ```
 
 报告分两个等级。**violation** 是真服务端会拒绝或处理错的问题；**note** 是真服务端

@@ -70,17 +70,30 @@ happens, which is what makes it worth stating.
 `plugrl-protocol` ships a server that grades a client against the
 specification clause by clause and exits non-zero on a violation.
 
-From a fresh checkout of `plugrl-protocol`, two things are not already in place.
-The conformance server imports `websockets`, which is not a declared dependency -
-`pyproject.toml` lists only `numpy` and `msgpack`, so `uv sync` leaves it out. And
-the C++ client is a source file, not a binary, so it has to be compiled first.
-Both steps are what CI does:
+It is one command, and it runs your client for you:
+
+```bash
+uv run --extra conformance plugrl-conformance \
+    --port 8000 --steps 20 \
+    --client "./my_client 127.0.0.1 8000 20"
+```
+
+`--client` is a shell command. The checker starts it **after** the socket is
+listening and waits for it afterwards, so a client that fails to connect fails
+for a reason that is about your client rather than about start-up order. A
+non-zero exit from it is reported as a failure of its own.
+
+Without `--client` the checker waits for a client started elsewhere, which is
+the older two-terminal form and still works.
+
+To check the reference clients in this repository, the C++ one is a source
+file rather than a binary, so it is compiled first:
 
 ```bash
 g++ -std=c++17 -O2 -Wall -Wextra -o /tmp/plugrl_client examples/plugrl_client.cpp
 
-uv run --with websockets examples/conformance_server.py --port 8000 --steps 20 &
-/tmp/plugrl_client 127.0.0.1 8000 20
+uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
+    --client "/tmp/plugrl_client 127.0.0.1 8000 20"
 ```
 
 `plugrl_client.cpp` uses POSIX sockets (`sys/socket.h`, `arpa/inet.h`), so that
@@ -88,7 +101,8 @@ build needs Linux, macOS or WSL. The Python reference client has no such
 constraint and exercises the same clauses:
 
 ```bash
-uv run --with websockets examples/raw_client.py --host 127.0.0.1 --port 8000 --steps 20
+uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
+    --client "python examples/raw_client.py --host 127.0.0.1 --port 8000 --steps 20"
 ```
 
 Its report has two severities. A **violation** is something the real server
