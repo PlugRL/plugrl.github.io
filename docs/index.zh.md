@@ -85,8 +85,9 @@ PlugRL 把策略、算法和环境拆开，所以真正值得回答的问题是�
 每段视频都取自三个种子里最后十轮回报居中的那个种子的最终检查点。这个检查点评估了五
 个回合，放出来的是回报居中的那一回合，不是最好的那一回合。表里没有 `dppo-policy · FPO`，
 因为这个组合不存在：FPO 只能训练流策略。pi0.5 的三段视频都从同一个场景开始，也就是原
-版策略能完成的第一个场景；视频下面的数字来自 50 个回合的评估。pi0.5 一轮 FPO 后掉到
-零，是我们平台的问题，还在排查，不是关于 FPO 的结论。生成这些内容的脚本在
+版策略能完成的第一个场景；视频下面的数字来自 50 个回合的评估。pi0.5 以前一轮 FPO 后
+就掉到零，问题出在我们这边——这里的 FPO 给动作块打分的方式不对，换成 FPO++ 的打分方式后
+策略就不再被毁（[E32](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e32-pi0-fpo-plus-plus)）。生成这些内容的脚本在
 [figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage)。
 
 训练端和环境端连 Python 环境都不共用。训练这些格子的服务端，没有一台装了 MuJoCo、robosuite
@@ -115,6 +116,11 @@ FPO 用回传的反馈训练。边界本身没有任何改动，变的只是策�
 分配的优化器状态挤在同一张 24 GB 卡上。预测是预注册的，其中一条被证伪。数字、两个
 进程各自被记录下来的环境，以及这些数据**不能**支持的结论，见
 [E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero)。
+
+这次归零后来查清了，原因在我们：这里的 FPO 给一个动作块打分时，对全部 320 个元素的
+误差取平均，其中大部分是补零的维度或客户端根本没执行的步。按 FPO++ 的方式打分——只算
+执行了的步、只算 LIBERO 用到的维度——一次更新后 pi0.5 还有 33/50（[E32](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e32-pi0-fpo-plus-plus)）。
+这只说明它不再被毁，还不能说明强化学习能让它变好。
 
 ## 环境端既不需要 CUDA，也不需要 GPU
 

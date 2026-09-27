@@ -100,8 +100,9 @@ episodes, and the clip is the episode with the median return, not the best
 one. `dppo-policy · FPO` is missing because it cannot exist: FPO trains flow
 policies only. The three pi0.5 clips all start from the same scene, the first
 one the released policy solves, and the numbers under them come from
-fifty-episode evaluations. pi0.5 falling to zero after one FPO iteration is a
-defect of ours we are still tracking down, not a finding about FPO. The
+fifty-episode evaluations. pi0.5 used to fall to zero after one FPO
+iteration; the defect was ours, in how our FPO scored an action chunk, and
+with FPO++'s way of scoring it the policy survives ([E32](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e32-pi0-fpo-plus-plus)). The
 scripts that made all of this are in
 [figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage).
 
@@ -138,6 +139,13 @@ the optimizer state the first one allocates on a 24 GB card. The predictions
 were pre-registered, and one of them is falsified. The numbers, the recorded
 environment of both processes, and what none of it supports:
 [E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero).
+
+The collapse turned out to be ours. This FPO scored an action chunk by
+averaging the error over all 320 of its elements, most of them padding or
+steps the client never executed; scored as FPO++ scores it - the executed
+steps and the dimensions LIBERO uses - one update leaves pi0.5 at 33 of 50
+([E32](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e32-pi0-fpo-plus-plus)). That it survives is all this shows: nothing yet says RL
+makes it better.
 
 ## The environment side needs neither CUDA nor a GPU
 
