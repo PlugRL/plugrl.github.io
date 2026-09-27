@@ -60,6 +60,13 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.details
 
+# The coverage figure on the home page; its data and clips are under
+# docs/media/coverage/, written by plugrl-server's figures/coverage.
+extra_css:
+  - stylesheets/coverage.css
+extra_javascript:
+  - javascripts/coverage.js
+
 nav:
   - Home: index.md
 

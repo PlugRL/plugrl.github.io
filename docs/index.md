@@ -80,6 +80,29 @@ confirm the two sides talk to each other, not to train anything.
   and starts stepping episodes.
 - With `fpo`, the server prints a metrics table whose `rollout/reward` rises.
 
+## What runs on it
+
+PlugRL keeps the policy, the algorithm and the environment apart, so the
+question worth answering is which combinations actually work. Below is every
+combination of the two MLP policies and the two algorithms on four tasks, and
+pi0.5 on LIBERO. The border and its label say what the experiments found. The
+line under each clip is the training return of all three seeds, drawn on one
+scale per column, so a flat line really is flat. Hover over a cell, or tap
+it, to play it.
+
+<div class="cov" data-src="/media/coverage/coverage.json"></div>
+
+Each clip comes from the final checkpoint of the seed whose last ten
+iterations were the median of three. That checkpoint was evaluated for five
+episodes, and the clip is the episode with the median return, not the best
+one. `dppo-policy · FPO` is missing because it cannot exist: FPO trains flow
+policies only. The three pi0.5 clips all start from the same scene, the first
+one the released policy solves, and the numbers under them come from
+fifty-episode evaluations. pi0.5 falling to zero after one FPO iteration is a
+defect of ours we are still tracking down, not a finding about FPO. The
+scripts that made all of this are in
+[figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage).
+
 ## A real VLA, end to end
 
 <video src="/media/libero-base.mp4" autoplay loop muted playsinline controls
