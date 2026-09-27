@@ -49,7 +49,7 @@
       clientNote: (e) => `uv sync --extra ${e.extra}: ${e.packages}`,
       cmdHint:
         "Click another cell: the highlighted words are what changed. Shown with seed 0 " +
-        "(the experiments ran seeds 0-2); the client's episode count is only an upper bound, " +
+        "(each experiment ran three seeds); the client's episode count is only an upper bound, " +
         "the server ends the run.",
       vlaHint: "Cluster paths are placeholders; the linked script has the rest.",
       copy: "Copy",
@@ -87,7 +87,7 @@
       client: "环境客户端",
       clientNote: (e) => `uv sync --extra ${e.extra}：${e.packages}`,
       cmdHint:
-        "点另一格：高亮的就是变了的词。这里统一写成种子 0（实验跑的是 0 到 2 三个种子）；" +
+        "点另一格：高亮的就是变了的词。这里统一写成种子 0（每个实验跑了三个种子）；" +
         "客户端的回合数只是个上限，什么时候停由服务端决定。",
       vlaHint: "集群上的路径用占位符代替，完整内容见链接的脚本。",
       copy: "复制",
