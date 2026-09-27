@@ -3,12 +3,17 @@
  * Builds every <div class="cov" data-src="..."> from the JSON that
  * plugrl-server's figures/coverage/data.py writes. Each cell shows a still;
  * its clip loads on first use and plays on hover (mouse) or on tap / Enter.
- * With reduced motion requested, hovering plays nothing.
+ * With reduced motion requested, hovering plays nothing. Clicking a cell
+ * also shows the two commands that trained it in the panel under its block,
+ * marking the words that differ from the cell shown before.
  */
 (function () {
   "use strict";
 
   const EXPERIMENTS = "https://github.com/PlugRL/plugrl-server/tree/main/experiments/";
+  // The cells whose commands show before anyone clicks.
+  const DEFAULT_CELL = "fpo-fpo-hopper";
+  const DEFAULT_VLA = "pi0-fpo";
 
   const TEXT = {
     en: {
@@ -36,6 +41,19 @@
       of: "of",
       successes: "successes in 50 episodes",
       missing: "clip not recorded",
+      cmdTitle: (row, col) => `${row} on ${col}`,
+      cmdSource: "as its experiment ran it",
+      server: "Training server",
+      serverNote: "no MuJoCo, robosuite or gymnasium installed",
+      client: "Env client",
+      clientNote: (e) => `uv sync --extra ${e.extra}: ${e.packages}`,
+      cmdHint:
+        "Click another cell: the highlighted words are what changed. Shown with seed 0 " +
+        "(the experiments ran seeds 0-2); the client's episode count is only an upper bound, " +
+        "the server ends the run.",
+      vlaHint: "Cluster paths are placeholders; the linked script has the rest.",
+      copy: "Copy",
+      copied: "Copied",
     },
     zh: {
       status: {
@@ -62,6 +80,18 @@
       of: "/",
       successes: "50 个回合里的成功次数",
       missing: "没有录像",
+      cmdTitle: (row, col) => `${row}，${col}`,
+      cmdSource: "实验里实际跑的脚本",
+      server: "训练服务端",
+      serverNote: "没装 MuJoCo、robosuite 或 gymnasium",
+      client: "环境客户端",
+      clientNote: (e) => `uv sync --extra ${e.extra}：${e.packages}`,
+      cmdHint:
+        "点另一格：高亮的就是变了的词。这里统一写成种子 0（实验跑的是 0 到 2 三个种子）；" +
+        "客户端的回合数只是个上限，什么时候停由服务端决定。",
+      vlaHint: "集群上的路径用占位符代替，完整内容见链接的脚本。",
+      copy: "复制",
+      copied: "已复制",
     },
   };
 
@@ -153,6 +183,66 @@
     return p;
   }
 
+  const SOURCES = "https://github.com/PlugRL/plugrl-server/blob/main/";
+  const ENTRY = { server: "plugrl-run-server", client: "plugrl-run-env-client" };
+
+  // One command as a code block. Words absent from `before` - the previously
+  // shown cell's commands - are marked, so a click shows what a swap changes.
+  function command(label, note, entry, lines, before, t) {
+    const all = [`${entry} ${lines[0]}`, ...lines.slice(1)];
+    const code = el("code");
+    all.forEach((line, i) => {
+      if (i) code.append("\n  ");
+      line.split(" ").forEach((word, j) => {
+        if (j) code.append(" ");
+        code.append(before && !before.has(word) ? el("mark", { text: word }) : word);
+      });
+      if (i < all.length - 1) code.append(" \\");
+    });
+    const text = all.join(" \\\n  ");
+    const copy = el("button", { type: "button", class: "cov-copy", text: t.copy });
+    copy.addEventListener("click", () => {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(text).then(() => {
+        copy.textContent = t.copied;
+        setTimeout(() => (copy.textContent = t.copy), 1500);
+      }, () => {});
+    });
+    return el("div", { class: "cov-cmd-block" },
+      el("p", { class: "cov-cmd-label" }, el("strong", { text: label }), el("span", { text: note })),
+      el("div", { class: "cov-cmd-code" }, el("pre", {}, code), copy));
+  }
+
+  // The panel under a block: the selected cell's server and client commands.
+  function panel(data, t, hint) {
+    const root = el("div", { class: "cov-cmd", "aria-live": "polite" });
+    let previous = null;
+    let selected = null;
+    const words = (tr) =>
+      new Set([ENTRY.server, ENTRY.client, ...tr.server, ...tr.client].join(" ").split(/\s+/));
+    const show = (c, node, title) => {
+      if (selected) selected.classList.remove("is-selected");
+      selected = node;
+      node.classList.add("is-selected");
+      const tr = c.train;
+      const before = previous && previous !== tr ? words(previous) : null;
+      root.replaceChildren(
+        el("p", { class: "cov-cmd-title" },
+          el("strong", { text: title }), " · ", el("a", { href: SOURCES + tr.source, text: t.cmdSource })),
+        command(t.server, t.serverNote, ENTRY.server, tr.server, before, t),
+        command(t.client, t.clientNote(data.envs[tr.env]), ENTRY.client, tr.client, before, t),
+        el("p", { class: "cov-cmd-hint", text: hint }),
+      );
+      previous = tr;
+    };
+    return { root, show };
+  }
+
+  function selectable(node, onSelect) {
+    node.addEventListener("click", (e) => !e.target.closest("a") && onSelect());
+    node.addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && onSelect());
+  }
+
   function cell(c, data, base, t, zh) {
     const node = el("figure", { class: "cov-cell", "data-status": c.status, tabindex: 0 });
     const m = media(c.id, c.clip, base, t, t.clip);
@@ -193,29 +283,57 @@
     const t = zh ? TEXT.zh : TEXT.en;
     const base = root.dataset.src.replace(/\/[^/]*$/, "");
 
+    const mlp = panel(data, t, t.cmdHint);
+    let first = null;
+    // A link to #cov-<cell id> opens with that cell selected after the default
+    // one, so the words that differ between the two are already marked.
+    const wanted = (location.hash.match(/^#cov-([\w-]+)$/) || [])[1];
+    let linked = null;
     const grid = el("div", { class: "cov-grid" });
     data.columns.forEach((col) => grid.append(el("div", { class: "cov-colhead", text: col.label })));
     data.rows.forEach((row) => {
       grid.append(el("div", { class: "cov-rowhead", text: row.label }));
       data.columns.forEach((col) => {
         const c = data.cells.find((x) => x.row === row.id && x.column === col.id);
-        grid.append(c ? cell(c, data, base, t, zh) : el("div"));
+        if (!c) return grid.append(el("div"));
+        const node = cell(c, data, base, t, zh);
+        const pick = () => mlp.show(c, node, t.cmdTitle(row.label, col.label));
+        selectable(node, pick);
+        if (c.id === DEFAULT_CELL) first = pick;
+        if (c.id === wanted) linked = { pick, node };
+        grid.append(node);
       });
     });
     root.append(el("div", { class: "cov-scroll" }, grid));
 
     const legend = el("p", { class: "cov-legend" });
     Object.entries(t.legend).forEach(([s, label]) => legend.append(el("span", { "data-status": s, text: label })));
-    root.append(legend);
+    root.append(legend, mlp.root);
+    if (first) first();
 
     if (data.vla) {
+      const vla = panel(data, t, t.vlaHint);
+      let firstVla = null;
       const row = el("div", { class: "cov-vla-grid" });
-      data.vla.cells.forEach((c) => row.append(vlaCell(c, data, base, t, zh)));
+      data.vla.cells.forEach((c) => {
+        const node = vlaCell(c, data, base, t, zh);
+        const pick = () => vla.show(c, node, zh ? c.label_zh : c.label);
+        selectable(node, pick);
+        if (c.id === DEFAULT_VLA) firstVla = pick;
+        if (c.id === wanted) linked = { pick, node };
+        row.append(node);
+      });
       root.append(
         el("div", { class: "cov-vla" },
           el("p", { class: "cov-vla-title", text: zh ? data.vla.task_zh : data.vla.task }),
-          el("div", { class: "cov-scroll" }, row)),
+          el("div", { class: "cov-scroll" }, row),
+          vla.root),
       );
+      if (firstVla) firstVla();
+    }
+    if (linked) {
+      linked.pick();
+      linked.node.scrollIntoView({ block: "center" });
     }
   }
 

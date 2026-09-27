@@ -77,7 +77,8 @@ dummy 算法的 `learn` 是一个 sleep，不会移动任何权重。它用来�
 PlugRL 把策略、算法和环境拆开，所以真正值得回答的问题是：哪些组合真的能跑。下面是
 两个 MLP 策略和两个算法在四个任务上的全部组合，外加 pi0.5 在 LIBERO 上的情况。边框
 和上面的标签写的是实验得出的结论。每段视频下面那条线是三个种子的训练回报，同一列用同
-一个纵轴，所以平的线就是真的没动。鼠标悬停或者点一下格子就能播放。
+一个纵轴，所以平的线就是真的没动。鼠标悬停就能播放；点一下格子，除了播放，还会在下面显示训练
+它的那两条命令。从一格换到另一格，变的只有指定策略、算法和任务的那几个词。
 
 <div class="cov" data-src="/media/coverage/coverage.json"></div>
 
@@ -87,6 +88,11 @@ PlugRL 把策略、算法和环境拆开，所以真正值得回答的问题是�
 版策略能完成的第一个场景；视频下面的数字来自 50 个回合的评估。pi0.5 一轮 FPO 后掉到
 零，是我们平台的问题，还在排查，不是关于 FPO 的结论。生成这些内容的脚本在
 [figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage)。
+
+训练端和环境端连 Python 环境都不共用。训练这些格子的服务端，没有一台装了 MuJoCo、robosuite
+或 gymnasium。环境客户端分别跑在三套独立的环境里：MuJoCo 那几个任务用的是 gymnasium 加
+MuJoCo 3；robomimic 和 LIBERO 用的是 robosuite 1.4.1 加 MuJoCo 2.3.7，因为 robosuite 1.4.1
+在 MuJoCo 3 上跑不起来。训练它们的是同一个服务端代码库。
 
 ## 真实 VLA，端到端
 

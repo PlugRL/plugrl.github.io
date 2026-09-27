@@ -205,6 +205,70 @@
 .cov-legend [data-status="flat"] { --cov-c: var(--cov-flat); }
 .cov-legend [data-status="collapses"] { --cov-c: var(--cov-collapses); }
 
+/* The selected cell, and the panel with its two commands. */
+.md-typeset .cov-cell.is-selected {
+  box-shadow: 0 0 0 2px var(--cov-ground), 0 0 0 4px var(--cov-c);
+}
+
+.cov-cmd {
+  margin-top: 0.8rem;
+  padding: 0.55rem 0.7rem 0.6rem;
+  border: 1px solid var(--cov-rule);
+  border-radius: 6px;
+}
+
+.md-typeset .cov-cmd p { margin: 0; }
+
+.cov-cmd-title { font-size: 0.7rem; }
+
+.md-typeset .cov-cmd-label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  align-items: baseline;
+  margin: 0.55rem 0 0.25rem;
+}
+
+.cov-cmd-label span {
+  color: var(--cov-ink-soft);
+  font-family: var(--md-code-font-family, monospace);
+  font-size: 0.6rem;
+}
+
+.cov-cmd-code { position: relative; }
+
+.md-typeset .cov-cmd-code pre {
+  margin: 0;
+  font-size: 0.64rem;
+}
+
+.md-typeset .cov-cmd-code pre > code { padding: 0.55rem 3.6rem 0.55rem 0.7rem; }
+
+.md-typeset .cov-cmd mark { padding: 0 0.1em; }
+
+.cov-copy {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--cov-rule);
+  border-radius: 3px;
+  background: var(--cov-ground);
+  color: var(--cov-ink-soft);
+  font-size: 0.6rem;
+  cursor: pointer;
+}
+
+.cov-copy:hover,
+.cov-copy:focus-visible { color: var(--cov-ink); }
+
+.md-typeset .cov-cmd-hint {
+  margin-top: 0.45rem;
+  color: var(--cov-ink-soft);
+  font-size: 0.64rem;
+  line-height: 1.45;
+}
+
 .cov-vla {
   margin-top: 1.4rem;
 }
