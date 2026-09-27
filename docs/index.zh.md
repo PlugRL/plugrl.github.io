@@ -72,6 +72,22 @@ dummy 算法的 `learn` 是一个 sleep，不会移动任何权重。它用来�
 - env client 打印 server 元信息（策略名、动作形状）并开始跑 episode
 - 用 `fpo` 时，server 的指标表里 `rollout/reward` 会上升
 
+## 在它上面能跑什么
+
+PlugRL 把策略、算法和环境拆开，所以真正值得回答的问题是：哪些组合真的能跑。下面是
+两个 MLP 策略和两个算法在四个任务上的全部组合，外加 pi0.5 在 LIBERO 上的情况。边框
+和上面的标签写的是实验得出的结论。每段视频下面那条线是三个种子的训练回报，同一列用同
+一个纵轴，所以平的线就是真的没动。鼠标悬停或者点一下格子就能播放。
+
+<div class="cov" data-src="/media/coverage/coverage.json"></div>
+
+每段视频都取自三个种子里最后十轮回报居中的那个种子的最终检查点。这个检查点评估了五
+个回合，放出来的是回报居中的那一回合，不是最好的那一回合。表里没有 `dppo-policy · FPO`，
+因为这个组合不存在：FPO 只能训练流策略。pi0.5 的三段视频都从同一个场景开始，也就是原
+版策略能完成的第一个场景；视频下面的数字来自 50 个回合的评估。pi0.5 一轮 FPO 后掉到
+零，是我们平台的问题，还在排查，不是关于 FPO 的结论。生成这些内容的脚本在
+[figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage)。
+
 ## 真实 VLA，端到端
 
 <video src="/media/libero-base.mp4" autoplay loop muted playsinline controls
