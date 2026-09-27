@@ -87,8 +87,10 @@ question worth answering is which combinations actually work. Below is every
 combination of the two MLP policies and the two algorithms on four tasks, and
 pi0.5 on LIBERO. The border and its label say what the experiments found. The
 line under each clip is the training return of all three seeds, drawn on one
-scale per column, so a flat line really is flat. Hover over a cell, or tap
-it, to play it.
+scale per column, so a flat line really is flat. Hover over a cell to play
+it; click or tap it to play it and see the two commands that trained it.
+From one cell to the next, only the words that name the policy, the
+algorithm and the task change.
 
 <div class="cov" data-src="/media/coverage/coverage.json"></div>
 
@@ -102,6 +104,13 @@ fifty-episode evaluations. pi0.5 falling to zero after one FPO iteration is a
 defect of ours we are still tracking down, not a finding about FPO. The
 scripts that made all of this are in
 [figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage).
+
+The two sides do not even share a Python environment. None of the servers
+that trained these cells has MuJoCo, robosuite or gymnasium installed. The
+env clients ran in three separate environments: gymnasium with MuJoCo 3 for
+the MuJoCo tasks, and robosuite 1.4.1 with MuJoCo 2.3.7 for robomimic and for
+LIBERO, because robosuite 1.4.1 does not run on MuJoCo 3. One server
+codebase trained all of them.
 
 ## A real VLA, end to end
 
