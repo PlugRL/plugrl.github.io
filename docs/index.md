@@ -84,8 +84,9 @@ confirm the two sides talk to each other, not to train anything.
 
 PlugRL keeps the policy, the algorithm and the environment apart, so the
 question worth answering is which combinations actually work. Below is every
-combination of the two MLP policies and the two algorithms on four tasks, and
-pi0.5 on LIBERO. The border and its label say what the experiments found. The
+combination of the two MLP policies and the two algorithms on four tasks; the
+baseline they are measured against, a Gaussian policy with PPO run as CleanRL
+runs it; and pi0.5 on LIBERO. The border and its label say what the experiments found. The
 line under each clip is the training return of all three seeds, drawn on one
 scale per column, so a flat line really is flat. Hover over a cell to play
 it; click or tap it to play it and see the two commands that trained it.
@@ -98,7 +99,9 @@ Each clip comes from the final checkpoint of the seed whose last ten
 iterations were the median of three. That checkpoint was evaluated for five
 episodes, and the clip is the episode with the median return, not the best
 one. `dppo-policy · FPO` is missing because it cannot exist: FPO trains flow
-policies only. The three pi0.5 clips all start from the same scene, the first
+policies only. `gaussian-policy · PPO` has no square cell because it was not
+run there; on the three MuJoCo tasks it ends about where CleanRL's own runs
+do ([E38](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e38-gaussian-ppo)). The three pi0.5 clips all start from the same scene, the first
 one the released policy solves, and the numbers under them come from
 fifty-episode evaluations. pi0.5 used to fall to zero after one FPO
 iteration; the defect was ours, in how our FPO scored an action chunk, and
