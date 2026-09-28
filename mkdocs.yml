@@ -1,6 +1,6 @@
 site_url: https://plugrl.github.io
 site_name: PlugRL
-site_description: An RL infrastructure that keeps the training stack and the environment stack in separate dependency worlds.
+site_description: Train a policy against environments that run somewhere else - another process, another machine, a machine with no GPU, or a program that is not Python.
 repo_url: https://github.com/PlugRL/plugrl.github.io
 repo_name: PlugRL/plugrl.github.io
 edit_uri: edit/main/docs/
@@ -25,6 +25,7 @@ plugins:
             Contributing: 贡献指南
             Protocol: 通信协议
             Get Started: 快速开始
+            pi0.5 on LIBERO: pi0.5 在 LIBERO 上
   - exclude:
       glob:
         - '**/sitemap.xml'
@@ -60,15 +61,18 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.details
 
-# The coverage figure on the home page; its data and clips are under
-# docs/media/coverage/, written by plugrl-server's figures/coverage.
+# The coverage figure on the home page and pi0.5's clips on vla.md; their data
+# and clips are under docs/media/coverage/, written by plugrl-server's
+# figures/coverage.
 extra_css:
   - stylesheets/coverage.css
 extra_javascript:
   - javascripts/coverage.js
 
 nav:
-  - Home: index.md
+  - Home:
+      - index.md
+      - pi0.5 on LIBERO: vla.md
 
   - User Guide:
       - Overview: user_guide/index.md

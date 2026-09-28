@@ -1,7 +1,8 @@
-/* The coverage figure on the home page.
+/* The coverage figure on the home page, and pi0.5's clips on their own page.
  *
  * Builds every <div class="cov" data-src="..."> from the JSON that
- * plugrl-server's figures/coverage/data.py writes. Each cell shows a still;
+ * plugrl-server's figures/coverage/data.py writes: the grid, pi0.5's panel,
+ * or with data-part="grid" / "vla" only one of them. Each cell shows a still;
  * its clip loads on first use and plays on hover (mouse) or on tap / Enter.
  * With reduced motion requested, hovering plays nothing. Clicking a cell
  * also shows the two commands that trained it in the panel under its block,
@@ -30,7 +31,6 @@
         learns: "learned the task",
         rising: "runs, return still rising",
         flat: "runs, has not learned",
-        collapses: "runs, one iteration breaks it",
       },
       play: "▶",
       speed: (s) => `${s}× speed`,
@@ -69,7 +69,6 @@
         learns: "学会了任务",
         rising: "跑通，回报还在上升",
         flat: "跑通，还没学会",
-        collapses: "跑通，一轮训练就把它毁了",
       },
       play: "▶",
       speed: (s) => `${s} 倍速`,
@@ -282,36 +281,40 @@
     const zh = (document.documentElement.lang || "").toLowerCase().startsWith("zh");
     const t = zh ? TEXT.zh : TEXT.en;
     const base = root.dataset.src.replace(/\/[^/]*$/, "");
+    // data-part="grid" or "vla" draws one of the two; without it, both.
+    const part = root.dataset.part || "all";
 
-    const mlp = panel(data, t, t.cmdHint);
-    let first = null;
     // A link to #cov-<cell id> opens with that cell selected after the default
     // one, so the words that differ between the two are already marked.
     const wanted = (location.hash.match(/^#cov-([\w-]+)$/) || [])[1];
     let linked = null;
-    const grid = el("div", { class: "cov-grid" });
-    data.columns.forEach((col) => grid.append(el("div", { class: "cov-colhead", text: col.label })));
-    data.rows.forEach((row) => {
-      grid.append(el("div", { class: "cov-rowhead", text: row.label }));
-      data.columns.forEach((col) => {
-        const c = data.cells.find((x) => x.row === row.id && x.column === col.id);
-        if (!c) return grid.append(el("div"));
-        const node = cell(c, data, base, t, zh);
-        const pick = () => mlp.show(c, node, t.cmdTitle(row.label, col.label));
-        selectable(node, pick);
-        if (c.id === DEFAULT_CELL) first = pick;
-        if (c.id === wanted) linked = { pick, node };
-        grid.append(node);
+    if (part !== "vla") {
+      const mlp = panel(data, t, t.cmdHint);
+      let first = null;
+      const grid = el("div", { class: "cov-grid" });
+      data.columns.forEach((col) => grid.append(el("div", { class: "cov-colhead", text: col.label })));
+      data.rows.forEach((row) => {
+        grid.append(el("div", { class: "cov-rowhead", text: row.label }));
+        data.columns.forEach((col) => {
+          const c = data.cells.find((x) => x.row === row.id && x.column === col.id);
+          if (!c) return grid.append(el("div"));
+          const node = cell(c, data, base, t, zh);
+          const pick = () => mlp.show(c, node, t.cmdTitle(row.label, col.label));
+          selectable(node, pick);
+          if (c.id === DEFAULT_CELL) first = pick;
+          if (c.id === wanted) linked = { pick, node };
+          grid.append(node);
+        });
       });
-    });
-    root.append(el("div", { class: "cov-scroll" }, grid));
+      root.append(el("div", { class: "cov-scroll" }, grid));
 
-    const legend = el("p", { class: "cov-legend" });
-    Object.entries(t.legend).forEach(([s, label]) => legend.append(el("span", { "data-status": s, text: label })));
-    root.append(legend, mlp.root);
-    if (first) first();
+      const legend = el("p", { class: "cov-legend" });
+      Object.entries(t.legend).forEach(([s, label]) => legend.append(el("span", { "data-status": s, text: label })));
+      root.append(legend, mlp.root);
+      if (first) first();
+    }
 
-    if (data.vla) {
+    if (data.vla && part !== "grid") {
       const vla = panel(data, t, t.vlaHint);
       let firstVla = null;
       const row = el("div", { class: "cov-vla-grid" });

@@ -1,24 +1,100 @@
 # PlugRL
 
-PlugRL is an RL infrastructure for distributed experiments with a clean split between training and environment execution.
+PlugRL trains a policy against environments that run somewhere else: in
+another process, on another machine, on a machine with no GPU, or in a
+program that is not Python. A training server holds the policy and the
+algorithm; env clients step the environments and ask it for actions. Between
+them is a written protocol that carries the rewards and episode ends back as
+well as the actions out, so the policy is trained, not only served.
 
-!!! note
+## What runs on it
 
-    PlugRL is a suite of Python packages. You can keep envs, policies and
-    algorithms in your own packages and import them on the side that uses
-    them.
+Every combination of the two MLP policies and the two algorithms on four
+tasks, and the baseline they are measured against, a Gaussian MLP with PPO.
+All sixteen learn. The border and its label say what the experiments found.
+The line under each clip is the training curve of all three seeds (the
+return; on square, the success rate, since those runs do not share a
+reward), drawn on one scale per column, so a flat line really is flat. Hover
+over a cell to play it; click or tap it to play it and see the two commands
+that trained it. From one cell to the next, only the words that name the
+policy, the algorithm and the task change.
 
-A full-size pi0.5 has run end to end across that split on LIBERO, and the
-reinforcement learning result is negative:
-[A real VLA, end to end](#a-real-vla-end-to-end).
+<div class="cov" data-part="grid" data-src="/media/coverage/coverage.json"></div>
+
+On square every row fine-tunes a pretrained policy: `dppo-policy` and the
+Gaussian MLP start from DPPO's released checkpoints, `fpo-policy` from a
+behaviour-cloned start of our own
+([E35](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e35-square-bc)).
+The Gaussian MLP row is CleanRL's policy and PPO on the three MuJoCo tasks,
+where it ends about where CleanRL's own runs do
+([E38](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e38-gaussian-ppo)),
+and DPPO's Gaussian MLP with DPPO's own PPO settings on square
+([E40](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e40-square-gaussian-ppo)).
+`dppo-policy · FPO` is missing because it cannot exist: FPO trains flow
+policies only. Each clip comes from the final checkpoint of the seed whose
+last ten iterations were the median of three. That checkpoint was evaluated
+for five episodes, and the clip is the episode with the median return, not
+the best one. The scripts that made all of this are in
+[figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage).
+
+The two sides do not even share a Python environment. None of the servers
+that trained these cells has MuJoCo, robosuite or gymnasium installed. The
+env clients ran in two separate environments: gymnasium with MuJoCo 3 for the
+MuJoCo tasks, and robosuite 1.4.1 with MuJoCo 2.3.7 for robomimic, because
+robosuite 1.4.1 does not run on MuJoCo 3. One server codebase trained all
+sixteen.
+
+## The environment side is light
+
+The training server is 6.5G and wants a GPU. The machine running environments
+needs neither. A LIBERO env client installs at **3.4G with no nvidia wheels**
+instead of 7.8G with sixteen, sends byte-identical observations, and renders
+on the **CPU**: ten clients at once, 30 of 30 episodes successful, at
+**1.91x** the wall clock of the same run on a GPU
+([E12](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e12-cuda-free-rollout),
+[E13](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e13-gpu-free-rendering)).
+Stepping is 10x slower in software, and most of that hides behind the queue
+of clients waiting on one policy.
+
+It does not have to be Python either. [The protocol](protocol/index.md) is
+written down, with a conformance checker, and a client in C++ with nothing
+beyond the standard library - no msgpack or WebSocket library - drove a real
+training server through 120 training exchanges
+([E2](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e2-cross-language)).
+
+## What the split costs
+
+Little. With a 184 KiB observation, one exchange takes about 0.8 ms on one
+machine, and leaving the machine adds about 0.5 ms
+([E7](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e7-cross-machine)).
+That second number was measured from a virtual machine to its host; it has
+not yet been measured between two physical machines.
+
+## A real VLA, end to end
+
+<video src="/media/libero-base.mp4" autoplay loop muted playsinline controls
+       style="width:360px;max-width:100%"></video>
+
+*The **unmodified** pi0.5, driven through the boundary on `libero_spatial`
+task 0 - three episodes, all three successful. This is the observation stream
+the policy itself sees, at its native 224x224, not an outside camera.*
+
+The same two processes carry a full-size pi0.5. The env client steps LIBERO
+and the server answers with actions; nothing about the boundary changes, only
+the policy does. The unmodified checkpoint scored 99 of 100 on
+`libero_spatial` and 185 of 200 on `libero_10`, against openpi's published
+98.8 and 92.4, and the server's episode and step counts matched the clients'
+exactly, which is what says the transport dropped nothing
+([E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero)).
+
+Fine-tuning pi0.5 with reinforcement learning through PlugRL has not made it
+better yet. That record, with clips, is on [its own page](vla.md).
 
 ## Quickstart
 
-Two processes: a training server that holds the policy, and an env client
-that runs environments and asks it for actions. This pair actually learns -
-FPO on HalfCheetah-v5, CPU only, no GPU and no assets to download.
-
-Neither package is on PyPI, so install both from source first:
+A pair that learns without a GPU: FPO on HalfCheetah-v5, CPU only, with no
+assets to download. Neither package is on PyPI, so install both from
+source:
 
 ```bash
 git clone https://github.com/PlugRL/plugrl-server.git
@@ -27,9 +103,6 @@ git clone https://github.com/PlugRL/plugrl-env-client.git
 cd plugrl-server     && uv sync && cd ..
 cd plugrl-env-client && uv sync --extra mujoco && cd ..
 ```
-
-The env client has one extra per environment family, and `mujoco` is the one
-this run needs. Full steps: [Get Started](user_guide/get_started.md).
 
 Then, in two terminals:
 
@@ -45,130 +118,12 @@ plugrl-run-env-client mujoco-v1 \
     --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
 ```
 
-`HalfCheetah-v5` has a 17-dimensional observation and a 6-dimensional
-action, which are exactly `fpo-policy`'s defaults, so nothing needs
-configuring. The environment needs `plugrl-env-client[mujoco]`.
-
-Episode return starts near -300. Across three seeds it is still dipping back
-into the -300s at step 20k, the mean crosses zero at about 60k, and by 500k
-steps it reaches **1928 ± 224** — roughly a hundred minutes on the CPU-only
-machine that measured it. The first few minutes are noise, so judge it over
-tens of thousands of steps rather than the first screenful. Curve, seeds and
-logs: [E6](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e6-first-learning-curve).
-
-!!! warning "`--algo.buffer-size` is not decoration"
-
-    FPO learns when its rollout buffer fills, or when the run reaches its
-    last step. At the default `buffer_size=983040`, a run shorter than about
-    a million steps therefore learns **exactly once, at the very end** -
-    which gives you a single point instead of a curve.
-
-### Just checking connectivity?
-
-```bash
-plugrl-run-server dummy-policy default dummy default
-plugrl-run-env-client dummy-v1 --num-episodes 2 --server-host 127.0.0.1 --server-port 8000
-```
-
-The dummy algorithm's `learn` is a sleep - it moves no weights. Use it to
-confirm the two sides talk to each other, not to train anything.
-
-## Verify
-
-- The server prints a WebSocket listening address.
-- The env client prints the server's metadata - policy name, action shape -
-  and starts stepping episodes.
-- With `fpo`, the server prints a metrics table whose `rollout/reward` rises.
-
-## What runs on it
-
-PlugRL keeps the policy, the algorithm and the environment apart, so the
-question worth answering is which combinations actually work. Below is every
-combination of the two MLP policies and the two algorithms on four tasks; the
-baseline they are measured against, a Gaussian policy with PPO run as CleanRL
-runs it; and pi0.5 on LIBERO. The border and its label say what the experiments found. The
-line under each clip is the training return of all three seeds, drawn on one
-scale per column, so a flat line really is flat. Hover over a cell to play
-it; click or tap it to play it and see the two commands that trained it.
-From one cell to the next, only the words that name the policy, the
-algorithm and the task change.
-
-<div class="cov" data-src="/media/coverage/coverage.json"></div>
-
-Each clip comes from the final checkpoint of the seed whose last ten
-iterations were the median of three. That checkpoint was evaluated for five
-episodes, and the clip is the episode with the median return, not the best
-one. `dppo-policy · FPO` is missing because it cannot exist: FPO trains flow
-policies only. `gaussian-policy · PPO` has no square cell because it was not
-run there; on the three MuJoCo tasks it ends about where CleanRL's own runs
-do ([E38](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e38-gaussian-ppo)). The three pi0.5 clips all start from the same scene, the first
-one the released policy solves, and the numbers under them come from
-fifty-episode evaluations. pi0.5 used to fall to zero after one FPO
-iteration; the defect was ours, in how our FPO scored an action chunk, and
-with FPO++'s way of scoring it the policy survives ([E32](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e32-pi0-fpo-plus-plus)). The
-scripts that made all of this are in
-[figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage).
-
-The two sides do not even share a Python environment. None of the servers
-that trained these cells has MuJoCo, robosuite or gymnasium installed. The
-env clients ran in three separate environments: gymnasium with MuJoCo 3 for
-the MuJoCo tasks, and robosuite 1.4.1 with MuJoCo 2.3.7 for robomimic and for
-LIBERO, because robosuite 1.4.1 does not run on MuJoCo 3. One server
-codebase trained all of them.
-
-## A real VLA, end to end
-
-<video src="/media/libero-base.mp4" autoplay loop muted playsinline controls
-       style="width:360px;max-width:100%"></video>
-
-*The **unmodified** pi0.5, driven through the boundary on `libero_spatial`
-task 0 - three episodes, all three successful. This is the observation stream
-the policy itself sees, at its native 224x224, not an outside camera. The
-fine-tuned policy is the one that scores zero, further down.*
-
-The same two processes carry a full-size pi0.5. The env client steps LIBERO,
-the server answers with actions, and FPO trains on the feedback that comes
-back. Nothing about the boundary changes; only the policy does.
-
-As a control, the unmodified checkpoint scored 99 of 100 on `libero_spatial`
-and 185 of 200 on `libero_10`, against openpi's published 98.8 and 92.4 - and
-the server's episode and step counts matched the clients' exactly, which is
-what says the transport dropped nothing.
-
-**The reinforcement learning result is negative.** One FPO iteration on the
-hardest task took its success rate from 26 of 50 to 0 of 50, and the run is
-incomplete at one iteration of ten: a second learn step does not fit beside
-the optimizer state the first one allocates on a 24 GB card. The predictions
-were pre-registered, and one of them is falsified. The numbers, the recorded
-environment of both processes, and what none of it supports:
-[E11](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e11-vla-rl-libero).
-
-The collapse turned out to be ours. This FPO scored an action chunk by
-averaging the error over all 320 of its elements, most of them padding or
-steps the client never executed; scored as FPO++ scores it - the executed
-steps and the dimensions LIBERO uses - one update leaves pi0.5 at 33 of 50
-([E32](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e32-pi0-fpo-plus-plus)). That it survives is all this shows: nothing yet says RL
-makes it better.
-
-## The environment side needs neither CUDA nor a GPU
-
-The training server is 6.5G and wants a GPU. The machine running environments
-does not have to be either. A LIBERO env client installs at **3.4G with no
-nvidia wheels** instead of 7.8G with sixteen, sending byte-identical
-observations, and renders on the **CPU** - ten clients at once, 30 of 30
-episodes successful, at **1.91x** the wall clock of the same run on a GPU.
-
-The catch is that 1.91x, and the numbers that make it: stepping is 10x slower
-in software, and most but not all of that hides behind the queue of clients
-waiting on one policy.
-
-This overturns a conclusion the project had already published. E1 measured a
-robomimic-class env client at 7.2G with CUDA and said the environment side does
-need a GPU; that was true of a default install, where `torch` brings CUDA along
-whether or not anything uses it. [E12](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e12-cuda-free-rollout)
-reproduced E1's row exactly before changing one pin, and
-[E13](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e13-gpu-free-rendering)
-measured what rendering without a GPU costs.
+Episode return starts near -300 and reaches **1928 ± 224** by 500k steps
+across three seeds, roughly a hundred minutes on the CPU-only machine that
+measured it
+([E6](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e6-first-learning-curve)).
+[Get Started](user_guide/get_started.md) has the rest: why
+`--algo.buffer-size` matters, a connectivity check, and troubleshooting.
 
 ## Components
 
@@ -176,23 +131,8 @@ measured what rendering without a GPU costs.
 - `plugrl-env-client`: environment runner, collects rollouts
 - `plugrl-protocol`: transport, message types, and serialization (WebSocket + msgpack)
 
-The boundary between the first two is [the protocol](protocol/index.md), and
-it is specified rather than implied: an env client does not have to be
-Python, or be this codebase.
-
-## Common options
-
-- The env client connects to the server via `--server-host` and `--server-port`.
-- `--num-procs` runs several env client processes against one server.
-
-!!! note "On `plugrl-run-server-ray`"
-
-    There is a Ray-based launcher, but it is **not a supported path today**.
-    It requires the `dppo` extra, builds its worker list from the *local*
-    GPU count so a multi-node cluster still only sees the head node, and its
-    server speaks an older dialect of the protocol than the WebSocket one -
-    see [SPEC.md section 5.3](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md).
-    Use `plugrl-run-server` unless you are working on the Ray path itself.
+Envs, policies and algorithms can live in your own packages, registered on the
+side that uses them.
 
 ## Next steps
 
