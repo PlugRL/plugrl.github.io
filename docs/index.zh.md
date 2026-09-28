@@ -32,6 +32,13 @@ robosuite 或 gymnasium。环境客户端分别跑在两套独立的环境里：
 gymnasium 加 MuJoCo 3；robomimic 用的是 robosuite 1.4.1 加 MuJoCo 2.3.7，因为
 robosuite 1.4.1 在 MuJoCo 3 上跑不起来。训练这十六格的是同一个服务端代码库。
 
+同样这一对，把环境端放到另一台机器上也照样学会：一台连着校园 Wi-Fi 的 Windows 笔记本步进
+HalfCheetah，训练端在一台 Linux 工作站上。两边各六个种子落在同一条带子里；跨两台机器时一次
+训练用了 41 到 53 分钟，同一台机器上是 20 分钟（[E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)）。
+
+<img src="/media/cross-machine.png" style="width:100%;max-width:720px"
+     alt="fpo-policy 用 FPO 训练 HalfCheetah 100 轮的回报：一台机器上六个种子、跨两台机器六个种子，两条带子都从约 -300 升到约 700 至 2300 之间，全程重叠。">
+
 ## 环境端很轻
 
 训练端有 6.5G，而且要一张显卡；跑环境的那台机器两样都不需要。LIBERO 环境端可以装成
@@ -48,9 +55,13 @@ robosuite 1.4.1 在 MuJoCo 3 上跑不起来。训练这十六格的是同一个
 
 ## 拆开的代价
 
-很小。观测为 184 KiB 时，同一台机器上一次交换约 0.8 毫秒，离开这台机器再多约 0.5 毫秒
-（[E7](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e7-cross-machine)）。
-后一个数是从虚拟机到它的宿主机测的，还没有在两台物理机之间测过。
+同一台机器上几乎没有代价：只传状态时一次交换 0.1 毫秒，观测有 588 KiB 也不到 1 毫秒。
+跨两台机器时，代价分成两项：
+- **固定延迟**：校园 Wi-Fi 上的笔记本经 Tailscale 连有线工作站，大约 3 毫秒。
+- **两倍的观测数据量除以链路带宽**：每次交换里观测要传两次，一次在请求动作时，一次在反馈里。
+
+在这条链路上（18 MB/s），只传状态的任务每步多约 3 毫秒，一个 184 KiB 的相机观测每步多约
+21 毫秒（[E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)）。链路越快，第二项按比例越小。
 
 ## 真实 VLA，端到端
 
