@@ -4,24 +4,34 @@ Run Libero tasks in `plugrl-env-client` via an optional dependency group.
 
 ## Install
 
-Install env client with Libero extras.
+LIBERO runs on robosuite 1.4.1, which needs MuJoCo 2.3.7: MuJoCo 3 fails
+robosuite 1.4.1's joint-type assertion. `mujoco-v1` and the other Gymnasium
+families are meant for MuJoCo 3. So give LIBERO an environment of its own,
+for example a second clone of the env client. `robomimic-v1` uses the same
+MuJoCo 2.3.7 / robosuite 1.4.1 stack and needs the same separation.
 
 ```bash
-pip install -e ".[libero]"
+git clone https://github.com/PlugRL/plugrl-env-client.git plugrl-env-client-libero
+cd plugrl-env-client-libero
+uv sync --extra libero
+uv run python -c "import mujoco, robosuite; print(mujoco.__version__, robosuite.__version__)"
 ```
+
+The last line should print `2.3.7 1.4.1`. Run the commands below from inside
+this clone.
 
 ## Quickstart
 
 Inspect the CLI config.
 
 ```bash
-plugrl-run-env-client libero-v1 --help
+uv run plugrl-run-env-client libero-v1 --help
 ```
 
 Run a few episodes.
 
 ```bash
-plugrl-run-env-client libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
+uv run plugrl-run-env-client libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
 ```
 
 ## As E11 ran it
@@ -31,7 +41,7 @@ client process per task, ten tasks at once, with each task's initial states
 taken in order rather than sampled.
 
 ```bash
-plugrl-run-env-client libero-v1 \
+uv run plugrl-run-env-client libero-v1 \
   --server-host 127.0.0.1 --server-port 8000 \
   --num-envs 1 --num-procs 10 --num-episodes 10 \
   --env.task-suite-name libero_spatial \
@@ -66,7 +76,7 @@ Protocol, results and the recorded environment of both processes:
 
 ## Troubleshooting
 
-- Multi process init conflicts: try `--use-env-lock`.
+- Multi process init conflicts: try `--runner.use-env-lock`.
 
 ## Next steps
 
