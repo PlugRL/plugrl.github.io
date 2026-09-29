@@ -11,7 +11,8 @@ cd plugrl-server
 uv sync
 ```
 
-如果你在改 env client 仓库，把目录换成 `plugrl-env-client`。
+如果你在改 env client，就在 `plugrl-env-client` 里跑同样的命令，并加上你要用的
+环境对应的 `--extra`（例如 `uv sync --extra mujoco`）。
 
 启用 pre-commit。
 
@@ -21,15 +22,18 @@ uv run pre-commit install
 
 ## 验证
 
-跑一个最小端到端 smoke test。
+跑一个最小端到端 smoke test。每条命令都在它所属的仓库目录里运行。
 
 ```bash
-# 终端 1：plugrl-server
+# Terminal 1, in plugrl-server
 uv run plugrl-run-server dummy-policy default dummy default
 
-# 终端 2：plugrl-env-client
-uv run plugrl-run-env-client dummy-v1 --num-episodes 1 --server-host 127.0.0.1 --server-port 8000
+# Terminal 2, in plugrl-env-client
+uv run plugrl-run-env-client dummy-v1 --server-host 127.0.0.1 --server-port 8000 --num-episodes 3
 ```
+
+客户端跑完三个 episode 后以 0 退出。`--server-host 127.0.0.1` 不能省：客户端的
+默认值 `0.0.0.0` 在 Windows 上连不上。
 
 ## 扩展点
 

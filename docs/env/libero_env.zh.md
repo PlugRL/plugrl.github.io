@@ -2,26 +2,34 @@
 
 通过可选依赖在 `plugrl-env-client` 中运行 Libero。
 
-## 安装
+## 安装 {#install}
 
-安装带 Libero extras 的 env client。
+LIBERO 跑在 robosuite 1.4.1 上，而 robosuite 1.4.1 需要 MuJoCo 2.3.7：换成
+MuJoCo 3 会在 robosuite 1.4.1 的关节类型断言上失败。`mujoco-v1` 和其他 Gymnasium
+家族按 MuJoCo 3 来用。所以给 LIBERO 单独一个环境，比如再 clone 一份 env client。
+`robomimic-v1` 用的是同一套 MuJoCo 2.3.7 / robosuite 1.4.1，也要同样分开。
 
 ```bash
-pip install -e ".[libero]"
+git clone https://github.com/PlugRL/plugrl-env-client.git plugrl-env-client-libero
+cd plugrl-env-client-libero
+uv sync --extra libero
+uv run python -c "import mujoco, robosuite; print(mujoco.__version__, robosuite.__version__)"
 ```
+
+最后一行应该打印 `2.3.7 1.4.1`。下面的命令都在这份 clone 里运行。
 
 ## 快速开始
 
 查看可配置项。
 
 ```bash
-plugrl-run-env-client libero-v1 --help
+uv run plugrl-run-env-client libero-v1 --help
 ```
 
 跑几个 episode。
 
 ```bash
-plugrl-run-env-client libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
+uv run plugrl-run-env-client libero-v1 --num-episodes 10 --server-host 127.0.0.1 --server-port 8000
 ```
 
 ## E11 是怎么跑的
@@ -30,7 +38,7 @@ E11 通过一个 PlugRL server 在 LIBERO 上评测 `pi05_libero` checkpoint：�
 客户端进程，十个任务同时跑，每个任务的初始状态按顺序取，而不是随机采样。
 
 ```bash
-plugrl-run-env-client libero-v1 \
+uv run plugrl-run-env-client libero-v1 \
   --server-host 127.0.0.1 --server-port 8000 \
   --num-envs 1 --num-procs 10 --num-episodes 10 \
   --env.task-suite-name libero_spatial \
@@ -62,7 +70,7 @@ plugrl-run-env-client libero-v1 \
 
 ## 常见问题
 
-- 多进程初始化冲突：可尝试 `--use-env-lock`。
+- 多进程初始化冲突：可尝试 `--runner.use-env-lock`。
 
 ## 下一步
 

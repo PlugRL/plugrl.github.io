@@ -35,28 +35,53 @@ PlugRL 把一次训练拆成两个进程。**训练服务端**持有策略与学
 `dtype` 是 numpy 的 typestr：一个字节序字符、一个类型字符、一个元素字节数。
 用任何语言解析它大约十行代码。
 
-## 四条最容易实现错的规则
+## 最容易实现错的几条规则
 
 **消息严格交替。** `infer`、`action`、`feedback`、`infer`……服务端的连接处理
 是一段没有分发器的顺序代码，所以连发两个 `infer` 的客户端会让第二个被当成
 `feedback` 解析，然后被断开。
 
-**一个周期里三条消息的环境集合不必相同。** `infer` 携带的是动作块刚用完的
+**动作数组是时间优先的。** `action` 的形状是 `[H, n, *da]`：先是 horizon，再是
+它所回应的那条 `infer` 里的 `n` 个环境，顺序不变。服务端内部按环境优先排，发出
+之前转置。按环境优先去读的客户端，执行的就是错的动作。客户端可以只用 `H` 步里
+的任意前缀、提前再要一次，但不能要超过 `H` 步。
+
+**`feedback` 的环境集合不必与 `infer` 的相同。** `infer` 携带的是动作块刚用完的
 环境，`feedback` 携带的是本步结束时动作块用完的环境。只要有一个环境提前终止，
-这两个集合就**永久**不再相等。`action` 与其后 `feedback` 的配对只是流控，
-不是语义关联 —— 服务端按环境编号查表路由。
+这两个集合就**永久**不再相等。（`action` 回应的永远正好是 `infer` 那一组。）
+`action` 与其后 `feedback` 的配对只是流控，不是语义关联 —— 服务端按环境编号查表路由。
 
 **奖励是整个动作块上的求和**，不是最后一步的奖励。只汇报最后一步的客户端会在
 一个不同的 MDP 上训练，而且不会有任何东西报错。
 
+**结束的那一步汇报它自己的观测。** 在置了 `terminated` 或 `truncated` 的那一步，
+`feedback` 里的观测必须是这一步返回的那一帧，而不是下一个 episode 的第一帧。
+这就是 Gymnasium 的 `AutoresetMode.NEXT_STEP`。在自己的 step 里就 reset 的环境
+会发错这一帧，同样不会有任何报错。
+
+**`info` 只读一个键。** 服务端只读 `info["episode"]` = `{r, l, s, mask}`（回报、
+长度、是否成功、这一项是否是刚结束的 episode），每一项都是长度为 `m` 的数组，
+`m` 是这条 `feedback` 里的环境数。只有在置了 `terminated` 或 `truncated` 的转移
+上才读，读来的值进 `rollout/reward`、`rollout/length` 和 `rollout/success`。缺了
+`mask` 就当作 true。不发 `episode`，训练完全一样，只是这三个指标一直是 0；
+[E44](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e44-cpp-pendulum)
+的 C++ 客户端就是这么发现它的。`info` 里的其他内容一概不读，发 `{}` 也合法。
+有一个坑，是 SPEC.md 里的一条 Gap：服务端拆分非空的 `info` 时，靠的是它找到的第一个
+长度为 `m` 的数组，只在顶层或往下一层的嵌套 map 里找。`m` > 1 而又没有这样的数组时
+—— 比如 `{"task": "pick"}`，或者该放数组的地方放了 msgpack list —— 就会拆错。
+服务端把这当作协议错误：以 `plugrl-server-resync` 为原因关闭这条连接，其他客户端
+照常继续。在 plugrl-server #108 之前，连接会以 1011 `Internal server error.` 关闭，
+整个服务端也随之退出。
+
 **重连意味着从零开始。** 服务端关于一个环境的全部记忆 —— 上一帧观测、策略的
 step state、终止标志 —— 只活在一条连接里。重连的客户端必须丢弃手上未发出的
-`feedback`：它描述的那次转移已经无法补全，发出去只会往训练缓冲里塞一条由空
-观测拼出来的转移。这件事发生时两端都不会报错，所以才值得单独写一条。
+`feedback`：它描述的那次转移已经无法补全。`plugrl-server` 现在遇到这种转移会打一条
+`Feedback for env <i> arrived with no step state` 警告并把它丢掉；以前它会不声不响
+地存下一条由空观测拼出来的转移。客户端这边仍然看不到任何报错。
 
 ## 检验一个实现
 
-`plugrl-protocol` 附带一个服务端，它按规范逐条给客户端打分，有违规就以非零码退出。
+`plugrl-protocol` 附带一个服务端，它按规范给客户端打分，有违规就以非零码退出。
 
 一条命令就够，它会替你把客户端也起起来：
 
@@ -83,7 +108,7 @@ uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
 
 `plugrl_client.cpp` 用的是 POSIX socket（`sys/socket.h`、`arpa/inet.h`），
 所以这一步需要 Linux、macOS 或 WSL。Python 参考客户端没有这个限制，
-覆盖的条款是同一批：
+过的是同一个检验器：
 
 ```bash
 uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
@@ -93,12 +118,27 @@ uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
 报告分两个等级。**violation** 是真服务端会拒绝或处理错的问题；**note** 是真服务端
 接受、但与 Python 客户端做法不同的地方 —— 是可移植性风险，不是违约。
 
+检验器看的是一条规规矩矩的连接，所以它只查这条连接看得到的东西：分帧、消息交替、
+环境编号、观测形状，以及 `feedback` 载荷的键、dtype 和长度。SPEC.md §8 清单里的其余
+条款它不查，而且没被触及的条款在报告里不留任何痕迹。下面这些全违反的客户端，照样
+打印 "no violations"：
+
+- 连接选项（关闭压缩、不限帧大小）；
+- 发任何东西之前先读 `metadata`；
+- 按动作块求和的奖励，以及结束那一步的终止观测；
+- 区别对待 `plugrl-server-stop` 和 `plugrl-server-resync` 两种关闭原因、重连时丢弃
+  手上的 `feedback`、把文本帧当致命错误；
+- 客户端拿到 `action` 之后怎么用：时间优先的布局，以及读 `env_ids`。
+
 两个参考客户端都能通过。`raw_client.py` 是 275 行 Python，只用 `msgpack` 和
 `websockets`，不用 numpy，也不用 PlugRL 的任何东西。`plugrl_client.cpp` 是 C++17，
 **完全不依赖第三方库**：SHA-1、base64、WebSocket 分帧，以及协议需要的那部分
 msgpack，全都写在同一个文件里 —— 因为嵌入式控制器面对的就是这种处境。
 
-两者都在每次改动的 CI 里跑，所以本页的说法是被持续检验的，而不是被记住的。
+`plugrl-protocol` 的 CI 在每次推到 `main` 和每个 pull request 上都让两者过一遍检验器。
+CI 还会给 C++ 客户端发 float64、时间优先的动作，再从它打印的输出核对它解对了。
+这是对 C++ 客户端的检查，检验器没法替你的客户端做。除此之外，上面清单里的各条对
+两个客户端都没有被检查。
 
 ## 与 openpi 的关系
 
