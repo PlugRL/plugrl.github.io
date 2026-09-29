@@ -11,8 +11,14 @@ Algorithms live in `plugrl-server`.
 ## Checklist
 
 - Implement the `infer(...)` and `feedback(...)` contract used by the server loop.
+- Decide `on_policy`. Keep the default `True` if each learn step may use only
+  frames the current policy collected. Set `False` if the algorithm learns
+  from a replay buffer.
+- If you override `discard_feedback`, call `super()` so finished episodes are
+  still recorded.
 - Implement training and checkpoint hooks as needed.
-- Register your config (UID + variants) and make sure it is imported.
+- Register your config (UID + variants) and your class, and make sure both
+  modules are imported.
 
 ## Verify
 
@@ -30,7 +36,8 @@ plugrl-run-env-client dummy-v1 --num-episodes 1 --server-host 127.0.0.1 --server
 
 ## Troubleshooting
 
-- Algo UID not listed: registration module was not imported.
+- Algo UID not listed under `plugrl-run-server <policy> <variant> --help`: registration module was not imported.
+- `KeyError: 'Algorithm <your-algo> is not registered.'`: the config module was imported, the class module was not.
 - Server crashes on first `infer`: observation schema mismatch.
 
 ## Next steps
