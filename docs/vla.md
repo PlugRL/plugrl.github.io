@@ -3,14 +3,17 @@
 The home page shows a full-size pi0.5 running across PlugRL's boundary, with
 its evaluations matching openpi's. This page is the rest of that record: what
 fine-tuning it with reinforcement learning through PlugRL has done so far.
-In short, it has not made the policy better.
+In short, it has not made the policy better. The collapses the first runs
+showed were defects of ours, and with them fixed FPO leaves the policy about
+where it started.
 
 <div class="cov" data-part="vla" data-src="/media/coverage/coverage.json"></div>
 
 All three clips start from the same scene, the first one the released policy
 solves, and the numbers under them come from fifty-episode evaluations. Over
-seven such evaluations the released policy scored between 28 and 37. Click a
-clip to see the two commands behind it.
+seven such evaluations the released policy scored between 28 and 37. Where an
+experiment ran two seeds, the clip and the number are the lower-scoring
+seed's. Click a clip to see the two commands behind it.
 
 ## How it went
 
@@ -32,8 +35,14 @@ than FPO++'s. Ten DPPO iterations left it at 20, three standard deviations
 below the released policy's mean
 ([E36](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e36-pi0-longer)).
 
-A run with FPO++'s fine-tuning in full is under way, to check whether what
-remains of the collapse is still ours.
+That fall was ours too. With the rest of FPO++'s fine-tuning in place (its
+optimizer, gradient clipping, critic learning rate, raw rewards, lambda and
+clip), ten FPO iterations left the same two seeds at 40 and 27 of 50
+([E42](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e42-pi0-fpo-plus-plus)).
+Neither reaches the bar set before the run, 42 of 50, so this is FPO holding
+pi0.5, not improving it. The lower seed, whose clip is above, was drifting
+the way E36's runs fell, only far more slowly. Whether it holds past ten
+iterations is open.
 
 The scripts that recorded the clips are in
 [figures/coverage](https://github.com/PlugRL/plugrl-server/tree/main/figures/coverage).
