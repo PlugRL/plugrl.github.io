@@ -44,6 +44,15 @@ MuJoCo tasks, and robosuite 1.4.1 with MuJoCo 2.3.7 for robomimic, because
 robosuite 1.4.1 does not run on MuJoCo 3. One server codebase trained all
 sixteen.
 
+The same pair also learns with its env clients on another machine: a
+Windows laptop on campus Wi-Fi steps HalfCheetah for a server on a Linux
+workstation. Six seeds on each side fall within one band. Across the two
+machines, a run took 41-53 minutes instead of 20
+([E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)).
+
+<img src="/media/cross-machine.png" style="width:100%;max-width:720px"
+     alt="Episode return over 100 iterations for fpo-policy with FPO on HalfCheetah, six seeds on one machine and six across two machines. Both bands rise from about -300 to between roughly 700 and 2,300 and overlap throughout.">
+
 ## The environment side is light
 
 The training server is 6.5G and wants a GPU. The machine running environments
@@ -57,18 +66,26 @@ Stepping is 10x slower in software, and most of that hides behind the queue
 of clients waiting on one policy.
 
 It does not have to be Python either. [The protocol](protocol/index.md) is
-written down, with a conformance checker, and a client in C++ with nothing
-beyond the standard library - no msgpack or WebSocket library - drove a real
-training server through 120 training exchanges
-([E2](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e2-cross-language)).
+written down, with a conformance checker. A C++ program with nothing beyond
+the standard library - no msgpack or WebSocket library - steps its own copy of
+Pendulum and trains a policy through it, as well as the Python env client does
+([E44](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e44-cpp-pendulum)).
 
 ## What the split costs
 
-Little. With a 184 KiB observation, one exchange takes about 0.8 ms on one
-machine, and leaving the machine adds about 0.5 ms
-([E7](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e7-cross-machine)).
-That second number was measured from a virtual machine to its host; it has
-not yet been measured between two physical machines.
+On one machine, almost nothing: an exchange takes 0.1 ms with states only and
+under 1 ms with a 588 KiB observation. Between two machines it becomes two
+terms:
+- **A fixed latency.** About 3 ms between a laptop on campus Wi-Fi and a wired
+  workstation, over Tailscale.
+- **Twice the observation's bytes over the link's bandwidth.** Each exchange
+  carries the observation twice, once asking for the action and once in the
+  feedback.
+
+On that link, at 18 MB/s, a state-only task pays about 3 ms per step, and a
+184 KiB camera observation about 21 ms
+([E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)).
+A faster link shrinks the second term in proportion.
 
 ## A real VLA, end to end
 
