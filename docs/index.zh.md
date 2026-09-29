@@ -48,10 +48,10 @@ HalfCheetah，训练端在一台 Linux 工作站上。两边各六个种子落�
 [E13](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e13-gpu-free-rendering)）。
 软件渲染的单步慢 10 倍，其中大部分被"多个客户端排队等同一个策略"的等待掩盖了。
 
-环境端也不必是 Python。[协议](protocol/index.zh.md)是写下来的，附带一致性检查器；一个
-除了标准库之外什么都不用的 C++ 客户端（没有 msgpack 库，也没有 WebSocket 库），驱动一个
-真实的训练端完成了 120 次训练交换
-（[E2](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e2-cross-language)）。
+环境端也不必是 Python。[协议](protocol/index.zh.md)是写下来的，附带一致性检查器。一个
+除了标准库之外什么都不用的 C++ 程序（没有 msgpack 库，也没有 WebSocket 库），自己实现了
+Pendulum，通过 PlugRL 训练出了策略，学得和 Python 环境端一样好
+（[E44](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e44-cpp-pendulum)）。
 
 ## 拆开的代价
 

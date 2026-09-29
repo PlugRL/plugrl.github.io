@@ -66,10 +66,10 @@ Stepping is 10x slower in software, and most of that hides behind the queue
 of clients waiting on one policy.
 
 It does not have to be Python either. [The protocol](protocol/index.md) is
-written down, with a conformance checker, and a client in C++ with nothing
-beyond the standard library - no msgpack or WebSocket library - drove a real
-training server through 120 training exchanges
-([E2](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e2-cross-language)).
+written down, with a conformance checker. A C++ program with nothing beyond
+the standard library - no msgpack or WebSocket library - steps its own copy of
+Pendulum and trains a policy through it, as well as the Python env client does
+([E44](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e44-cpp-pendulum)).
 
 ## What the split costs
 
