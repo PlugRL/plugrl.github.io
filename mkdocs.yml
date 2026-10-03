@@ -31,9 +31,13 @@ plugins:
         - '**/sitemap.xml'
 theme:
   name: material
-  # The PlugRL mark: the light-plate version, for the dark header bar.
-  logo: assets/plugrl-mark-on-dark.svg
+  # The PlugRL lockup (mark and wordmark), light version, for the dark header
+  # bar; brand.css hides the site name beside it, which the lockup already says.
+  logo: assets/plugrl-lockup-on-dark.png
+  # The ICO for every browser; overrides/main.html adds the SVG for those that
+  # read it. Both fill their canvas with the plate.
   favicon: assets/favicon.ico
+  custom_dir: overrides
   features:
     - navigation.tracking
     - navigation.indexes
@@ -69,6 +73,7 @@ markdown_extensions:
 # figures/coverage.
 extra_css:
   - stylesheets/coverage.css
+  - stylesheets/brand.css
 extra_javascript:
   - javascripts/coverage.js
 

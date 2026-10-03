@@ -1,0 +1,37 @@
+/* The header logo is the PlugRL lockup, which already reads "PlugRL". */
+
+/* Material hides the header logo below 76.25em, where the menu button takes its
+   place; keep it beside the menu button instead, so every width shows the same
+   brand. Same specificity as Material's rule, later in the cascade. */
+.md-header__button.md-logo {
+  display: inline-block;
+}
+/* There, the menu button comes first and the lockup after it. */
+@media screen and (max-width: 76.234375em) {
+  .md-header__button[for="__drawer"] {
+    order: -1;
+  }
+}
+
+/* A wider image than Material's square logo: give it a little more height. */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 1.6rem;
+  width: auto;
+}
+
+/* Hide the site name beside it. The page title that replaces the name once
+   the reader scrolls past the heading is the second topic, and stays. */
+.md-header__title .md-header__topic:first-child {
+  visibility: hidden;
+}
+
+/* The mobile drawer shows the logo and the site name together: keep the
+   lockup and drop the text. */
+.md-nav--primary > .md-nav__title {
+  font-size: 0;
+}
+.md-nav--primary > .md-nav__title .md-logo img {
+  height: 2rem;
+  width: auto;
+}
