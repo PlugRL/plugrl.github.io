@@ -31,6 +31,9 @@ plugins:
         - '**/sitemap.xml'
 theme:
   name: material
+  # The PlugRL mark: the light-plate version, for the dark header bar.
+  logo: assets/plugrl-mark-on-dark.svg
+  favicon: assets/favicon.ico
   features:
     - navigation.tracking
     - navigation.indexes
