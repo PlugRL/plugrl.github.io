@@ -65,27 +65,73 @@ on the **CPU**: ten clients at once, 30 of 30 episodes successful, at
 Stepping is 10x slower in software, and most of that hides behind the queue
 of clients waiting on one policy.
 
+It is lighter than the other systems that train through their channel, too.
+`plugrl-env-client` installs 31 packages, 222 MB, with no torch, and the C++
+client below is an 86 KB binary. RLlib's external-env client and LeRobot's
+HIL-SERL actor each install about 6.1 GB, torch and 15 CUDA packages among
+it, because both run the policy on the environment side. A thin environment
+side alone is not new: dm_env_rpc's and openpi's clients are smaller still,
+but neither trains through its channel
+([E45](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e45-env-side-footprint)).
+
 It does not have to be Python either. [The protocol](protocol/index.md) is
 written down, with a conformance checker. A C++ program with nothing beyond
 the standard library - no msgpack or WebSocket library - steps its own copy of
 Pendulum and trains a policy through it, as well as the Python env client does
 ([E44](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e44-cpp-pendulum)).
 
+## Other trainers train through it
+
+The protocol is not tied to PlugRL's own server. Small adapters present it as
+the environment interface a trainer already has (`plugrl-bridges`, not public
+yet). Through them, three trainers that were not written for PlugRL train
+PlugRL env clients, and every seed of every pairing learns:
+- RLinf's PPO, on the C++ Pendulum client;
+- Stable-Baselines3's PPO, on the C++ Pendulum client and on HalfCheetah;
+- CleanRL's PPO, on HalfCheetah
+  ([E49](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e49-multi-trainer)).
+
+<img src="/media/other-trainers.png" style="width:100%;max-width:760px"
+     alt="Episode return against environment steps, three seeds per trainer, 16 env clients each. Left, Pendulum run by the C++ env client: Stable-Baselines3 rises from about -1,250 to -200 within 50 thousand steps; RLinf stays near -1,150 until about 150 thousand steps, then climbs to between -200 and -800. Right, HalfCheetah: Stable-Baselines3 and CleanRL both rise from about -350 to between 800 and 1,300 over 400 thousand steps.">
+
+Each line is one seed's mean return over its 16 env clients, from the
+bridge's own episode log. RLinf learns Pendulum later than Stable-Baselines3
+at the same settings; E49 records that and does not explain it.
+
+RLinf also trained 16 HalfCheetah env clients that ran on a laptop with no
+torch, Ray or RLinf, in a 276 MB environment
+([E48](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e48-rlinf-bridge)).
+
+Behind the protocol, training sees nothing different. Stable-Baselines3 with
+its 16 environments in another process ends on the same weights, byte for
+byte, as with them in its own process: on Pendulum and HalfCheetah
+([E50](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e50-boundary-transparency)),
+on Atari frames with a CNN
+([E53](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e53-image-observations)),
+and with every byte between the two sides held up to 25 ms each way
+([E52](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e52-latency-sweep)).
+Only the time changes: 0.4-0.6 ms per step of 16 environments on one machine,
+2.6-3.0 ms when each step carries 16 frames, and about two one-way delays per
+step behind a slow link.
+
 ## What the split costs
 
 On one machine, almost nothing: an exchange takes 0.1 ms with states only and
 under 1 ms with a 588 KiB observation. Between two machines it becomes two
 terms:
-- **A fixed latency.** About 3 ms between a laptop on campus Wi-Fi and a wired
+- **A fixed latency.** About 3 ms between a laptop on Wi-Fi and a
   workstation, over Tailscale.
-- **Twice the observation's bytes over the link's bandwidth.** Each exchange
-  carries the observation twice, once asking for the action and once in the
-  feedback.
+- **The observation's bytes over the link's bandwidth, once.** The feedback
+  that ends a chunk carries the observation, and since protocol version 2
+  (`reuse-feedback-obs`) the next request for actions leaves it out.
 
-On that link, at 18 MB/s, a state-only task pays about 3 ms per step, and a
-184 KiB camera observation about 21 ms
-([E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)).
-A faster link shrinks the second term in proportion.
+On a 23.7 MB/s link, a state-only task pays about 3 ms per step, and a
+184 KiB camera observation 11.6 ms, against 18.5 ms when each observation
+crossed twice. Training ends on the same weights, byte for byte, either way
+([E46](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e46-reuse-feedback-obs);
+[E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)
+measured the first version). A faster link shrinks the second term in
+proportion.
 
 ## A real VLA, end to end
 
@@ -121,16 +167,17 @@ cd plugrl-server     && uv sync && cd ..
 cd plugrl-env-client && uv sync --extra mujoco && cd ..
 ```
 
-Then, in two terminals:
+Then, in two terminals, each inside its own repository (`uv run` uses that
+repository's `.venv`):
 
 ```bash
-# Terminal 1 - the training server
-plugrl-run-server fpo-policy default fpo default \
+# Terminal 1, in plugrl-server - the training server
+uv run plugrl-run-server fpo-policy default fpo default \
     --port 8000 --policy.device cpu \
     --algo.global-steps 500000 --algo.buffer-size 4096
 
-# Terminal 2 - the environment
-plugrl-run-env-client mujoco-v1 \
+# Terminal 2, in plugrl-env-client - the environment
+uv run plugrl-run-env-client mujoco-v1 \
     --server-host 127.0.0.1 --server-port 8000 \
     --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
 ```
