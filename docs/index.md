@@ -122,8 +122,9 @@ terms:
 - **A fixed latency.** About 3 ms between a laptop on Wi-Fi and a
   workstation, over Tailscale.
 - **The observation's bytes over the link's bandwidth, once.** The feedback
-  that ends a chunk carries the observation, and since protocol version 2
-  (`reuse-feedback-obs`) the next request for actions leaves it out.
+  that ends a chunk carries the observation, and with `reuse-feedback-obs`, a
+  feature the server offers and the env client uses by default, the next
+  request for actions leaves it out.
 
 On a 23.7 MB/s link, a state-only task pays about 3 ms per step, and a
 184 KiB camera observation 11.6 ms, against 18.5 ms when each observation
