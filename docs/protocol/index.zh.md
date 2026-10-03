@@ -118,27 +118,68 @@ uv run --extra conformance plugrl-conformance --port 8000 --steps 20 \
 报告分两个等级。**violation** 是真服务端会拒绝或处理错的问题；**note** 是真服务端
 接受、但与 Python 客户端做法不同的地方 —— 是可移植性风险，不是违约。
 
-检验器看的是一条规规矩矩的连接，所以它只查这条连接看得到的东西：分帧、消息交替、
-环境编号、观测形状，以及 `feedback` 载荷的键、dtype 和长度。SPEC.md §8 清单里的其余
-条款它不查，而且没被触及的条款在报告里不留任何痕迹。下面这些全违反的客户端，照样
-打印 "no violations"：
+默认情况下，检验器旁观一条连接，所以它看得到消息，看不到客户端拿这些消息做了什么：
+它查分帧、消息交替、环境编号、观测形状，以及 `feedback` 载荷的键、dtype 和长度。
 
-- 连接选项（关闭压缩、不限帧大小）；
-- 发任何东西之前先读 `metadata`；
-- 按动作块求和的奖励，以及结束那一步的终止观测；
-- 区别对待 `plugrl-server-stop` 和 `plugrl-server-resync` 两种关闭原因、重连时丢弃
-  手上的 `feedback`、把文本帧当致命错误；
-- 客户端拿到 `action` 之后怎么用：时间优先的布局，以及读 `env_ids`。
+其余的要让客户端跑 [SPEC.md §8.1](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#81-the-probe-environment)
+里的**探针环境**（任何语言几行就能写完，不需要模拟器），再加上 `--probe`：
 
-两个参考客户端都能通过。`raw_client.py` 是 275 行 Python，只用 `msgpack` 和
-`websockets`，不用 numpy，也不用 PlugRL 的任何东西。`plugrl_client.cpp` 是 C++17，
-**完全不依赖第三方库**：SHA-1、base64、WebSocket 分帧，以及协议需要的那部分
-msgpack，全都写在同一个文件里 —— 因为嵌入式控制器面对的就是这种处境。
+```bash
+uv run --extra conformance plugrl-conformance --probe --scenario all \
+    --client "./my_client --probe 127.0.0.1 8000"
+```
 
-`plugrl-protocol` 的 CI 在每次推到 `main` 和每个 pull request 上都让两者过一遍检验器。
-CI 还会给 C++ 客户端发 float64、时间优先的动作，再从它打印的输出核对它解对了。
-这是对 C++ 客户端的检查，检验器没法替你的客户端做。除此之外，上面清单里的各条对
-两个客户端都没有被检查。
+这时检验器发出的动作值编码了它自己在动作块里的位置，所以每条 `feedback` 都说明了客户端
+怎么处理这个动作块：奖励有没有按实际跑的步数求和，结束那一步发的是不是终止观测，动作有没有
+按时间优先、按顺序执行。检验器也不再只是旁观，而是主动驱动连接，每个场景各启动一次客户端：
+
+- `basic`：它晚一点才开口，发一个超过 1 MiB、带着客户端没见过的键的 `metadata`，检查
+  握手没有提供压缩，最后用 `plugrl-server-stop` 结束，此后客户端必须以 0 退出、不再重连；
+- `resync`：在客户端手上还压着一条 `feedback` 时用 `plugrl-server-resync` 关闭连接，
+  客户端必须重连，并且新连接上的第一条消息必须是 `infer`；
+- `text`：它用一个文本帧作答，客户端必须把它当致命错误。
+
+即便如此，§8 清单里仍有四条查不了，因为从线上看，做对和做错的客户端表现一样：读
+`env_ids`、容忍 `feedback` 的环境集合和 `infer` 不同、不要求 `metadata` 里有特定的键，
+以及非 resync 关闭之后丢弃手上的 `feedback`。
+
+两个参考客户端都能通过全部场景，各有一条 note：它们把 `text` 发成 msgpack 字符串数组，
+也就是 §3.4 里的 Gap。`raw_client.py` 是只用 `msgpack` 和 `websockets` 的 Python，
+不用 numpy，也不用 PlugRL 的任何东西。`plugrl_client.cpp` 是 C++17，**完全不依赖第三方库**：
+SHA-1、base64、WebSocket 分帧，以及协议需要的那部分 msgpack，全都写在同一个文件里 ——
+因为嵌入式控制器面对的就是这种处境。`plugrl-protocol` 的 CI 在每次推到 `main` 和每个
+pull request 上，都让两者带着 `--probe` 过一遍检验器。
+
+## 检验训练端
+
+反方向也能检验。`plugrl-conformance-server` 按 SPEC.md 允许客户端的方式去驱动一个训练端，
+检查它的回应：动作布局和 `env_ids`、参差的批次、超过 1 MiB 的帧、遇到每一种格式错误的
+消息都以 resync 关闭且服务端对其他客户端照常工作，以及训练结束时的 stop
+（[SPEC.md §8.2](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#82-checking-a-server)）：
+
+```bash
+uv run --extra conformance plugrl-conformance-server --port 8000 --state-dim 3 --until-stop
+```
+
+`plugrl-protocol` 里的 `examples/reference_server.py` 是照着规范写的一个什么都不训练的
+训练端，能通过。`plugrl-server` 也能通过，它的 CI 每次都跑这个检验器。
+
+## 可选特性
+
+协议是第 1 版。服务端在 `metadata` 里以 `protocol_version` 发出版本号，客户端不得依赖
+这个键。变化通过**特性**协商：服务端在 `metadata` 的 `features` 里列出自己实现了哪些，
+客户端只用列出来的；某个特性不存在时，两边都和原来一样。所以旧客户端能连新服务端，反过来也行
+（[SPEC.md §10](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#10-versioning)）。
+
+目前只有一个特性：`reuse-feedback-obs`
+（[§10.1](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#101-reuse-feedback-obs)）。
+没有它时，每个观测要过两次链路：一次在结束动作块的 `feedback` 里，一次在下一条 `infer` 里。
+有了它，`infer` 把这些行标成 `reuse` 并略去，只有重置后的那个观测还要过两次。
+`plugrl-server` 提供这个特性，`plugrl-env-client` 默认使用。跨两台机器时，它把带 184 KiB
+观测的一步从 18.5 毫秒降到 11.6 毫秒，训练出的权重逐字节相同
+（[E46](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e46-reuse-feedback-obs)）。
+`plugrl-conformance --features reuse-feedback-obs` 会向客户端提供这个特性，
+`plugrl-conformance-server` 则在服务端列出它时去检验它。
 
 ## 与 openpi 的关系
 
