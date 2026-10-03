@@ -48,20 +48,61 @@ HalfCheetah，训练端在一台 Linux 工作站上。两边各六个种子落�
 [E13](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e13-gpu-free-rendering)）。
 软件渲染的单步慢 10 倍，其中大部分被"多个客户端排队等同一个策略"的等待掩盖了。
 
+和其他"通过通道训练"的系统比，它也更轻。`plugrl-env-client` 装 31 个包、222 MB，
+不带 torch；下面那个 C++ 客户端是一个 86 KB 的可执行文件。RLlib 的 external env 客户端
+和 LeRobot 的 HIL-SERL actor 各装约 6.1 GB，其中有 torch 和 15 个 CUDA 包，因为它们都在
+环境端跑策略。光是环境端轻并不新鲜：dm_env_rpc 和 openpi 的客户端更小，但两者都不通过
+自己的通道训练（[E45](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e45-env-side-footprint)）。
+
 环境端也不必是 Python。[协议](protocol/index.zh.md)是写下来的，附带一致性检查器。一个
 除了标准库之外什么都不用的 C++ 程序（没有 msgpack 库，也没有 WebSocket 库），自己实现了
 Pendulum，通过 PlugRL 训练出了策略，学得和 Python 环境端一样好
 （[E44](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e44-cpp-pendulum)）。
 
+## 别的训练框架也能通过它训练
+
+协议不绑定 PlugRL 自己的训练端。几个小适配器把它包装成训练框架本来就认的环境接口
+（`plugrl-bridges`，暂未公开）。通过它们，三个不是为 PlugRL 写的训练框架训练 PlugRL
+的环境端，每种组合的每个种子都学会了：
+- RLinf 的 PPO，训练 C++ Pendulum 客户端；
+- Stable-Baselines3 的 PPO，训练 C++ Pendulum 客户端和 HalfCheetah；
+- CleanRL 的 PPO，训练 HalfCheetah
+  （[E49](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e49-multi-trainer)）。
+
+<img src="/media/other-trainers.png" style="width:100%;max-width:760px"
+     alt="三个训练框架各三个种子、各 16 个环境端的回报随环境步数变化。左：C++ 环境端跑的 Pendulum，Stable-Baselines3 在 5 万步内从约 -1250 升到 -200；RLinf 在约 15 万步前停在 -1150 附近，之后升到 -200 到 -800 之间。右：HalfCheetah，Stable-Baselines3 和 CleanRL 都在 40 万步内从约 -350 升到 800 到 1300 之间。">
+
+每条线是一个种子在 16 个环境端上的平均回报，数据来自 bridge 自己记的回合日志。同样的
+设置下，RLinf 学会 Pendulum 比 Stable-Baselines3 晚；E49 记录了这一点，但没有解释原因。
+
+RLinf 还训练了跑在一台笔记本上的 16 个 HalfCheetah 环境端，那台笔记本没装 torch、Ray
+和 RLinf，环境端只占 276 MB
+（[E48](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e48-rlinf-bridge)）。
+
+隔着协议，训练看到的东西没有任何不同。Stable-Baselines3 把 16 个环境放到另一个进程里，
+最后的权重和环境放在自己进程里时逐字节相同：Pendulum 和 HalfCheetah 上如此
+（[E50](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e50-boundary-transparency)），
+换成 Atari 画面加 CNN 也如此
+（[E53](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e53-image-observations)），
+两端之间每个字节每个方向都压住 25 毫秒还是如此
+（[E52](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e52-latency-sweep)）。
+变的只有时间：同一台机器上 16 个环境每步多 0.4 到 0.6 毫秒，每步带 16 帧画面时多 2.6 到
+3.0 毫秒，链路慢时每步大约多两个单程延迟。
+
 ## 拆开的代价
 
 同一台机器上几乎没有代价：只传状态时一次交换 0.1 毫秒，观测有 588 KiB 也不到 1 毫秒。
 跨两台机器时，代价分成两项：
-- **固定延迟**：校园 Wi-Fi 上的笔记本经 Tailscale 连有线工作站，大约 3 毫秒。
-- **两倍的观测数据量除以链路带宽**：每次交换里观测要传两次，一次在请求动作时，一次在反馈里。
+- **固定延迟**：Wi-Fi 上的笔记本经 Tailscale 连工作站，大约 3 毫秒。
+- **观测数据量除以链路带宽，只算一次**：结束一段动作的反馈里带着观测；有了
+  `reuse-feedback-obs`（训练端提供、环境端默认使用的协议特性），下一次请求动作时不再
+  重复发送。
 
-在这条链路上（18 MB/s），只传状态的任务每步多约 3 毫秒，一个 184 KiB 的相机观测每步多约
-21 毫秒（[E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)）。链路越快，第二项按比例越小。
+在一条 23.7 MB/s 的链路上，只传状态的任务每步多约 3 毫秒，一个 184 KiB 的相机观测每步多
+11.6 毫秒，观测传两次时是 18.5 毫秒。两种情况下训练出的权重逐字节相同
+（[E46](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e46-reuse-feedback-obs)；
+第一版的测量见 [E43](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e43-cross-machine-training)）。
+链路越快，第二项按比例越小。
 
 ## 真实 VLA，端到端
 
@@ -93,16 +134,16 @@ cd plugrl-server     && uv sync && cd ..
 cd plugrl-env-client && uv sync --extra mujoco && cd ..
 ```
 
-然后开两个终端：
+然后开两个终端，各自进到对应的仓库里运行（`uv run` 用的是那个仓库自己的 `.venv`）：
 
 ```bash
-# 终端 1 —— 训练端
-plugrl-run-server fpo-policy default fpo default \
+# 终端 1，在 plugrl-server 里 —— 训练端
+uv run plugrl-run-server fpo-policy default fpo default \
     --port 8000 --policy.device cpu \
     --algo.global-steps 500000 --algo.buffer-size 4096
 
-# 终端 2 —— 环境端
-plugrl-run-env-client mujoco-v1 \
+# 终端 2，在 plugrl-env-client 里 —— 环境端
+uv run plugrl-run-env-client mujoco-v1 \
     --server-host 127.0.0.1 --server-port 8000 \
     --num-envs 1 --num-episodes 600 --runner.replan-steps 1 --runner.seed 0
 ```
