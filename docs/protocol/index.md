@@ -141,34 +141,87 @@ Its report has two severities. A **violation** is something the real server
 would reject or mishandle. A **note** is something it accepts that differs
 from what the Python client does — a portability risk, not a breach.
 
-The checker watches one well-behaved connection, so it checks what that
-connection shows: framing, alternation, environment indices, observation
-shape, and the `feedback` payload's keys, dtypes and lengths. It does not
-check the rest of the SPEC.md §8 checklist, and a clause it did not exercise
-leaves no trace in its report. A client that breaks all of these still
-prints "no violations":
+By default the checker watches one connection, so it sees the messages and
+not what the client did with them: framing, alternation, environment
+indices, observation shape, and the `feedback` payload's keys, dtypes and
+lengths.
 
-- the connection options (compression off, no frame size cap);
-- reading `metadata` before sending anything;
-- the chunk-summed reward, and the terminal observation on a done step;
-- handling the close reasons `plugrl-server-stop` and `plugrl-server-resync`
-  differently, dropping held `feedback` on a reconnect, and treating a text
-  frame as fatal;
-- what the client does with the `action` it receives: the time-major layout
-  and reading `env_ids`.
+To check the rest, have the client run the **probe environment** of
+[SPEC.md §8.1](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#81-the-probe-environment),
+a few lines in any language and no simulator, and add `--probe`:
 
-Two reference clients pass it. `raw_client.py` is 275 lines of Python using
-only `msgpack` and `websockets` — no numpy, nothing from PlugRL.
+```bash
+uv run --extra conformance plugrl-conformance --probe --scenario all \
+    --client "./my_client --probe 127.0.0.1 8000"
+```
+
+The checker's actions then encode their own position, so each `feedback`
+says what the client did with the chunk: whether it summed the reward over
+the steps it ran, sent the terminal observation on a done step, and applied
+the actions time-major and in order. It also drives the connection instead
+of watching it, starting the client once per scenario:
+
+- `basic`: it speaks late, sends a `metadata` frame over 1 MiB with a key the
+  client has never seen, checks that compression was not offered, and ends
+  with `plugrl-server-stop`, after which the client must exit 0 and not
+  reconnect;
+- `resync`: it closes with `plugrl-server-resync` while the client holds a
+  `feedback`; the client must reconnect and open with an `infer`;
+- `text`: it answers with a text frame, which the client must treat as fatal.
+
+Four clauses of the §8 checklist stay unchecked even then, because a correct
+and an incorrect client look the same from the wire: reading `env_ids`,
+tolerating a `feedback` set unlike the `infer` set, requiring no particular
+`metadata` key, and dropping held `feedback` after a close other than a
+resync.
+
+Two reference clients pass every scenario, each with one note: they send
+`text` as a msgpack string array, the §3.4 Gap. `raw_client.py` is Python
+using only `msgpack` and `websockets` — no numpy, nothing from PlugRL.
 `plugrl_client.cpp` is C++17 with **no third-party libraries at all**: SHA-1,
 base64, WebSocket framing and the msgpack subset the protocol needs are all
 in the one file, because that is the situation an embedded controller is
-actually in.
+actually in. Both go through the checker, with `--probe`, in
+`plugrl-protocol`'s CI on every push to `main` and every pull request.
 
-Both go through the checker in `plugrl-protocol`'s CI on every push to `main`
-and every pull request. CI also sends the C++ client float64, time-major
-actions and checks from its printed output that it decoded them. That is a
-check of the C++ client, not something the checker can do for yours. Apart
-from it, nothing in the list above is checked for either client.
+## Checking a server
+
+The other direction is checked too. `plugrl-conformance-server` drives a
+training server the way SPEC.md lets a client behave, and checks what comes
+back: the action layout and `env_ids`, ragged batches, frames over 1 MiB, a
+resync close on each kind of malformed message with the server staying up
+for its other clients, and the stop at the end of the run
+([SPEC.md §8.2](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#82-checking-a-server)):
+
+```bash
+uv run --extra conformance plugrl-conformance-server --port 8000 --state-dim 3 --until-stop
+```
+
+`examples/reference_server.py` in `plugrl-protocol` is a server written
+against the specification that trains nothing, and passes. So does
+`plugrl-server`, whose CI runs the checker against it.
+
+## Optional features
+
+The protocol is version 1. The server sends that as `protocol_version` in
+`metadata`, and a client must not require the key. What changes is
+negotiated as **features**: the server lists the ones it implements in
+`metadata`'s `features`, a client uses one only when it is listed, and
+nothing changes for either side when it is absent. So an old client works
+with a new server, and the other way round
+([SPEC.md §10](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#10-versioning)).
+
+There is one so far, `reuse-feedback-obs`
+([§10.1](https://github.com/PlugRL/plugrl-protocol/blob/main/SPEC.md#101-reuse-feedback-obs)).
+Without it every observation crosses the link twice: in the `feedback` that
+ends a chunk, and again in the next `infer`. With it the `infer` marks those
+rows `reuse` and leaves them out, so only the observation after a reset
+crosses twice. `plugrl-server` offers it and `plugrl-env-client` uses it by
+default. Between two machines it cut a step with a 184 KiB observation from
+18.5 to 11.6 ms, and training ended on byte-identical weights
+([E46](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e46-reuse-feedback-obs)).
+`plugrl-conformance --features reuse-feedback-obs` offers it to a client, and
+`plugrl-conformance-server` exercises it when the server lists it.
 
 ## Relationship to openpi
 
