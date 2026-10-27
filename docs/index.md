@@ -83,8 +83,8 @@ Pendulum and trains a policy through it, as well as the Python env client does
 ## Other trainers train through it
 
 The protocol is not tied to PlugRL's own server. Small adapters present it as
-the environment interface a trainer already has (`plugrl-bridges`, not public
-yet). Through them, three trainers that were not written for PlugRL train
+the environment interface a trainer already has
+([`plugrl-bridges`](https://github.com/PlugRL/plugrl-bridges)). Through them, three trainers that were not written for PlugRL train
 PlugRL env clients, and every seed of every pairing learns:
 - RLinf's PPO, on the C++ Pendulum client;
 - Stable-Baselines3's PPO, on the C++ Pendulum client and on HalfCheetah;
@@ -113,6 +113,50 @@ and with every byte between the two sides held up to 25 ms each way
 Only the time changes: 0.4-0.6 ms per step of 16 environments on one machine,
 2.6-3.0 ms when each step carries 16 frames, and about two one-way delays per
 step behind a slow link.
+
+## When the boundary is wrong, nothing says so
+
+<video src="/media/boundary-faults.mp4" controls muted playsinline preload="metadata"
+       style="width:100%;max-width:720px"></video>
+
+*70 seconds, no sound: one value changed on its way to the trainer, a learning
+curve that rises anyway, and the step ledger that finds the change.*
+
+The same bridge let us ask how a broken boundary shows itself. While SB3's
+PPO trained Pendulum, HalfCheetah, Hopper and Pusher, a 7-joint arm, the env
+client changed one field of what crossed, in one way: an observation, action,
+reward or final observation zeroed, stale, swapped with the next
+environment's or rounded to float16, an episode end invented or sent as the
+wrong kind, a step skipped. Nothing raised an error. Unless every value was
+wrong, the learning-curve threshold we had relied on caught at most one run
+in ten, and a comparison with ten fault-free seeds at most 21%
+([E54](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e54-boundary-faults),
+[E56](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e56-hopper-faults),
+[E58](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e58-pusher-faults)).
+A clean evaluation of every final policy agreed with the curves: of the 728
+boundary-fault runs that passed both curve checks, 723 scored like fault-free
+seeds ([E57](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e57-clean-eval)).
+The runs were not the same runs, though. Nearly all ended on other weights,
+and reward faults changed the returns the trainer logged.
+
+What saw every fault was a check of the run itself. A step ledger keeps a
+record on each side of the boundary, what each environment took and gave and
+what the trainer sent and received, and compares the two step by step. On
+one machine it caught and located all 585 boundary-fault runs on Pendulum,
+Hopper and Pusher, and across two machines all 21 on Pendulum, with no
+fault-free run to compare against, for a median 3% of training time on
+Pendulum ([E55](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e55-step-ledger);
+Hopper and Pusher in E56 and E58).
+An episode record kept at the environment caught the faults planted in the
+trainer's own log. Such faults happen outside experiments too: under
+`SAME_STEP` autoreset, Gymnasium 1.3's vector episode statistics dropped the
+first reward of every episode after an environment's first, until 1.4
+([E51](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e51-episode-accounting)).
+
+This is the paper *Detecting Silent Faults at the Environment-Trainer
+Boundary in Reinforcement Learning*, accepted to the CoRL 2026 Workshop on
+Everything Beneath the Policy ([PDF](/assets/silent-faults-webp2026.pdf);
+[citing it](#citing)).
 
 ## What the split costs
 
@@ -208,3 +252,16 @@ side that uses them.
 - [Environments](env/index.md)
 - [Policies](policy/index.md)
 - [Contributing](contributing/index.md)
+
+## Citing
+
+If the boundary checks are useful to you, cite the paper:
+
+```bibtex
+@inproceedings{gou2026silent,
+  title     = {Detecting Silent Faults at the Environment-Trainer Boundary in Reinforcement Learning},
+  author    = {Gou, Zuo and Lu, Chenhao},
+  booktitle = {CoRL 2026 Workshop on Everything Beneath the Policy},
+  year      = {2026}
+}
+```

@@ -62,7 +62,7 @@ Pendulum，通过 PlugRL 训练出了策略，学得和 Python 环境端一样�
 ## 别的训练框架也能通过它训练
 
 协议不绑定 PlugRL 自己的训练端。几个小适配器把它包装成训练框架本来就认的环境接口
-（`plugrl-bridges`，暂未公开）。通过它们，三个不是为 PlugRL 写的训练框架训练 PlugRL
+（[`plugrl-bridges`](https://github.com/PlugRL/plugrl-bridges)）。通过它们，三个不是为 PlugRL 写的训练框架训练 PlugRL
 的环境端，每种组合的每个种子都学会了：
 - RLinf 的 PPO，训练 C++ Pendulum 客户端；
 - Stable-Baselines3 的 PPO，训练 C++ Pendulum 客户端和 HalfCheetah；
@@ -88,6 +88,42 @@ RLinf 还训练了跑在一台笔记本上的 16 个 HalfCheetah 环境端，那
 （[E52](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e52-latency-sweep)）。
 变的只有时间：同一台机器上 16 个环境每步多 0.4 到 0.6 毫秒，每步带 16 帧画面时多 2.6 到
 3.0 毫秒，链路慢时每步大约多两个单程延迟。
+
+## 边界出错时，什么都不会报错
+
+<video src="/media/boundary-faults.mp4" controls muted playsinline preload="metadata"
+       style="width:100%;max-width:720px"></video>
+
+*70 秒，无声：一个值在送往训练端的路上被改掉，学习曲线照样上升，步账本找到了这处改动。*
+
+借同一个 bridge，我们还能看边界出错时会有什么表现。Stable-Baselines3 的 PPO 训练
+Pendulum、HalfCheetah、Hopper 和 7 关节机械臂 Pusher 时，环境端把发出去的某一个字段按
+某一种方式改掉：观测、动作、奖励或回合最后一帧观测被置零、换成上一步的、换成下一个环境的，
+或者经过 float16 舍入；凭空多出一个回合结束，或者把回合结束的类型发错；跳过一步。没有任何
+报错。除非每个值都错了，我们原来依赖的学习曲线阈值最多只抓到十分之一的运行，和十个无错
+种子比较的检查最多抓到 21%
+（[E54](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e54-boundary-faults)、
+[E56](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e56-hopper-faults)、
+[E58](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e58-pusher-faults)）。
+在干净的环境里评估每个最终策略，结论和曲线一样：两项曲线检查都通过的 728 个边界出错运行中，
+723 个和无错种子表现相当
+（[E57](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e57-clean-eval)）。
+但这些运行已经不是原来那次运行了：几乎全都停在了不同的权重上，奖励出错时训练端记下的回报
+也变了。
+
+能看到每一处错误的，是检查运行本身。步账本在边界两侧各记一份：每个环境收到了什么、给出了
+什么，训练端发出了什么、收到了什么，然后逐步比对。单机上，它在 Pendulum、Hopper 和 Pusher
+上抓到并定位了全部 585 个边界出错的运行；跨两台机器时，抓到了 Pendulum 上全部 21 个。全程
+不需要无错运行做参照，在 Pendulum 上训练时间的中位数只多 3%
+（[E55](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e55-step-ledger)；
+Hopper 和 Pusher 见 E56、E58）。在环境端记的回合记录，抓到了故意埋进训练端日志里的错误。
+这类错误在实验之外也会发生：Gymnasium 1.3 的向量回合统计在 `SAME_STEP` 自动重置下，每个
+环境从第二个回合起都会丢掉回合的第一个奖励，直到 1.4 才修好
+（[E51](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e51-episode-accounting)）。
+
+这部分内容是论文 *Detecting Silent Faults at the Environment-Trainer Boundary in
+Reinforcement Learning*，已被 CoRL 2026 Workshop on Everything Beneath the Policy 录用
+（[PDF](/assets/silent-faults-webp2026.pdf)；[引用方式](#citing)）。
 
 ## 拆开的代价
 
@@ -171,3 +207,16 @@ episode 回报从 -300 附近起步，三个随机种子到 50 万步达到 **19
 - [环境](env/index.zh.md)
 - [策略](policy/index.zh.md)
 - [贡献指南](contributing/index.zh.md)
+
+## 引用 {#citing}
+
+如果边界检查对你有用，请引用这篇论文：
+
+```bibtex
+@inproceedings{gou2026silent,
+  title     = {Detecting Silent Faults at the Environment-Trainer Boundary in Reinforcement Learning},
+  author    = {Gou, Zuo and Lu, Chenhao},
+  booktitle = {CoRL 2026 Workshop on Everything Beneath the Policy},
+  year      = {2026}
+}
+```
