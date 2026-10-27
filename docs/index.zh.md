@@ -121,6 +121,12 @@ Hopper 和 Pusher 见 E56、E58）。在环境端记的回合记录，抓到了�
 环境从第二个回合起都会丢掉回合的第一个奖励，直到 1.4 才修好
 （[E51](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e51-episode-accounting)）。
 
+步账本现在单独做成了一个包 [step-ledger](https://github.com/PlugRL/step-ledger)，Gymnasium
+和 Stable-Baselines3 都能用，用不用 PlugRL 都行。给每个环境包一层 `LedgerEnv`，给训练端看到的
+向量环境包一层 `LedgerVectorEnv`（Stable-Baselines3 用 `LedgerVecEnv`）；跑完后
+`stepledger compare` 会指出第一处不一致在哪个环境、哪个回合、哪一步、哪个字段。每一侧每个环境步
+只多几微秒。
+
 这部分内容是论文 *Detecting Silent Faults at the Environment-Trainer Boundary in
 Reinforcement Learning*，已被 CoRL 2026 Workshop on Everything Beneath the Policy 录用
 （[PDF](/assets/silent-faults-webp2026.pdf)；[引用方式](#citing)）。
