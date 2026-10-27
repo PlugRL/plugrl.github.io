@@ -153,6 +153,14 @@ trainer's own log. Such faults happen outside experiments too: under
 first reward of every episode after an environment's first, until 1.4
 ([E51](https://github.com/PlugRL/plugrl-server/tree/main/experiments/e51-episode-accounting)).
 
+The step ledger is now a package of its own,
+[step-ledger](https://github.com/PlugRL/step-ledger), for Gymnasium and
+Stable-Baselines3 with or without PlugRL. Wrap each environment in
+`LedgerEnv` and the vector env the trainer sees in `LedgerVectorEnv` (or
+`LedgerVecEnv` for Stable-Baselines3); after the run, `stepledger compare`
+names the environment, episode, step and field of the first difference. Each
+side adds a few microseconds per environment step.
+
 This is the paper *Detecting Silent Faults at the Environment-Trainer
 Boundary in Reinforcement Learning*, accepted to the CoRL 2026 Workshop on
 Everything Beneath the Policy ([PDF](/assets/silent-faults-webp2026.pdf);
