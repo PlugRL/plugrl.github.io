@@ -119,7 +119,7 @@ step behind a slow link.
 <video src="/media/boundary-faults.mp4" controls muted playsinline preload="metadata"
        style="width:100%;max-width:720px"></video>
 
-*70 seconds, no sound: one value changed on its way to the trainer, a learning
+*67 seconds, no sound: one value changed on its way to the trainer, a learning
 curve that rises anyway, and the step ledger that finds the change.*
 
 The same bridge let us ask how a broken boundary shows itself. While SB3's

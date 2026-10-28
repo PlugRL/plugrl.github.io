@@ -94,7 +94,7 @@ RLinf 还训练了跑在一台笔记本上的 16 个 HalfCheetah 环境端，那
 <video src="/media/boundary-faults.mp4" controls muted playsinline preload="metadata"
        style="width:100%;max-width:720px"></video>
 
-*70 秒，无声：一个值在送往训练端的路上被改掉，学习曲线照样上升，步账本找到了这处改动。*
+*67 秒，无声：一个值在送往训练端的路上被改掉，学习曲线照样上升，步账本找到了这处改动。*
 
 借同一个 bridge，我们还能看边界出错时会有什么表现。Stable-Baselines3 的 PPO 训练
 Pendulum、HalfCheetah、Hopper 和 7 关节机械臂 Pusher 时，环境端把发出去的某一个字段按
