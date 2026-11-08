@@ -129,7 +129,7 @@ Hopper 和 Pusher 见 E56、E58）。在环境端记的回合记录，抓到了�
 
 这部分内容是论文 *Detecting Silent Faults at the Environment-Trainer Boundary in
 Reinforcement Learning*，已被 CoRL 2026 Workshop on Everything Beneath the Policy 录用
-（[PDF](/assets/silent-faults-webp2026.pdf)；[引用方式](#citing)）。
+（[arXiv:2611.08144](https://arxiv.org/abs/2611.08144)；[引用方式](#citing)）。
 
 ## 拆开的代价
 
@@ -220,9 +220,13 @@ episode 回报从 -300 附近起步，三个随机种子到 50 万步达到 **19
 
 ```bibtex
 @inproceedings{gou2026silent,
-  title     = {Detecting Silent Faults at the Environment-Trainer Boundary in Reinforcement Learning},
-  author    = {Gou, Zuo and Lu, Chenhao},
-  booktitle = {CoRL 2026 Workshop on Everything Beneath the Policy},
-  year      = {2026}
+  title         = {Detecting Silent Faults at the Environment-Trainer Boundary in Reinforcement Learning},
+  author        = {Gou, Zuo and Lu, Chenhao},
+  booktitle     = {CoRL 2026 Workshop on Everything Beneath the Policy},
+  year          = {2026},
+  eprint        = {2611.08144},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url           = {https://arxiv.org/abs/2611.08144}
 }
 ```
