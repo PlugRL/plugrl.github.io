@@ -163,7 +163,7 @@ side adds a few microseconds per environment step.
 
 This is the paper *Detecting Silent Faults at the Environment-Trainer
 Boundary in Reinforcement Learning*, accepted to the CoRL 2026 Workshop on
-Everything Beneath the Policy ([PDF](/assets/silent-faults-webp2026.pdf);
+Everything Beneath the Policy ([arXiv:2611.08144](https://arxiv.org/abs/2611.08144);
 [citing it](#citing)).
 
 ## What the split costs
@@ -267,9 +267,13 @@ If the boundary checks are useful to you, cite the paper:
 
 ```bibtex
 @inproceedings{gou2026silent,
-  title     = {Detecting Silent Faults at the Environment-Trainer Boundary in Reinforcement Learning},
-  author    = {Gou, Zuo and Lu, Chenhao},
-  booktitle = {CoRL 2026 Workshop on Everything Beneath the Policy},
-  year      = {2026}
+  title         = {Detecting Silent Faults at the Environment-Trainer Boundary in Reinforcement Learning},
+  author        = {Gou, Zuo and Lu, Chenhao},
+  booktitle     = {CoRL 2026 Workshop on Everything Beneath the Policy},
+  year          = {2026},
+  eprint        = {2611.08144},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url           = {https://arxiv.org/abs/2611.08144}
 }
 ```
